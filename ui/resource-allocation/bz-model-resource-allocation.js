@@ -9,13 +9,13 @@ const BZ_RESOURCECLASS_SORT = {
 }
 const resourceSort = (a, b) => {
     // first sort empire, city, bonus, treasure, factory
-    const classA = BZ_RESOURCECLASS_SORT[a.classType] ?? 0;
-    const classB = BZ_RESOURCECLASS_SORT[b.classType] ?? 0;
-    if (classA != classB) return classA - classB;
+    const groupA = BZ_RESOURCECLASS_SORT[a.groupType] ?? 0;
+    const groupB = BZ_RESOURCECLASS_SORT[b.groupType] ?? 0;
+    if (groupA != groupB) return groupA - groupB;
     // then sort by name
-    const typeA = Locale.compose(a.type);
-    const typeB = Locale.compose(b.type);
-    return typeA.localeCompare(typeB);
+    const nameA = Locale.compose(a.name);
+    const nameB = Locale.compose(b.name);
+    return nameA.localeCompare(nameB);
 }
 const BZ_SETTLEMENT_SORT = {
     Capital: 1,
@@ -24,9 +24,9 @@ const BZ_SETTLEMENT_SORT = {
 }
 const settlementSort = (a, b) => {
     // first sort capital, city, town
-    const classA = BZ_SETTLEMENT_SORT[a.settlementType] ?? 0;
-    const classB = BZ_SETTLEMENT_SORT[b.settlementType] ?? 0;
-    if (classA != classB) return classA - classB;
+    const groupA = BZ_SETTLEMENT_SORT[a.settlementType] ?? 0;
+    const groupB = BZ_SETTLEMENT_SORT[b.settlementType] ?? 0;
+    if (groupA != groupB) return groupA - groupB;
     // then sort by name
     const nameA = Locale.compose(a.name);
     const nameB = Locale.compose(b.name);
