@@ -9,8 +9,8 @@ const BZ_RESOURCECLASS_SORT = {
 }
 const resourceSort = (a, b) => {
     // first sort empire, city, bonus, treasure, factory
-    const groupA = BZ_RESOURCECLASS_SORT[a.groupType] ?? 0;
-    const groupB = BZ_RESOURCECLASS_SORT[b.groupType] ?? 0;
+    const groupA = BZ_RESOURCECLASS_SORT[a.classType] ?? 0;
+    const groupB = BZ_RESOURCECLASS_SORT[b.classType] ?? 0;
     if (groupA != groupB) return groupA - groupB;
     // then sort by name
     const nameA = Locale.compose(a.name);
