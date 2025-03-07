@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <EnglishText>
+        <Row Tag="LOC_MOD_BZ_RE_SORTS_NAME">
+            <Text>Reource Re-sorts 1.0.0</Text>
+        </Row>
+        <Row Tag="LOC_MOD_BZ_RE_SORTS_DESCRIPTION">
+            <Text>better resource sorting</Text>
+        </Row>
+    </EnglishText>
+</Database>
