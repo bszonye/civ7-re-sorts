@@ -31,7 +31,7 @@ const settlementSort = (a, b) => {
     const nameA = Locale.compose(a.name).toUpperCase();
     const nameB = Locale.compose(b.name).toUpperCase();
     // TODO: ideally this would use case-insensitive comparison instead,
-    // but the game doesn't seem to support Intl.Collator options.
+    //       but the game doesn't seem to support Intl.Collator options.
     // const locale = Locale.getCurrentDisplayLocale();
     // nameA.localeCompare(nameB, locale, { sensitivity: "base" });
     return nameA.localeCompare(nameB);
