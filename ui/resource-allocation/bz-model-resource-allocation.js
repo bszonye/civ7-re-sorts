@@ -28,8 +28,12 @@ const settlementSort = (a, b) => {
     const groupB = BZ_SETTLEMENT_SORT[b.settlementType] ?? 0;
     if (groupA != groupB) return groupA - groupB;
     // then sort by name
-    const nameA = Locale.compose(a.name);
-    const nameB = Locale.compose(b.name);
+    const nameA = Locale.compose(a.name).toUpperCase();
+    const nameB = Locale.compose(b.name).toUpperCase();
+    // TODO: ideally this would use case-insensitive comparison instead,
+    //       but the game doesn't seem to support Intl.Collator options.
+    // const locale = Locale.getCurrentDisplayLocale();
+    // nameA.localeCompare(nameB, locale, { sensitivity: "base" });
     return nameA.localeCompare(nameB);
 };
 
