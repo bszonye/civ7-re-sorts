@@ -27,10 +27,6 @@
                 <UIScripts>
                     <Item>ui/resource-allocation/bz-model-resource-allocation.js</Item>
                 </UIScripts>
-                <UpdateText>
-                    <Item>text/en_us/InGameText.xml</Item>
-                    <Item locale="de_DE">text/de_DE/InGameText.xml</Item>
-                </UpdateText>
             </Actions>
         </ActionGroup>
     </ActionGroups>
