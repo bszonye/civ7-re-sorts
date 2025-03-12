@@ -1,3 +1,4 @@
+// TODO: system option for different sorting rules
 import ResourceAllocation from '/base-standard/ui/resource-allocation/model-resource-allocation.js';
 
 const BZ_RESOURCECLASS_SORT = {

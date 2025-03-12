@@ -1,4 +1,4 @@
-## Resource Re-sorts 1.0.1
+## Resource Re-sorts 1.1.0
 sorts the names and icons on the resource screen.
 
 - sorts settlements by name, with the capital and cities first.
