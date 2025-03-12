@@ -31,7 +31,7 @@
         </ActionGroup>
     </ActionGroups>
     <LocalizedText>
-        <File>text/de_DE/ModInfoText.xml</File>
         <File>text/en_us/ModInfoText.xml</File>
+        <File>text/de_DE/ModInfoText.xml</File>
     </LocalizedText>
 </Mod>
