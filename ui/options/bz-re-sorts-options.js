@@ -42,7 +42,7 @@ Options.addInitCallback(() => {
     Options.addOption({
         category: CategoryType.Mods,
         // @ts-ignore
-        group: MOD_ID.replace(/-/g, '_'),
+        group: "bz_mods",
         type: OptionType.Checkbox,
         id: "bz-sort-cities-by-type",
         initListener: onInitSortCitiesByType,
@@ -61,7 +61,7 @@ Options.addInitCallback(() => {
     Options.addOption({
         category: CategoryType.Mods,
         // @ts-ignore
-        group: MOD_ID.replace(/-/g, '_'),
+        group: "bz_mods",
         type: OptionType.Checkbox,
         id: "bz-sort-cities-by-slots",
         initListener: onInitSortCitiesBySlots,
