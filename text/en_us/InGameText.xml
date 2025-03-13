@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <EnglishText>
-        <Row Tag="LOC_OPTIONS_GROUP_BZ_RE_SORTS">
-            <Text>Resource Re-sorts</Text>
-        </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS">
             <Text>sort settlements by number of resource slots</Text>
         </Row>
@@ -15,6 +12,9 @@
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE_DESCRIPTION">
             <Text>On the resource screen, list the capital first, then cities, then towns.</Text>
+        </Row>
+        <Row Tag="LOC_OPTIONS_GROUP_BZ_RE_SORTS">
+            <Text>Resource Re-sorts</Text>
         </Row>
     </EnglishText>
 </Database>
