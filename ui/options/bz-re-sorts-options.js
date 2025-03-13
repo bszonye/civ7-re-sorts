@@ -32,20 +32,12 @@ const bzReSortsOptions = new class {
         this.save();
     }
 };
-
 const onInitSortCitiesBySlots = (info) => {
     info.currentValue = bzReSortsOptions.sortCitiesBySlots;
 };
 const onUpdateSortCitiesBySlots = (_info, flag) => {
     bzReSortsOptions.sortCitiesBySlots = flag;
 };
-const onInitSortCitiesByType = (info) => {
-    info.currentValue = bzReSortsOptions.sortCitiesByType;
-};
-const onUpdateSortCitiesByType = (_info, flag) => {
-    bzReSortsOptions.sortCitiesByType = flag;
-};
-
 Options.addInitCallback(() => {
     Options.addOption({
         category: CategoryType.Game,
@@ -59,6 +51,12 @@ Options.addInitCallback(() => {
         description: "LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE_DESCRIPTION",
     });
 });
+const onInitSortCitiesByType = (info) => {
+    info.currentValue = bzReSortsOptions.sortCitiesByType;
+};
+const onUpdateSortCitiesByType = (_info, flag) => {
+    bzReSortsOptions.sortCitiesByType = flag;
+};
 Options.addInitCallback(() => {
     Options.addOption({
         category: CategoryType.Game,
