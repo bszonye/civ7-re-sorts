@@ -5,3 +5,13 @@ sorts the names and icons on the resource screen.
 - groups resources by type, with city resources first, factory last.
 - uses locale-appropriate sorting for names.
 - does not modify **any** game scripts, for maximum compatibility.
+
+## localization
+the mod is language-independent during play.
+only the mod configuration screen contains localized text.
+
+supported languages:
+
+- German (translated by Chr1Z93)
+
+thank you for your help!
