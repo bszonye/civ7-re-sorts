@@ -7,8 +7,8 @@ const MOD_ID = "bz-re-sorts";
 
 const bzReSortsOptions = new class {
     data = {
-        sortCitiesBySlots: false,
         sortCitiesByType: true,
+        sortCitiesBySlots: false,
     };
     constructor() {
         const modSettings = ModSettings.load(MOD_ID);
