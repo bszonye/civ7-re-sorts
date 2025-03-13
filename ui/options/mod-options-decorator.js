@@ -12,14 +12,14 @@ export class ModSettingsSingleton {
         const modSettings = JSON.parse(localStorage.getItem("modSettings") || '{}');
         modSettings[modID] = data;
         localStorage.setItem("modSettings", JSON.stringify(modSettings));
-        console.warn(`TRIX SAVE=${JSON.stringify(data)}`);
+        console.warn(`SAVE ${modID}=${JSON.stringify(data)}`);
     }
     load(modID) {
         try {
             const modSettings = localStorage.getItem("modSettings");
             if (!modSettings) return null;
             const data = modSettings && (JSON.parse(modSettings)[modID] ?? null);
-            console.warn(`TRIX LOAD=${JSON.stringify(data)}`);
+            console.warn(`LOAD ${modID}=${JSON.stringify(data)}`);
             return data;
         }
         catch (e) {
