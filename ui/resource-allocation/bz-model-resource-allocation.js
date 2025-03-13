@@ -1,4 +1,4 @@
-// TODO: system option for different sorting rules
+import bzReSortsOptions from '/bz-re-sorts/ui/options/bz-re-sorts-options.js';
 import ResourceAllocation from '/base-standard/ui/resource-allocation/model-resource-allocation.js';
 
 const BZ_RESOURCECLASS_SORT = {
@@ -24,10 +24,18 @@ const BZ_SETTLEMENT_SORT = {
     Town: 3,
 }
 const settlementSort = (a, b) => {
-    // first sort capital, city, town
-    const groupA = BZ_SETTLEMENT_SORT[a.settlementType] ?? 0;
-    const groupB = BZ_SETTLEMENT_SORT[b.settlementType] ?? 0;
-    if (groupA != groupB) return groupA - groupB;
+    if (bzReSortsOptions.sortCitiesByType) {
+        // first sort capital, city, town
+        const groupA = BZ_SETTLEMENT_SORT[a.settlementType] ?? 0;
+        const groupB = BZ_SETTLEMENT_SORT[b.settlementType] ?? 0;
+        if (groupA != groupB) return groupA - groupB;
+    }
+    if (bzReSortsOptions.sortCitiesBySlots) {
+        // then sort by total resource slots
+        const groupA = a.resourceCap;
+        const groupB = b.resourceCap;
+        if (groupA != groupB) return groupB - groupA;
+    }
     // then sort by name
     const nameA = Locale.compose(a.name).toUpperCase();
     const nameB = Locale.compose(b.name).toUpperCase();

@@ -19,14 +19,33 @@
         </Criteria>
     </ActionCriteria>
     <ActionGroups>
+        <ActionGroup id="bz-re-sorts-menu" scope="shell" criteria="always">
+            <Properties>
+                <LoadOrder>1000</LoadOrder>
+            </Properties>
+            <Actions>
+                <UIScripts>
+                    <Item>ui/options/bz-re-sorts-options.js</Item>
+                    <Item>ui/options/mod-options-decorator.js</Item>
+                </UIScripts>
+                <UpdateText>
+                    <Item>text/en_us/InGameText.xml</Item>
+                </UpdateText>
+            </Actions>
+        </ActionGroup>
         <ActionGroup id="bz-re-sorts-ui" scope="game" criteria="always">
             <Properties>
                 <LoadOrder>1000</LoadOrder>
             </Properties>
             <Actions>
                 <UIScripts>
+                    <Item>ui/options/bz-re-sorts-options.js</Item>
+                    <Item>ui/options/mod-options-decorator.js</Item>
                     <Item>ui/resource-allocation/bz-model-resource-allocation.js</Item>
                 </UIScripts>
+                <UpdateText>
+                    <Item>text/en_us/InGameText.xml</Item>
+                </UpdateText>
             </Actions>
         </ActionGroup>
     </ActionGroups>
