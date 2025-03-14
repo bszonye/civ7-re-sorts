@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <LocalizedText>
+        <Row Tag="LOC_MOD_BZ_RE_SORTS_NAME">
+            <Text>Resource Re-sorts 1.1.0</Text>
+        </Row>
+        <Row Tag="LOC_MOD_BZ_RE_SORTS_DESCRIPTION">
+            <Text>개선된 자원 정렬</Text>
+        </Row>
+    </LocalizedText>
+</Database>
