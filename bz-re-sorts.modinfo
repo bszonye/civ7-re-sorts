@@ -48,7 +48,7 @@
                 <UpdateText>
                     <Item>text/en_us/InGameText.xml</Item>
                     <Item locale="de_DE">text/de_DE/InGameText.xml</Item>
-                    <Item locale="ko_KR">text/de_KR/InGameText.xml</Item>
+                    <Item locale="ko_KR">text/ko_KR/InGameText.xml</Item>
                 </UpdateText>
             </Actions>
         </ActionGroup>
