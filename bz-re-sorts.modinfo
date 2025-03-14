@@ -30,6 +30,7 @@
                 </UIScripts>
                 <UpdateText>
                     <Item>text/en_us/InGameText.xml</Item>
+                    <Item locale="de_DE">text/de_DE/InGameText.xml</Item>
                 </UpdateText>
             </Actions>
         </ActionGroup>
@@ -45,6 +46,7 @@
                 </UIScripts>
                 <UpdateText>
                     <Item>text/en_us/InGameText.xml</Item>
+                    <Item locale="de_DE">text/de_DE/InGameText.xml</Item>
                 </UpdateText>
             </Actions>
         </ActionGroup>
