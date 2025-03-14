@@ -13,5 +13,6 @@ only the main menu screens (Mods and Options) contain localized text.
 supported languages:
 
 - German (translated by Chr1Z93)
+- Korean (translated by Hotsolidinfill)
 
 thank you for your help!
