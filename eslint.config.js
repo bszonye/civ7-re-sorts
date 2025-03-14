@@ -15,10 +15,14 @@ export default [
         },
         languageOptions: {
             globals: {
+                CategoryType: "readonly",
                 Controls: "readonly",
                 Locale: "readonly",
+                Options: "readonly",
+                OptionType: "readonly",
                 console: "readonly",
                 engine: "readonly",
+                localStorage: "readonly",
             }
         }
 

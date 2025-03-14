@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <EnglishText>
+        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS">
+            <Text>group settlements by number of resource slots</Text>
+        </Row>
+        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS_DESCRIPTION">
+            <Text>[B]Resource Re-sorts:[/B] On the resource screen, list settlements with more resource slots before those with fewer.</Text>
+        </Row>
+        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE">
+            <Text>separate cities and towns on the resource screen</Text>
+        </Row>
+        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE_DESCRIPTION">
+            <Text>[B]Resource Re-sorts:[/B] On the resource screen, list the capital first, then cities, then towns.</Text>
+        </Row>
+        <InsertOrIgnore Tag="LOC_OPTIONS_GROUP_BZ_MODS">
+            <Text>trixie's mods</Text>
+        </InsertOrIgnore>
+    </EnglishText>
+</Database>
