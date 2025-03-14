@@ -8,7 +8,7 @@ sorts the names and icons on the resource screen.
 
 ## localization
 the mod is language-independent during play.
-only the mod configuration screen contains localized text.
+only the main menu screens (Mods and Options) contain localized text.
 
 supported languages:
 
