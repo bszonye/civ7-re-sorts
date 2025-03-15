@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
-    <EnglishText>
-        <Row Tag="LOC_MOD_BZ_RE_SORTS_NAME">
+    <LocalizedText>
+        <Row Tag="LOC_MOD_BZ_RE_SORTS_NAME" Language="it_IT">
             <Text>Riordinamento Risorse 1.2.0</Text>
         </Row>
-        <Row Tag="LOC_MOD_BZ_RE_SORTS_DESCRIPTION">
+        <Row Tag="LOC_MOD_BZ_RE_SORTS_DESCRIPTION" Language="it_IT">
             <Text>miglioramenti all'ordinamento delle risorse</Text>
         </Row>
-    </EnglishText>
+    </LocalizedText>
 </Database>
