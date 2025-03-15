@@ -1,4 +1,4 @@
-## Resource Re-sorts 1.1.0
+## Resource Re-sorts 1.2.0
 sorts the names and icons on the resource screen.
 
 - sorts settlements by name, with the capital and cities first.
@@ -13,5 +13,6 @@ only the main menu screens (Mods and Options) contain localized text.
 supported languages:
 
 - German (translated by Chr1Z93)
+- Korean (translated by Hotsolidinfill)
 
 thank you for your help!
