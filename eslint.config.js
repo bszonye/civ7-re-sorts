@@ -21,6 +21,7 @@ export default [
                 Options: "readonly",
                 OptionType: "readonly",
                 console: "readonly",
+                document: "readonly",
                 engine: "readonly",
                 localStorage: "readonly",
             }

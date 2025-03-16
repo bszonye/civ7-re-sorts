@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <LocalizedText>
+        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT" Language="it_IT">
+            <Text>Riordinamento Risorse • raggruppa gli insediamenti per fabbrica e per bonus di posizione</Text>
+        </Row>
+        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT_DESCRIPTION" Language="it_IT">
+            <Text>Nella schermata delle risorse, elenca prima gli insediamenti con fabbriche, poi i bonus di posizione (stazione ferroviaria, terre lontane).</Text>
+        </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS" Language="it_IT">
             <Text>Riordinamento Risorse • raggruppa gli insediamenti per numero di slot risorsa</Text>
         </Row>

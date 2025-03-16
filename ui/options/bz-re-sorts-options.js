@@ -8,6 +8,7 @@ const MOD_ID = "bz-re-sorts";
 const bzReSortsOptions = new class {
     data = {
         sortCitiesByType: true,
+        sortCitiesByRequirement: true,
         sortCitiesBySlots: false,
     };
     constructor() {
@@ -16,6 +17,13 @@ const bzReSortsOptions = new class {
     }
     save() {
         ModSettings.save(MOD_ID, this.data);
+    }
+    get sortCitiesByRequirement() {
+        return this.data.sortCitiesByRequirement;
+    }
+    set sortCitiesByRequirement(flag) {
+        this.data.sortCitiesByRequirement = !!flag;
+        this.save();
     }
     get sortCitiesBySlots() {
         return this.data.sortCitiesBySlots;
@@ -32,11 +40,11 @@ const bzReSortsOptions = new class {
         this.save();
     }
 };
-const onInitSortCitiesBySlots = (info) => {
-    info.currentValue = bzReSortsOptions.sortCitiesBySlots;
+const onInitSortCitiesByType = (info) => {
+    info.currentValue = bzReSortsOptions.sortCitiesByType;
 };
-const onUpdateSortCitiesBySlots = (_info, flag) => {
-    bzReSortsOptions.sortCitiesBySlots = flag;
+const onUpdateSortCitiesByType = (_info, flag) => {
+    bzReSortsOptions.sortCitiesByType = flag;
 };
 Options.addInitCallback(() => {
     Options.addOption({
@@ -51,11 +59,30 @@ Options.addInitCallback(() => {
         description: "LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE_DESCRIPTION",
     });
 });
-const onInitSortCitiesByType = (info) => {
-    info.currentValue = bzReSortsOptions.sortCitiesByType;
+const onInitSortCitiesByRequirement = (info) => {
+    info.currentValue = bzReSortsOptions.sortCitiesByRequirement;
 };
-const onUpdateSortCitiesByType = (_info, flag) => {
-    bzReSortsOptions.sortCitiesByType = flag;
+const onUpdateSortCitiesByRequirement = (_info, flag) => {
+    bzReSortsOptions.sortCitiesByRequirement = flag;
+};
+Options.addInitCallback(() => {
+    Options.addOption({
+        category: CategoryType.Mods,
+        // @ts-ignore
+        group: "bz_mods",
+        type: OptionType.Checkbox,
+        id: "bz-sort-cities-by-requirement",
+        initListener: onInitSortCitiesByRequirement,
+        updateListener: onUpdateSortCitiesByRequirement,
+        label: "LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT",
+        description: "LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT_DESCRIPTION",
+    });
+});
+const onInitSortCitiesBySlots = (info) => {
+    info.currentValue = bzReSortsOptions.sortCitiesBySlots;
+};
+const onUpdateSortCitiesBySlots = (_info, flag) => {
+    bzReSortsOptions.sortCitiesBySlots = flag;
 };
 Options.addInitCallback(() => {
     Options.addOption({
