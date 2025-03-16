@@ -2,13 +2,13 @@
 <Database>
     <LocalizedText>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS" Language="ko_KR">
-            <Text>[B]Resource Re-sorts:[/B] 자원 슬롯 수로 정착지 그룹화</Text>
+            <Text>[B]Resource Re-sorts[/B] • 자원 슬롯 수로 정착지 그룹화</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS_DESCRIPTION" Language="ko_KR">
             <Text>자원 화면에서, 자원 슬롯이 더 많은 정착지를 자원 슬롯이 적은 정착지보다 우선하여 목록에 표시합니다.</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE" Language="ko_KR">
-            <Text>[B]Resource Re-sorts:[/B] 자원 화면에서 도시와 마을을 분리</Text>
+            <Text>[B]Resource Re-sorts[/B] • 자원 화면에서 도시와 마을을 분리</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE_DESCRIPTION" Language="ko_KR">
             <Text>자원 화면에서 정착지를 수도, 도시, 마을 순으로 정렬합니다.</Text>
