@@ -2,13 +2,13 @@
 <Database>
     <EnglishText>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS">
-            <Text>[B]Resource Re-sorts[/B] • group settlements by number of resource slots</Text>
+            <Text>Resource Re-sorts • group settlements by number of resource slots</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS_DESCRIPTION">
             <Text>On the resource screen, list settlements with more resource slots before those with fewer.</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE">
-            <Text>[B]Resource Re-sorts[/B] • separate cities and towns on the resource screen</Text>
+            <Text>Resource Re-sorts • separate cities and towns on the resource screen</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE_DESCRIPTION">
             <Text>On the resource screen, list the capital first, then cities, then towns.</Text>

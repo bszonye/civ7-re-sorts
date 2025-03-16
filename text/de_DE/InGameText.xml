@@ -2,13 +2,13 @@
 <Database>
     <LocalizedText>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS" Language="de_DE">
-            <Text>[B]Resource Re-sorts[/B] • gruppiert Siedlungen nach der Anzahl der Ressourcenplätze</Text>
+            <Text>Resource Re-sorts • gruppiert Siedlungen nach der Anzahl der Ressourcenplätze</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS_DESCRIPTION" Language="de_DE">
             <Text>Auf dem Ressourcenbildschirm werden Siedlungen mit mehr Ressourcenplätzen vor denen mit weniger aufgelistet.</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE" Language="de_DE">
-            <Text>[B]Resource Re-sorts[/B] • trennt Städte und Gemeinden auf dem Ressourcenbildschirm</Text>
+            <Text>Resource Re-sorts • trennt Städte und Gemeinden auf dem Ressourcenbildschirm</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE_DESCRIPTION" Language="de_DE">
             <Text>Auf dem Ressourcenbildschirm wird zuerst die Hauptstadt, dann die Städte, und dann die Gemeinden aufgelistet.</Text>
