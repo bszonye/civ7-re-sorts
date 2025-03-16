@@ -24,14 +24,24 @@ const BZ_SETTLEMENT_SORT = {
     Town: 3,
 }
 const settlementSort = (a, b) => {
+    if (bzReSortsOptions.sortCitiesByRequirement) {
+        // group factories
+        if (a.hasFactory && !b.hasFactory) return -1;
+        if (b.hasFactory && !a.hasFactory) return +1;
+    }
     if (bzReSortsOptions.sortCitiesByType) {
-        // first sort capital, city, town
+        // group by capital, city, town
         const groupA = BZ_SETTLEMENT_SORT[a.settlementType] ?? 0;
         const groupB = BZ_SETTLEMENT_SORT[b.settlementType] ?? 0;
         if (groupA != groupB) return groupA - groupB;
     }
+    if (bzReSortsOptions.sortCitiesByRequirement) {
+        // group city bonus types (Rail Station, Distant Lands)
+        if (a.hasCityBonus && !b.hasCityBonus) return -1;
+        if (b.hasCityBonus && !a.hasCityBonus) return +1;
+    }
     if (bzReSortsOptions.sortCitiesBySlots) {
-        // then sort by total resource slots
+        // sort by total resource slots
         const groupA = a.resourceCap;
         const groupB = b.resourceCap;
         if (groupA != groupB) return groupB - groupA;
@@ -45,18 +55,36 @@ const settlementSort = (a, b) => {
     // nameA.localeCompare(nameB, locale, { sensitivity: "base" });
     return nameA.localeCompare(nameB);
 };
+const updateSettlements = (list) => {
+    const age = GameInfo.Ages.lookup(Game.age);
+    for (const item of list) {
+        item.currentResources.sort(resourceSort);
+        item.visibleResources.sort(resourceSort);
+        item.treasureResources.sort(resourceSort);
+        item.hasCityBonus = false;
+        const city = Cities.get(item.id);
+        if (city.isTown) continue;
+        switch (age.ChronologyIndex) {
+            case 0:  // antiquity
+                item.hasCityBonus = !city.isCapital;
+                break;
+            case 1:  // exploration
+                item.hasCityBonus = city.isDistantLands;
+                break;
+            case 2:  // modern
+                item.hasCityBonus = city.Constructibles?.hasConstructible("BUILDING_RAIL_STATION", false);
+                break;
+        }
+    }
+    list.sort(settlementSort);
+}
 
 const initialize = () => {
     const proto = Object.getPrototypeOf(ResourceAllocation);
     const update = proto.update;
     proto.update = function(...args) {
         update.apply(this, args);
-        this._availableCities.sort(settlementSort);
-        for (const city of this._availableCities) {
-            city.currentResources.sort(resourceSort);
-            city.visibleResources.sort(resourceSort);
-            city.treasureResources.sort(resourceSort);
-        }
+        updateSettlements(this._availableCities);
         this._empireResources.sort(resourceSort);
         this._uniqueEmpireResources.sort(resourceSort);
         this._allAvailableResources.sort(resourceSort);

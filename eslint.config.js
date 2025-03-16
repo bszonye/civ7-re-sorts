@@ -16,7 +16,10 @@ export default [
         languageOptions: {
             globals: {
                 CategoryType: "readonly",
+                Cities: "readonly",
                 Controls: "readonly",
+                Game: "readonly",
+                GameInfo: "readonly",
                 Locale: "readonly",
                 Options: "readonly",
                 OptionType: "readonly",
