@@ -2,10 +2,10 @@
 <Database>
     <LocalizedText>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT" Language="de_DE">
-            <Text>Resource Re-sorts • gruppiert Siedlungen nach Fabrik und Standortboni</Text>
+            <Text>Resource Re-sorts • gruppiert Siedlungen nach Fabrik und nach bedingtem Bonus</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT_DESCRIPTION" Language="de_DE">
-            <Text>Auf dem Ressourcenbildschirm werden zuerst Siedlungen mit Fabriken und dann Standortboni (Bahnhof, Ferne Länder) aufgelistet.</Text>
+            <Text>Auf dem Ressourcenbildschirm werden zuerst Siedlungen mit Fabriken und dann Städte mit einem bedingten Bonus (Bahnhof, Ferne Länder) aufgelistet.</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS" Language="de_DE">
             <Text>Resource Re-sorts • gruppiert Siedlungen nach der Anzahl der Ressourcenplätze</Text>
