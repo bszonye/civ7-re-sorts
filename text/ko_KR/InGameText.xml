@@ -2,10 +2,10 @@
 <Database>
     <LocalizedText>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT" Language="ko_KR">
-            <Text>Resource Re-sorts • 공장 및 위치 보너스별로 정착지 그룹화</Text>
+            <Text>Resource Re-sorts • 공장 및 조건부 보너스별 정착지 그룹화.</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT_DESCRIPTION" Language="ko_KR">
-            <Text>자원 화면에서, 공장이 있는 정착지를 먼저 나열하고 그 다음에 위치 보너스(철도역, 머나먼 땅)를 나열합니다.</Text>
+            <Text>자원 화면에서, 공장이 있는 정착지를 먼저 나열한 다음 조건부 보너스가 있는 도시(철도역, 머나먼 땅)를 나열합니다.</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS" Language="ko_KR">
             <Text>Resource Re-sorts • 자원 슬롯 수로 정착지 그룹화</Text>
