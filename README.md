@@ -13,7 +13,7 @@ additional features:
 
 ## localization
 the mod is language-independent during play.
-only the main menu screens (Mods and Options) contain localized text.
+only the menu screens (Mods and Options) contain localized text.
 
 supported languages:
 
