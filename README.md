@@ -1,11 +1,13 @@
 ## Resource Re-sorts 1.2.0
-sorts the names and icons on the resource screen.
+better resource organization
 
-- sorts settlements by name, with grouping options
-- optionally list cities before towns
-- optionally group by Factory, Rail Station, and Distant Lands bonuses
-- optionally group by number of resource slots
-- groups resources by type, with city resources first, factory last.
+sorts settlements by name, with multiple grouping options:
+- separate cities and towns
+- group factories and conditional bonuses (Rail Station, Distant Lands)
+- group by number of resource slots
+
+additional features:
+- groups resources by type and class (city, bonus, treasure, factory).
 - uses locale-appropriate sorting for names.
 - does not modify **any** game scripts, for maximum compatibility.
 
@@ -16,6 +18,7 @@ only the main menu screens (Mods and Options) contain localized text.
 supported languages:
 
 - German (translated by Chr1Z93)
+- Italian (translated by leonardfactory)
 - Korean (translated by Hotsolidinfill)
 
-thank you for your help!
+thank you all for your help!
