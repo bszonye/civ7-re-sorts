@@ -1,5 +1,5 @@
 ## Resource Re-sorts 1.2.0
-better resource organization
+better resource screen organization
 
 sorts settlements by name, with multiple grouping options:
 - separate cities and towns
