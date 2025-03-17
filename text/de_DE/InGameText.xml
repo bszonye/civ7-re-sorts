@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <LocalizedText>
+        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT" Language="de_DE">
+            <Text>Resource Re-sorts • gruppiert Siedlungen nach Fabrik und nach bedingtem Bonus</Text>
+        </Row>
+        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT_DESCRIPTION" Language="de_DE">
+            <Text>Auf dem Ressourcenbildschirm werden zuerst Siedlungen mit Fabriken und dann Städte mit einem bedingten Bonus (Bahnhof, Ferne Länder) aufgelistet.</Text>
+        </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS" Language="de_DE">
-            <Text>gruppiert Siedlungen nach der Anzahl der Ressourcenplätze</Text>
+            <Text>Resource Re-sorts • gruppiert Siedlungen nach der Anzahl der Ressourcenplätze</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS_DESCRIPTION" Language="de_DE">
-            <Text>[B]Resource Re-sorts:[/B] Auf dem Ressourcenbildschirm werden Siedlungen mit mehr Ressourcenplätzen vor denen mit weniger aufgelistet.</Text>
+            <Text>Auf dem Ressourcenbildschirm werden Siedlungen mit mehr Ressourcenplätzen vor denen mit weniger aufgelistet.</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE" Language="de_DE">
-            <Text>trennt Städte und Gemeinden auf dem Ressourcenbildschirm</Text>
+            <Text>Resource Re-sorts • trennt Städte und Gemeinden auf dem Ressourcenbildschirm</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE_DESCRIPTION" Language="de_DE">
-            <Text>[B]Resource Re-sorts:[/B] Auf dem Ressourcenbildschirm wird zuerst die Hauptstadt, dann die Städte, und dann die Gemeinden aufgelistet.</Text>
+            <Text>Auf dem Ressourcenbildschirm wird zuerst die Hauptstadt, dann die Städte, und dann die Gemeinden aufgelistet.</Text>
         </Row>
         <InsertOrIgnore Tag="LOC_OPTIONS_GROUP_BZ_MODS" Language="de_DE">
             <Text>Trixies mods</Text>
