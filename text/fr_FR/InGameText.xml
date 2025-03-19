@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <LocalizedText>
+        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT" Language="fr_FR">
+            <Text>Resource Re-sorts • Regroupe les colonies par usines et bonus conditionnels.</Text>
+        </Row>
+        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT_DESCRIPTION" Language="fr_FR">
+            <Text>L'écran des ressources répertorie d'abord les colonies avec des usines, puis les bonus conditionnels (gares ferroviaires, contrées lointaines).</Text>
+        </Row>
+        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS" Language="fr_FR">
+            <Text>Resource Re-sorts • Regroupe les colonies en fonction du nombre d'emplacements des ressources.</Text>
+        </Row>
+        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS_DESCRIPTION" Language="fr_FR">
+            <Text>Sur l'écran des ressources, les colonies avec le plus d'emplacements de ressources sont répertoriées avant celles qui en ont le moins.</Text>
+        </Row>
+        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE" Language="fr_FR">
+            <Text>Resource Re-sorts • Sépare les villes et les communes sur l'écran des ressources.</Text>
+        </Row>
+        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE_DESCRIPTION" Language="fr_FR">
+            <Text>L'écran des ressources répertorie d'abord la capitale, puis les villes, puis les communes.</Text>
+        </Row>
+        <InsertOrIgnore Tag="LOC_OPTIONS_GROUP_BZ_MODS" Language="fr_FR">
+            <Text>Trixies mods</Text>
+        </InsertOrIgnore>
+    </LocalizedText>
+</Database>

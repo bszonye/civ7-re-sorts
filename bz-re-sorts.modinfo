@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Mod id="bz-re-sorts" version="10200"
+<Mod id="bz-re-sorts" version="10300"
     xmlns="ModInfo">
     <Properties>
         <Name>LOC_MOD_BZ_RE_SORTS_NAME</Name>
-        <Version>1.2.0</Version>
+        <Version>1.3.0</Version>
         <Description>LOC_MOD_BZ_RE_SORTS_DESCRIPTION</Description>
         <Authors>beezany</Authors>
         <URL>https://forums.civfanatics.com/resources/resource-re-sorts.32032/</URL>
@@ -31,6 +31,7 @@
                 <UpdateText>
                     <Item>text/en_us/InGameText.xml</Item>
                     <Item locale="de_DE">text/de_DE/InGameText.xml</Item>
+                    <Item locale="fr_FR">text/fr_FR/InGameText.xml</Item>
                     <Item locale="it_IT">text/it_IT/InGameText.xml</Item>
                     <Item locale="ko_KR">text/ko_KR/InGameText.xml</Item>
                 </UpdateText>
@@ -49,6 +50,7 @@
                 <UpdateText>
                     <Item>text/en_us/InGameText.xml</Item>
                     <Item locale="de_DE">text/de_DE/InGameText.xml</Item>
+                    <Item locale="fr_FR">text/fr_FR/InGameText.xml</Item>
                     <Item locale="it_IT">text/it_IT/InGameText.xml</Item>
                     <Item locale="ko_KR">text/ko_KR/InGameText.xml</Item>
                 </UpdateText>
@@ -58,6 +60,7 @@
     <LocalizedText>
         <File>text/en_us/ModInfoText.xml</File>
         <File>text/de_DE/ModInfoText.xml</File>
+        <File>text/fr_FR/ModInfoText.xml</File>
         <File>text/it_IT/ModInfoText.xml</File>
         <File>text/ko_KR/ModInfoText.xml</File>
     </LocalizedText>
