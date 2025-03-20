@@ -2,7 +2,7 @@
 <Database>
     <LocalizedText>
         <Row Tag="LOC_MOD_BZ_RE_SORTS_NAME" Language="fr_FR">
-            <Text>Resource Re-sorts 1.3.0</Text>
+            <Text>Resource Re-sorts 1.2.1</Text>
         </Row>
         <Row Tag="LOC_MOD_BZ_RE_SORTS_DESCRIPTION" Language="fr_FR">
             <Text>Un meilleur tri des ressources</Text>
