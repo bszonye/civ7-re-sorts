@@ -1,4 +1,4 @@
-## Resource Re-sorts 1.2.0
+## Resource Re-sorts 1.2.1
 better resource screen organization
 
 sorts settlements by name, with multiple grouping options:
@@ -17,6 +17,7 @@ only the menu screens (Mods and Options) contain localized text.
 
 supported languages:
 
+- French (translated by Somchai2548)
 - German (translated by Chr1Z93)
 - Italian (translated by leonardfactory)
 - Korean (translated by Hotsolidinfill)
