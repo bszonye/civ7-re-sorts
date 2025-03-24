@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <LocalizedText>
+        <Row Tag="LOC_MOD_BZ_RE_SORTS_NAME" Language="zh_Hant_HK">
+            <Text>資源智能分配</Text>
+        </Row>
+        <Row Tag="LOC_MOD_BZ_RE_SORTS_DESCRIPTION" Language="zh_Hant_HK">
+            <Text>優化後的資源分類與調度系統</Text>
+        </Row>
+    </LocalizedText>
+</Database>

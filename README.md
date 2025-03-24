@@ -21,5 +21,7 @@ supported languages:
 - German (translated by Chr1Z93)
 - Italian (translated by leonardfactory)
 - Korean (translated by Hotsolidinfill)
+- Simplified Chinese (translated by v480615)
+- Traditional Chinese (translated by v480615)
 
 thank you all for your help!
