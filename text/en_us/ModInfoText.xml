@@ -2,7 +2,7 @@
 <Database>
     <EnglishText>
         <Row Tag="LOC_MOD_BZ_RE_SORTS_NAME">
-            <Text>Resource Re-sorts 1.2.1</Text>
+            <Text>Resource Re-sorts 1.2.2</Text>
         </Row>
         <Row Tag="LOC_MOD_BZ_RE_SORTS_DESCRIPTION">
             <Text>better resource sorting</Text>
