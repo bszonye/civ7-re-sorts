@@ -2,7 +2,7 @@
 <Database>
     <LocalizedText>
         <Row Tag="LOC_MOD_BZ_RE_SORTS_NAME" Language="ko_KR">
-            <Text>Resource Re-sorts 1.2.1</Text>
+            <Text>Resource Re-sorts</Text>
         </Row>
         <Row Tag="LOC_MOD_BZ_RE_SORTS_DESCRIPTION" Language="ko_KR">
             <Text>개선된 자원 정렬</Text>

@@ -1,4 +1,4 @@
-## Resource Re-sorts 1.2.1
+## Resource Re-sorts 1.2.2
 better resource screen organization
 
 sorts settlements by name, with multiple grouping options:
@@ -21,5 +21,7 @@ supported languages:
 - German (translated by Chr1Z93)
 - Italian (translated by leonardfactory)
 - Korean (translated by Hotsolidinfill)
+- Simplified Chinese (translated by v480615)
+- Traditional Chinese (translated by v480615)
 
 thank you all for your help!
