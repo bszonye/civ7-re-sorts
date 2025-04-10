@@ -5,12 +5,13 @@ import ModSettings from '/bz-re-sorts/ui/options/mod-options-decorator.js';
 
 const MOD_ID = "bz-re-sorts";
 
+const BZ_DEFAULT_OPTIONS = {
+    sortCitiesByType: true,
+    sortCitiesByRequirement: true,
+    sortCitiesBySlots: false,
+};
 const bzReSortsOptions = new class {
-    data = {
-        sortCitiesByType: true,
-        sortCitiesByRequirement: true,
-        sortCitiesBySlots: false,
-    };
+    data = { ...BZ_DEFAULT_OPTIONS };
     constructor() {
         const modSettings = ModSettings.load(MOD_ID);
         if (modSettings) this.data = modSettings;
@@ -19,21 +20,21 @@ const bzReSortsOptions = new class {
         ModSettings.save(MOD_ID, this.data);
     }
     get sortCitiesByRequirement() {
-        return this.data.sortCitiesByRequirement;
+        return this.data.sortCitiesByRequirement ??  BZ_DEFAULT_OPTIONS.sortCitiesByRequirement;
     }
     set sortCitiesByRequirement(flag) {
         this.data.sortCitiesByRequirement = !!flag;
         this.save();
     }
     get sortCitiesBySlots() {
-        return this.data.sortCitiesBySlots;
+        return this.data.sortCitiesBySlots ??  BZ_DEFAULT_OPTIONS.sortCitiesBySlots;
     }
     set sortCitiesBySlots(flag) {
         this.data.sortCitiesBySlots = !!flag;
         this.save();
     }
     get sortCitiesByType() {
-        return this.data.sortCitiesByType;
+        return this.data.sortCitiesByType ??  BZ_DEFAULT_OPTIONS.sortCitiesByType;
     }
     set sortCitiesByType(flag) {
         this.data.sortCitiesByType = !!flag;

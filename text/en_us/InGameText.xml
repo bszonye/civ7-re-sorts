@@ -19,8 +19,8 @@
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE_DESCRIPTION">
             <Text>On the resource screen, list the capital first, then cities, then towns.</Text>
         </Row>
-        <InsertOrIgnore Tag="LOC_OPTIONS_GROUP_BZ_MODS">
+        <Replace Tag="LOC_OPTIONS_GROUP_BZ_MODS">
             <Text>trixie's mods</Text>
-        </InsertOrIgnore>
+        </Replace>
     </EnglishText>
 </Database>

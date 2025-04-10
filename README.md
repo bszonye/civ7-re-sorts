@@ -1,4 +1,4 @@
-## Resource Re-sorts 1.2.2
+## Resource Re-sorts 1.2.3
 better resource screen organization
 
 sorts settlements by name, with multiple grouping options:
