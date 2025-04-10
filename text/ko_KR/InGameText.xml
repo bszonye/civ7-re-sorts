@@ -19,8 +19,8 @@
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE_DESCRIPTION" Language="ko_KR">
             <Text>자원 화면에서 정착지를 수도, 도시, 마을 순으로 정렬합니다.</Text>
         </Row>
-        <InsertOrIgnore Tag="LOC_OPTIONS_GROUP_BZ_MODS" Language="ko_KR">
+        <Replace Tag="LOC_OPTIONS_GROUP_BZ_MODS" Language="ko_KR">
             <Text>trixie의 다양한 모드</Text>
-        </InsertOrIgnore>
+        </Replace>
     </LocalizedText>
 </Database>

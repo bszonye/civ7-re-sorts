@@ -19,8 +19,8 @@
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE_DESCRIPTION" Language="de_DE">
             <Text>Auf dem Ressourcenbildschirm wird zuerst die Hauptstadt, dann die Städte, und dann die Gemeinden aufgelistet.</Text>
         </Row>
-        <InsertOrIgnore Tag="LOC_OPTIONS_GROUP_BZ_MODS" Language="de_DE">
+        <Replace Tag="LOC_OPTIONS_GROUP_BZ_MODS" Language="de_DE">
             <Text>Trixies mods</Text>
-        </InsertOrIgnore>
+        </Replace>
     </LocalizedText>
 </Database>

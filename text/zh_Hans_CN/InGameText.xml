@@ -19,8 +19,8 @@
         <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE_DESCRIPTION" Language="zh_Hans_CN">
             <Text>资源界面将按首都、城市、乡镇的顺序排列定居点</Text>
         </Row>
-        <InsertOrIgnore Tag="LOC_OPTIONS_GROUP_BZ_MODS" Language="zh_Hans_CN">
+        <Replace Tag="LOC_OPTIONS_GROUP_BZ_MODS" Language="zh_Hans_CN">
             <Text>trixie系列模组</Text>
-        </InsertOrIgnore>
+        </Replace>
     </LocalizedText>
 </Database>
