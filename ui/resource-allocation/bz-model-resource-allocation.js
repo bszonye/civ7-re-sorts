@@ -87,12 +87,12 @@ const updateSettlements = (list) => {
         switch (age.ChronologyIndex) {
             case 0:  // antiquity
                 if (!city.isTown && !city.isCapital) {
-                    item.bonusSort = 1;
+                    item.bonusSort = +1;
                 }
                 break;
             case 1:  // exploration
                 if (city.isDistantLands) {
-                    item.bonusSort = 1;
+                    item.bonusSort = +1;
                     stype.push(Locale.compose("LOC_PLOT_TOOLTIP_HEMISPHERE_WEST"));
                 } else {
                     stype.push(Locale.compose("LOC_PLOT_TOOLTIP_HEMISPHERE_EAST"));
@@ -100,11 +100,11 @@ const updateSettlements = (list) => {
                 break;
             case 2:  // modern
                 if (hasBuilding("BUILDING_RAIL_STATION")) {
-                    item.bonusSort = 1;
+                    item.bonusSort = +1;
                     stype.push(Locale.compose("LOC_BUILDING_RAIL_STATION_NAME"));
                 }
                 if (hasBuilding("BUILDING_PORT")) {
-                    item.bonusSort = 1;
+                    item.bonusSort = +1;
                     stype.push(Locale.compose("LOC_BUILDING_PORT_NAME"));
                 }
                 break;
