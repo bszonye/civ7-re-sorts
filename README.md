@@ -3,13 +3,14 @@ better resource screen organization
 
 sorts settlements by name, with multiple grouping options:
 - separate cities and towns
-- group factories and conditional bonuses (Rail Station, Distant Lands)
+- group factories and conditional bonuses
 - group by number of resource slots
 
 additional features:
-- groups resources by type and class (city, bonus, treasure, factory).
-- uses locale-appropriate sorting for names.
-- does not modify **any** game scripts, for maximum compatibility.
+- highlights important features (Rail Station, Port, Distant Lands)
+- groups resources by type and class (city, bonus, treasure, factory)
+- uses locale-appropriate sorting for names
+- does not modify **any** game scripts, for maximum compatibility
 
 ## localization
 the mod is language-independent during play.
