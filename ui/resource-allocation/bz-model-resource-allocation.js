@@ -1,6 +1,26 @@
 import bzReSortsOptions from '/bz-re-sorts/ui/options/bz-re-sorts-options.js';
 import ResourceAllocation from '/base-standard/ui/resource-allocation/model-resource-allocation.js';
 
+const BZ_HEAD_STYLE = [
+`
+.bz-re-sorts .settlement-type-text {
+    text-transform: none;
+    margin-left: 0.4444444444rem;
+    padding: 0.1111111111rem 0.4444444444rem;
+    background-color: black;
+    border-radius: 1rem;
+    font-family: BodyFont;
+    font-size: 83.3333333333%;
+}
+`,
+];
+BZ_HEAD_STYLE.map(style => {
+    const e = document.createElement('style');
+    e.textContent = style;
+    document.head.appendChild(e);
+});
+document.body.classList.add("bz-re-sorts");
+
 const BZ_RESOURCECLASS_SORT = {
     RESOURCECLASS_EMPIRE: 1,
     RESOURCECLASS_CITY: 2,
@@ -37,8 +57,7 @@ const settlementSort = (a, b) => {
     }
     if (bzReSortsOptions.sortCitiesByRequirement) {
         // group city bonus types (Rail Station, Distant Lands)
-        if (a.hasCityBonus && !b.hasCityBonus) return -1;
-        if (b.hasCityBonus && !a.hasCityBonus) return +1;
+        if (a.bonusSort != b.bonusSort) return b.bonusSort - a.bonusSort;
     }
     if (bzReSortsOptions.sortCitiesBySlots) {
         // sort by total resource slots
@@ -61,20 +80,36 @@ const updateSettlements = (list) => {
         item.currentResources.sort(resourceSort);
         item.visibleResources.sort(resourceSort);
         item.treasureResources.sort(resourceSort);
-        item.hasCityBonus = false;
+        item.bonusSort = 0;
+        const stype = [Locale.compose(item.settlementTypeName)];
         const city = Cities.get(item.id);
-        if (city.isTown) continue;
+        const hasBuilding = (b) => city.Constructibles?.hasConstructible(b, false);
         switch (age.ChronologyIndex) {
             case 0:  // antiquity
-                item.hasCityBonus = !city.isCapital;
+                if (!city.isTown && !city.isCapital) {
+                    item.bonusSort = +1;
+                }
                 break;
             case 1:  // exploration
-                item.hasCityBonus = city.isDistantLands;
+                if (city.isDistantLands) {
+                    item.bonusSort = +1;
+                    stype.push(Locale.compose("LOC_PLOT_TOOLTIP_HEMISPHERE_WEST"));
+                } else {
+                    stype.push(Locale.compose("LOC_PLOT_TOOLTIP_HEMISPHERE_EAST"));
+                }
                 break;
             case 2:  // modern
-                item.hasCityBonus = city.Constructibles?.hasConstructible("BUILDING_RAIL_STATION", false);
+                if (hasBuilding("BUILDING_RAIL_STATION")) {
+                    item.bonusSort = +1;
+                    stype.push(Locale.compose("LOC_BUILDING_RAIL_STATION_NAME"));
+                }
+                if (hasBuilding("BUILDING_PORT")) {
+                    item.bonusSort = +1;
+                    stype.push(Locale.compose("LOC_BUILDING_PORT_NAME"));
+                }
                 break;
         }
+        item.settlementTypeName = stype.join(" • ");
     }
     list.sort(settlementSort);
 }
