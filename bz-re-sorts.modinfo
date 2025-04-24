@@ -48,6 +48,7 @@
                     <Item>ui/options/bz-re-sorts-options.js</Item>
                     <Item>ui/options/mod-options-decorator.js</Item>
                     <Item>ui/resource-allocation/bz-model-resource-allocation.js</Item>
+                    <Item>ui/resource-allocation/bz-screen-resource-allocation.js</Item>
                 </UIScripts>
                 <UpdateText>
                     <Item>text/en_us/InGameText.xml</Item>
