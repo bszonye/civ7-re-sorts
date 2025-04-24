@@ -9,7 +9,7 @@ const BZ_HEAD_STYLE = [
     padding: 0.1111111111rem 0.4444444444rem;
     background-color: black;
     border-radius: 1rem;
-    font-family: BodyFont;
+    font-family: "BodyFont", "BodyFont-JP", "BodyFont-KR", "BodyFont-SC", "BodyFont-TC";
     font-size: 83.3333333333%;
 }
 `,
