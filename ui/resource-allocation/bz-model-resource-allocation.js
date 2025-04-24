@@ -1,26 +1,6 @@
 import bzReSortsOptions from '/bz-re-sorts/ui/options/bz-re-sorts-options.js';
 import ResourceAllocation from '/base-standard/ui/resource-allocation/model-resource-allocation.js';
 
-const BZ_HEAD_STYLE = [
-`
-.bz-re-sorts .settlement-type-text {
-    text-transform: none;
-    margin-left: 0.4444444444rem;
-    padding: 0.1111111111rem 0.4444444444rem;
-    background-color: black;
-    border-radius: 1rem;
-    font-family: BodyFont;
-    font-size: 83.3333333333%;
-}
-`,
-];
-BZ_HEAD_STYLE.map(style => {
-    const e = document.createElement('style');
-    e.textContent = style;
-    document.head.appendChild(e);
-});
-document.body.classList.add("bz-re-sorts");
-
 const BZ_RESOURCECLASS_SORT = {
     RESOURCECLASS_EMPIRE: 1,
     RESOURCECLASS_CITY: 2,
