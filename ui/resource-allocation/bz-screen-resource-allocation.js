@@ -1,8 +1,9 @@
+import ResourceAllocation from '/base-standard/ui/resource-allocation/model-resource-allocation.js';
 const BZ_HEAD_STYLE = [
 `
 .bz-re-sorts screen-resource-allocation .available-resources-column.hover-enabled:hover {
     background-color: #0000;
-    background-image: linear-gradient(180deg, #0000 0%, #E5D2AC66 100%);
+    background-image: linear-gradient(180deg, #0000 0%, #E5D2ACB0 100%);
 }
 `,
 ];
@@ -30,6 +31,27 @@ export class bzScreenResourceAllocation {
         // patch component methods
         const _proto = bzScreenResourceAllocation.c_prototype = c_prototype;
     }
+    onResourceInput(event) {
+        if (ResourceAllocation.isResourceAssignmentLocked) return;
+        // only recognize completed middle-clicks
+        if (event.detail.status != InputActionStatuses.FINISH) return;
+        if (event.detail.name != "mousebutton-middle") return;
+        // don't interrupt resource assignment
+        if (ResourceAllocation.hasSelectedResource()) return;
+        // middle-click on resource
+        if (event.target.classList.contains('city-resource')) {
+            this.component.onAssignedResourceActivate(event);
+            this.component.onUnassignActivated(event);
+        }
+    }
+    onTargetInput(event) {
+        const v = event.detail;
+        if (v.status == InputActionStatuses.FINISH && v.name == "mousebutton-left") {
+            if (ResourceAllocation.hasSelectedAssignedResource) {
+                this.component.onUnassignActivated(event);
+            }
+        }
+    }
     beforeAttach() { }
     afterAttach() {
         // restyle settlement type in bz capsule style
@@ -44,7 +66,7 @@ export class bzScreenResourceAllocation {
         }
         const acolumn = this.component.availableResourceCol;
         acolumn.classList.add('pointer-events-auto');
-        acolumn.setAttribute('data-bind-class-toggle', 'hover-enabled:{{g_ResourceAllocationModel.selectedResource}}!=-1');
+        acolumn.setAttribute('data-bind-class-toggle', 'hover-enabled:{{g_ResourceAllocationModel.hasSelectedAssignedResource}}');
         acolumn.addEventListener('engine-input', this.targetInputListener);
         for (const scrollable of acolumn.querySelectorAll("fxs-scrollable")) {
             scrollable.addEventListener('engine-input', this.targetInputListener);
@@ -53,18 +75,5 @@ export class bzScreenResourceAllocation {
     beforeDetach() { }
     afterDetach() { }
     onAttributeChanged(_name, _prev, _next) { }
-    onResourceInput(event) {
-        const v = event.detail;
-        if (v.status == InputActionStatuses.FINISH && v.name == "mousebutton-middle") {
-            this.component.onAssignedResourceActivate(event);
-            this.component.onUnassignActivated(event);
-        }
-    }
-    onTargetInput(event) {
-        const v = event.detail;
-        if (v.status == InputActionStatuses.FINISH && v.name == "mousebutton-left") {
-            this.component.onUnassignActivated(event);
-        }
-    }
 }
 Controls.decorate('screen-resource-allocation', (component) => new bzScreenResourceAllocation(component));
