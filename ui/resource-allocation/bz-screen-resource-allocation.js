@@ -39,31 +39,32 @@ export class bzScreenResourceAllocation {
         const _proto = bzScreenResourceAllocation.c_prototype = c_prototype;
     }
     unassignAllResources(cityID) {
-        const bonusSlots = (res) =>
-            GameInfo.Resources.lookup(res.type)?.BonusResourceSlots ?? false;
+        const bonusSlots = (res) => {
+            const slots = GameInfo.Resources.lookup(res.type)?.BonusResourceSlots ?? 0;
+            // camels add an extra slot (possibly a bug)
+            return slots && slots + 1;
+        }
         const resources = ResourceAllocation.availableCities
-                .find(e => e.id.id == cityID)?.currentResources ?? [];
-        const tmax = 5 * (resources.length + 1);
+                .find(e => e.id.id == cityID)?.currentResources;
+        if (!resources || !resources.length) return;
+        resources.sort((a, b) => bonusSlots(b) - bonusSlots(a));
+        let slots = resources.length;
         let tries = 0;
-        let unres = null;
+        const tmax = 2 * slots + 1;
+        // unassign resources slowly (about 125ms each) to avoid loud
+        // clicks or camels getting stuck in their slots
         const unassignInterval = setInterval(() => {
-            if (tmax <= ++tries) clearInterval(unassignInterval);
-            console.warn(`TRIX TRY ${tries} ${unres?.type} ${unres?.value}`);
-            const resources = ResourceAllocation.availableCities
-                .find(e => e.id.id == cityID)?.currentResources ?? [];
-            // is the settlement empty yet?
-            if (resources.length == 0) {
-                console.warn(`TRIX DONE`);
-                clearInterval(unassignInterval);
-                return;
-            }
-            // is the last unassignment done yet?
-            if (unres && resources.some(res => res.value == unres.value)) return;
-            // remove all of the bonus slot resources last
-            unres = resources.find(res => !bonusSlots(res)) ?? resources[0];
-            console.warn(`TRIX UNASSIGN ${tries} ${unres.type} ${unres.value}`);
-            ResourceAllocation.unassignResource(unres.value);
-        }, 25);
+            if (tmax <= ++tries) clearInterval(unassignInterval);  // timeout
+            const city = ResourceAllocation.availableCities
+                .find(e => e.id.id == cityID);
+            const emptySlots = city.emptySlots.length;
+            // unassign slots right to left
+            const res = resources[slots - 1];
+            if (emptySlots < bonusSlots(res)) return;  // wait for more empty slots
+            ResourceAllocation.unassignResource(res.value);
+            --slots;
+            if (slots < 1) clearInterval(unassignInterval);  // last loop
+        }, 125);
     }
     onResourceInput(event) {
         // only recognize completed middle-clicks
