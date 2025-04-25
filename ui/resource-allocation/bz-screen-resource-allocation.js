@@ -5,6 +5,13 @@ const BZ_HEAD_STYLE = [
     background-color: #0000;
     background-image: linear-gradient(180deg, #0000 0%, #E5D2ACB0 100%);
 }
+.bz-re-sorts .city-top-container img,
+.bz-re-sorts .city-top-container p {
+    pointer-events: none;
+}
+.bz-re-sorts .city-top-container:hover {
+    color: #E5D2AC;
+}
 `,
 ];
 BZ_HEAD_STYLE.map(style => {
@@ -31,13 +38,50 @@ export class bzScreenResourceAllocation {
         // patch component methods
         const _proto = bzScreenResourceAllocation.c_prototype = c_prototype;
     }
+    unassignAllResources(cityID) {
+        const bonusSlots = (res) =>
+            GameInfo.Resources.lookup(res.type)?.BonusResourceSlots ?? false;
+        const resources = ResourceAllocation.availableCities
+                .find(e => e.id.id == cityID)?.currentResources ?? [];
+        const tmax = 5 * (resources.length + 1);
+        let tries = 0;
+        let unres = null;
+        const unassignInterval = setInterval(() => {
+            if (tmax <= ++tries) clearInterval(unassignInterval);
+            console.warn(`TRIX TRY ${tries} ${unres?.type} ${unres?.value}`);
+            const resources = ResourceAllocation.availableCities
+                .find(e => e.id.id == cityID)?.currentResources ?? [];
+            // is the settlement empty yet?
+            if (resources.length == 0) {
+                console.warn(`TRIX DONE`);
+                clearInterval(unassignInterval);
+                return;
+            }
+            // is the last unassignment done yet?
+            if (unres && resources.some(res => res.value == unres.value)) return;
+            // remove all of the bonus slot resources last
+            unres = resources.find(res => !bonusSlots(res)) ?? resources[0];
+            console.warn(`TRIX UNASSIGN ${tries} ${unres.type} ${unres.value}`);
+            ResourceAllocation.unassignResource(unres.value);
+        }, 25);
+    }
     onResourceInput(event) {
-        if (ResourceAllocation.isResourceAssignmentLocked) return;
         // only recognize completed middle-clicks
         if (event.detail.status != InputActionStatuses.FINISH) return;
         if (event.detail.name != "mousebutton-middle") return;
         // don't interrupt resource assignment
         if (ResourceAllocation.hasSelectedResource()) return;
+        // middle-click on settlement name
+        if (event.target.classList.contains('city-top-container')) {
+            const cityEntry = event.target.parentElement?.parentElement;
+            const cityIDAttribute = cityEntry?.getAttribute('data-city-id');
+            if (!cityIDAttribute) {
+                console.error("bz-screen-resource-allocation: invalid city-id");
+                return;
+            }
+            const cityID = parseInt(cityIDAttribute);
+            this.unassignAllResources(cityID);
+        }
         // middle-click on resource
         if (event.target.classList.contains('city-resource')) {
             this.component.onAssignedResourceActivate(event);
@@ -61,6 +105,9 @@ export class bzScreenResourceAllocation {
             stype.classList.add('leading-snug', 'bg-primary-5', 'rounded-3xl', 'ml-2', 'px-2');
         }
         // event handlers
+        for (const title of this.Root.querySelectorAll(".city-top-container")) {
+            title.addEventListener('engine-input', this.resourceInputListener);
+        }
         for (const resource of this.Root.querySelectorAll(".city-resource")) {
             resource.addEventListener('engine-input', this.resourceInputListener);
         }

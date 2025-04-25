@@ -24,10 +24,12 @@ export default [
                 Locale: "readonly",
                 Options: "readonly",
                 OptionType: "readonly",
+                clearInterval: "readonly",
                 console: "readonly",
                 document: "readonly",
                 engine: "readonly",
                 localStorage: "readonly",
+                setInterval: "readonly",
             }
         }
 
