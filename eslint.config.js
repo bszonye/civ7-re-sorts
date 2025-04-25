@@ -20,6 +20,7 @@ export default [
                 Controls: "readonly",
                 Game: "readonly",
                 GameInfo: "readonly",
+                InputActionStatuses: "readonly",
                 Locale: "readonly",
                 Options: "readonly",
                 OptionType: "readonly",
