@@ -50,21 +50,19 @@ export class bzScreenResourceAllocation {
         resources.sort((a, b) => bonusSlots(b) - bonusSlots(a));
         let slots = resources.length;
         let tries = 0;
-        const tmax = 2 * slots + 1;
-        // unassign resources slowly (about 125ms each) to avoid loud
-        // clicks or camels getting stuck in their slots
+        // unassign resources over time to avoid loud clicks
+        // or camels getting stuck in their slots
         const unassignInterval = setInterval(() => {
-            if (tmax <= ++tries) clearInterval(unassignInterval);  // timeout
-            const city = ResourceAllocation.availableCities
-                .find(e => e.id.id == cityID);
-            const emptySlots = city.emptySlots.length;
+            if (10 <= ++tries) clearInterval(unassignInterval);  // failsafe
+            const current = ResourceAllocation.availableCities
+                .find(e => e.id.id == cityID)?.currentResources ?? [];
+            if (slots < current.length && tries < 5) return;
             // unassign slots right to left
-            const res = resources[slots - 1];
-            if (emptySlots < bonusSlots(res)) return;  // wait for more empty slots
+            const res = resources[--slots];
             ResourceAllocation.unassignResource(res.value);
-            --slots;
+            tries = 0;
             if (slots < 1) clearInterval(unassignInterval);  // last loop
-        }, 125);
+        }, 50);
     }
     onResourceInput(event) {
         // only recognize completed middle-clicks
