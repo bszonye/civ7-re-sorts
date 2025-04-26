@@ -20,13 +20,16 @@ export default [
                 Controls: "readonly",
                 Game: "readonly",
                 GameInfo: "readonly",
+                InputActionStatuses: "readonly",
                 Locale: "readonly",
                 Options: "readonly",
                 OptionType: "readonly",
+                clearInterval: "readonly",
                 console: "readonly",
                 document: "readonly",
                 engine: "readonly",
                 localStorage: "readonly",
+                setInterval: "readonly",
             }
         }
 
