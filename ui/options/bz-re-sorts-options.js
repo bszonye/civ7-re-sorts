@@ -5,31 +5,19 @@ import ModSettings from '/bz-re-sorts/ui/options/mod-options-decorator.js';
 
 const MOD_ID = "bz-re-sorts";
 
-export var bzSortOrder;
-(function (bzSortOrder) {
-        bzSortOrder[bzSortOrder["NAME"] = 0] = "NAME";
-        bzSortOrder[bzSortOrder["SLOTS"] = 1] = "SLOTS";
-        bzSortOrder[bzSortOrder["YIELD_FOOD"] = 2] = "YIELD_FOOD";
-        bzSortOrder[bzSortOrder["YIELD_PRODUCTION"] = 2] = "YIELD_PRODUCTION";
-        bzSortOrder[bzSortOrder["YIELD_GOLD"] = 2] = "YIELD_GOLD";
-        bzSortOrder[bzSortOrder["YIELD_SCIENCE"] = 2] = "YIELD_SCIENCE";
-        bzSortOrder[bzSortOrder["YIELD_CULTURE"] = 2] = "YIELD_CULTURE";
-        bzSortOrder[bzSortOrder["YIELD_HAPPINESS"] = 2] = "YIELD_HAPPINESS";
-        bzSortOrder[bzSortOrder["YIELD_DIPLOMACY"] = 2] = "YIELD_DIPLOMACY";
-})(bzSortOrder || (bzSortOrder = {}));
 const sortOrderOptions = [
-    { label: 'LOC_OPTIONS_BZ_RE_SORTS_SORT_BY_NAME', value: bzSortOrder.NAME },
-    { label: 'LOC_OPTIONS_BZ_RE_SORTS_SORT_BY_SLOTS', value: bzSortOrder.SLOTS },
-    { label: 'LOC_YIELD_FOOD', value: bzSortOrder.YIELD_FOOD },
-    { label: 'LOC_YIELD_PRODUCTION', value: bzSortOrder.YIELD_PRODUCTION },
-    { label: 'LOC_YIELD_GOLD', value: bzSortOrder.YIELD_GOLD },
-    { label: 'LOC_YIELD_SCIENCE', value: bzSortOrder.YIELD_SCIENCE },
-    { label: 'LOC_YIELD_CULTURE', value: bzSortOrder.YIELD_CULTURE },
-    { label: 'LOC_YIELD_HAPPINESS', value: bzSortOrder.YIELD_HAPPINESS },
-    { label: 'LOC_YIELD_DIPLOMACY', value: bzSortOrder.YIELD_DIPLOMACY },
+    { label: 'LOC_OPTIONS_BZ_RE_SORTS_SORT_BY_NAME', value: "NAME", },
+    { label: 'LOC_OPTIONS_BZ_RE_SORTS_SORT_BY_SLOTS', value: "SLOTS", },
+    { label: 'LOC_YIELD_FOOD', value: "YIELD_FOOD", },
+    { label: 'LOC_YIELD_PRODUCTION', value: "YIELD_PRODUCTION", },
+    { label: 'LOC_YIELD_GOLD', value: "YIELD_GOLD", },
+    { label: 'LOC_YIELD_SCIENCE', value: "YIELD_SCIENCE", },
+    { label: 'LOC_YIELD_CULTURE', value: "YIELD_CULTURE", },
+    { label: 'LOC_YIELD_HAPPINESS', value: "YIELD_HAPPINESS", },
+    { label: 'LOC_YIELD_DIPLOMACY', value: "YIELD_DIPLOMACY", },
 ];
 const BZ_DEFAULT_OPTIONS = {
-    sortOrder: bzSortOrder.SLOTS,
+    sortOrder: "SLOTS",
     groupByType: true,
     groupByReq: true,
 };
@@ -78,10 +66,11 @@ const bzReSortsOptions = new class {
     }
 };
 const onInitSortOrder = (info) => {
-    info.selectedItemIndex = bzReSortsOptions.sortOrder;
+    const order = bzReSortsOptions.sortOrder;
+    info.selectedItemIndex = sortOrderOptions.findIndex(opt => opt.value == order);
 };
-const onUpdateSortOrder = (_info, order) => {
-    bzReSortsOptions.sortOrder = order;
+const onUpdateSortOrder = (_info, index) => {
+    bzReSortsOptions.sortOrder = sortOrderOptions[index].value;
 };
 Options.addInitCallback(() => {
     Options.addOption({
@@ -117,10 +106,10 @@ Options.addInitCallback(() => {
     });
 });
 const onInitGroupByReq = (info) => {
-    info.currentValue = bzReSortsOptions.sortCitiesByRequirement;
+    info.currentValue = bzReSortsOptions.groupByReq;
 };
 const onUpdateGroupByReq = (_info, flag) => {
-    bzReSortsOptions.sortCitiesByRequirement = flag;
+    bzReSortsOptions.groupByReq = flag;
 };
 Options.addInitCallback(() => {
     Options.addOption({

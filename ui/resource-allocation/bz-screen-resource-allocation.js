@@ -1,4 +1,5 @@
 import ResourceAllocation from '/base-standard/ui/resource-allocation/model-resource-allocation.js';
+import bzReSortsOptions from '/bz-re-sorts/ui/options/bz-re-sorts-options.js';
 const BZ_HEAD_STYLE = [
 `
 .bz-re-sorts screen-resource-allocation .available-resources-column.hover-enabled:hover {
@@ -95,7 +96,10 @@ export class bzScreenResourceAllocation {
             }
         }
     }
-    beforeAttach() { }
+    beforeAttach() {
+        ResourceAllocation.bzSortOrder = bzReSortsOptions.sortOrder;
+        ResourceAllocation.bzSortReverse = false;
+    }
     afterAttach() {
         // restyle settlement type in bz capsule style
         const stypes = this.Root.querySelectorAll(".settlement-type-text");

@@ -54,17 +54,21 @@ const bonusOrder = (a, b) => {
     // sort by number of bonus conditions met
     return b.bzBonusOrder - a.bzBonusOrder;
 };
-const slotsOrder = (a, b) => {
-    // sort by total resource slots
-    const groupA = a.resourceCap;
-    const groupB = b.resourceCap;
-    return groupA - groupB;
+const nullOrder = (_a, _b) => 0;
+const slotsOrder = (a, b) => a.resourceCap - b.resourceCap;
+const yieldOrder = (a, b) => {
+    const ayield = a.yields.find(y => y.type == ResourceAllocation.bzSortOrder);
+    const byield = b.yields.find(y => y.type == ResourceAllocation.bzSortOrder);
+    return (ayield?.valueNum ?? 0) - (byield?.valueNum ?? 0);
 }
-const sortSettlements = (list, order, direction) => {
-    if (!direction) direction = -1;  // descending
+export const sortSettlements = () => {
+    const list = ResourceAllocation.availableCities;
+    const order = ResourceAllocation.bzSortOrder;
+    const direction = ResourceAllocation.bzSortReverse ? -1 : +1;
+    const f = order == "NAME" ? nullOrder : order == "SLOTS" ? slotsOrder : yieldOrder;
     const settlementOrder = (a, b) =>
         factoryOrder(a, b) || settlementTypeOrder(a, b) || bonusOrder(a, b) ||
-            direction * order(a, b) || localeOrder(a, b);
+            -direction * f(a, b) || direction * localeOrder(a, b);
     list.sort(settlementOrder);
 };
 const updateSettlements = (list) => {
@@ -104,7 +108,12 @@ const updateSettlements = (list) => {
         }
         item.settlementTypeName = stype.join(" • ");
     }
-    sortSettlements(list, slotsOrder);
+    // initialize sort order
+    if (!ResourceAllocation.bzSortOrder) {
+        ResourceAllocation.bzSortOrder = bzReSortsOptions.sortOrder;
+        ResourceAllocation.bzSortReverse = false;
+    }
+    sortSettlements();
 }
 
 const initialize = () => {
