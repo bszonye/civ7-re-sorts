@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Mod id="bz-re-sorts" version="10400"
+<Mod id="bz-re-sorts" version="10500"
     xmlns="ModInfo">
     <Properties>
         <Name>LOC_MOD_BZ_RE_SORTS_NAME</Name>
-        <Version>1.4.0</Version>
+        <Version>1.5.0</Version>
         <Description>LOC_MOD_BZ_RE_SORTS_DESCRIPTION</Description>
         <Authors>beezany</Authors>
         <URL>https://forums.civfanatics.com/resources/resource-re-sorts.32032/</URL>
