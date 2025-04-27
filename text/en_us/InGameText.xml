@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <EnglishText>
-        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT">
+        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_REQ">
             <Text>Resource Re-sorts • group settlements by factory and by conditional bonus</Text>
         </Row>
-        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT_DESCRIPTION">
-            <Text>On the resource screen, list settlements with factories first, then cities with a conditional bonus (Rail Station, Distant Lands).</Text>
+        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_REQ_DESCRIPTION">
+            <Text>On the resource screen, list settlements with factories first, then cities with a conditional bonus (Rail Station, Port, Distant Lands).</Text>
         </Row>
-        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS">
-            <Text>Resource Re-sorts • group settlements by number of resource slots</Text>
-        </Row>
-        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS_DESCRIPTION">
-            <Text>On the resource screen, list settlements with more resource slots before those with fewer.</Text>
-        </Row>
-        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE">
+        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE">
             <Text>Resource Re-sorts • separate cities and towns on the resource screen</Text>
         </Row>
-        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE_DESCRIPTION">
+        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION">
             <Text>On the resource screen, list the capital first, then cities, then towns.</Text>
+        </Row>
+        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_SORT_ORDER">
+            <Text>Resource Re-sorts • settlement sort order</Text>
+        </Row>
+        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_SORT_ORDER_DESCRIPTION">
+            <Text>Whether to order settlements by name, number of resource slots, or yield.</Text>
+        </Row>
+        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_SORT_BY_NAME">
+            <Text>[icon:YIELD_CITIES] Name</Text>
+        </Row>
+        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_SORT_BY_SLOTS">
+            <Text>[icon:RESOURCE_CAMELS] Resource Slots</Text>
         </Row>
         <Replace Tag="LOC_OPTIONS_GROUP_BZ_MODS">
             <Text>trixie's mods</Text>

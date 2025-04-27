@@ -1,78 +1,91 @@
 import bzReSortsOptions from '/bz-re-sorts/ui/options/bz-re-sorts-options.js';
 import ResourceAllocation from '/base-standard/ui/resource-allocation/model-resource-allocation.js';
 
-const BZ_RESOURCECLASS_SORT = {
-    RESOURCECLASS_EMPIRE: 1,
-    RESOURCECLASS_CITY: 2,
-    RESOURCECLASS_BONUS: 3,
-    RESOURCECLASS_TREASURE: 4,
-    RESOURCECLASS_FACTORY: 5,
-}
-const resourceSort = (a, b) => {
-    // first sort empire, city, bonus, treasure, factory
-    const groupA = BZ_RESOURCECLASS_SORT[a.classType] ?? 0;
-    const groupB = BZ_RESOURCECLASS_SORT[b.classType] ?? 0;
-    if (groupA != groupB) return groupA - groupB;
-    // then sort by name
-    const nameA = Locale.compose(a.name);
-    const nameB = Locale.compose(b.name);
-    return nameA.localeCompare(nameB);
-}
-const BZ_SETTLEMENT_SORT = {
-    Capital: 1,
-    City: 2,
-    Town: 3,
-}
-const settlementSort = (a, b) => {
-    if (bzReSortsOptions.sortCitiesByRequirement) {
-        // group factories
-        if (a.hasFactory && !b.hasFactory) return -1;
-        if (b.hasFactory && !a.hasFactory) return +1;
-    }
-    if (bzReSortsOptions.sortCitiesByType) {
-        // group by capital, city, town
-        const groupA = BZ_SETTLEMENT_SORT[a.settlementType] ?? 0;
-        const groupB = BZ_SETTLEMENT_SORT[b.settlementType] ?? 0;
-        if (groupA != groupB) return groupA - groupB;
-    }
-    if (bzReSortsOptions.sortCitiesByRequirement) {
-        // group city bonus types (Rail Station, Distant Lands)
-        if (a.bonusSort != b.bonusSort) return b.bonusSort - a.bonusSort;
-    }
-    if (bzReSortsOptions.sortCitiesBySlots) {
-        // sort by total resource slots
-        const groupA = a.resourceCap;
-        const groupB = b.resourceCap;
-        if (groupA != groupB) return groupB - groupA;
-    }
-    // then sort by name
-    const nameA = Locale.compose(a.name).toUpperCase();
-    const nameB = Locale.compose(b.name).toUpperCase();
+// name sorting
+const localeOrder = (a, b) => {
     // TODO: ideally this would use case-insensitive comparison instead,
     //       but the game doesn't seem to support Intl.Collator options.
     // const locale = Locale.getCurrentDisplayLocale();
     // nameA.localeCompare(nameB, locale, { sensitivity: "base" });
+    const nameA = Locale.compose(a.name).toUpperCase();
+    const nameB = Locale.compose(b.name).toUpperCase();
     return nameA.localeCompare(nameB);
+};
+
+// resource sorting
+var RClassOrder;
+(function (RClassOrder) {
+    RClassOrder[RClassOrder["RESOURCECLASS_EMPIRE"] = 0] = "RESOURCECLASS_EMPIRE";
+    RClassOrder[RClassOrder["RESOURCECLASS_CITY"] = 1] = "RESOURCECLASS_CITY";
+    RClassOrder[RClassOrder["RESOURCECLASS_BONUS"] = 2] = "RESOURCECLASS_BONUS";
+    RClassOrder[RClassOrder["RESOURCECLASS_TREASURE"] = 3] = "RESOURCECLASS_TREASURE";
+    RClassOrder[RClassOrder["RESOURCECLASS_FACTORY"] = 4] = "RESOURCECLASS_FACTORY";
+})(RClassOrder || (RClassOrder = {}));
+const resourceClassOrder = (a, b) => {
+    const groupA = RClassOrder[a.classType] ?? -1;
+    const groupB = RClassOrder[b.classType] ?? -1;
+    return groupA - groupB;
+};
+const resourceOrder = (a, b) => resourceClassOrder(a, b) || localeOrder(a, b);
+
+// settlement sorting
+var STypeOrder;
+(function (STypeOrder) {
+    STypeOrder[STypeOrder["Capital"] = 0] = "Capital";
+    STypeOrder[STypeOrder["City"] = 1] = "City";
+    STypeOrder[STypeOrder["Town"] = 2] = "Town";
+})(STypeOrder || (STypeOrder = {}));
+const settlementTypeOrder = (a, b) => {
+    if (!bzReSortsOptions.groupByType) return 0;
+    // group by capital, city, town
+    const groupA = STypeOrder[a.settlementType] ?? -1;
+    const groupB = STypeOrder[b.settlementType] ?? -1;
+    return groupA - groupB;
+};
+const factoryOrder = (a, b) => {
+    if (!bzReSortsOptions.groupByReq) return 0;
+    // group factories
+    if (a.hasFactory && !b.hasFactory) return -1;
+    if (b.hasFactory && !a.hasFactory) return +1;
+    return 0;
+};
+const bonusOrder = (a, b) => {
+    if (!bzReSortsOptions.groupByReq) return 0;
+    // sort by number of bonus conditions met
+    return b.bzBonusOrder - a.bzBonusOrder;
+};
+const slotsOrder = (a, b) => {
+    // sort by total resource slots
+    const groupA = a.resourceCap;
+    const groupB = b.resourceCap;
+    return groupA - groupB;
+}
+const sortSettlements = (list, order, direction) => {
+    if (!direction) direction = -1;  // descending
+    const settlementOrder = (a, b) =>
+        factoryOrder(a, b) || settlementTypeOrder(a, b) || bonusOrder(a, b) ||
+            direction * order(a, b) || localeOrder(a, b);
+    list.sort(settlementOrder);
 };
 const updateSettlements = (list) => {
     const age = GameInfo.Ages.lookup(Game.age);
     for (const item of list) {
-        item.currentResources.sort(resourceSort);
-        item.visibleResources.sort(resourceSort);
-        item.treasureResources.sort(resourceSort);
-        item.bonusSort = 0;
+        item.currentResources.sort(resourceOrder);
+        item.visibleResources.sort(resourceOrder);
+        item.treasureResources.sort(resourceOrder);
+        item.bzBonusOrder = 0;
         const stype = [Locale.compose(item.settlementTypeName)];
         const city = Cities.get(item.id);
         const hasBuilding = (b) => city.Constructibles?.hasConstructible(b, false);
         switch (age.ChronologyIndex) {
             case 0:  // antiquity
                 if (!city.isTown && !city.isCapital) {
-                    item.bonusSort = +1;
+                    item.bzBonusOrder = +1;
                 }
                 break;
             case 1:  // exploration
                 if (city.isDistantLands) {
-                    item.bonusSort = +1;
+                    item.bzBonusOrder = +1;
                     stype.push(Locale.compose("LOC_PLOT_TOOLTIP_HEMISPHERE_WEST"));
                 } else {
                     stype.push(Locale.compose("LOC_PLOT_TOOLTIP_HEMISPHERE_EAST"));
@@ -80,18 +93,18 @@ const updateSettlements = (list) => {
                 break;
             case 2:  // modern
                 if (hasBuilding("BUILDING_RAIL_STATION")) {
-                    item.bonusSort = +1;
+                    item.bzBonusOrder = +1;
                     stype.push(Locale.compose("LOC_BUILDING_RAIL_STATION_NAME"));
                 }
                 if (hasBuilding("BUILDING_PORT")) {
-                    item.bonusSort = +1;
+                    item.bzBonusOrder = +1;
                     stype.push(Locale.compose("LOC_BUILDING_PORT_NAME"));
                 }
                 break;
         }
         item.settlementTypeName = stype.join(" • ");
     }
-    list.sort(settlementSort);
+    sortSettlements(list, slotsOrder);
 }
 
 const initialize = () => {
@@ -100,13 +113,13 @@ const initialize = () => {
     proto.update = function(...args) {
         update.apply(this, args);
         updateSettlements(this._availableCities);
-        this._empireResources.sort(resourceSort);
-        this._uniqueEmpireResources.sort(resourceSort);
-        this._allAvailableResources.sort(resourceSort);
-        this._availableBonusResources.sort(resourceSort);
-        this._availableResources.sort(resourceSort);
-        this._availableFactoryResources.sort(resourceSort);
-        this._treasureResources.sort(resourceSort);
+        this._empireResources.sort(resourceOrder);
+        this._uniqueEmpireResources.sort(resourceOrder);
+        this._allAvailableResources.sort(resourceOrder);
+        this._availableBonusResources.sort(resourceOrder);
+        this._availableResources.sort(resourceOrder);
+        this._availableFactoryResources.sort(resourceOrder);
+        this._treasureResources.sort(resourceOrder);
     }
 };
 engine.whenReady.then(initialize);
