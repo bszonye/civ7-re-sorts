@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <LocalizedText>
-        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT" Language="zh_Hans_CN">
+        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_REQ" Language="zh_Hans_CN">
             <Text>资源智能分配 • 按工厂和条件奖励分组定居点</Text>
         </Row>
-        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT_DESCRIPTION" Language="zh_Hans_CN">
+        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_REQ_DESCRIPTION" Language="zh_Hans_CN">
             <Text>在资源界面中，优先列出有工厂的定居点，然后是具备条件奖励的城市（火车站、遥远土地）</Text>
         </Row>
-        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS" Language="zh_Hans_CN">
-            <Text>资源智能分配 • 按资源槽数量分组定居点</Text>
-        </Row>
-        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS_DESCRIPTION" Language="zh_Hans_CN">
-            <Text>在资源界面中，资源槽较多的定居点会优先显示在列表上方</Text>
-        </Row>
-        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE" Language="zh_Hans_CN">
+        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE" Language="zh_Hans_CN">
             <Text>资源智能分配 • 在资源界面分离城市与乡镇</Text>
         </Row>
-        <Row Tag="LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE_DESCRIPTION" Language="zh_Hans_CN">
+        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION" Language="zh_Hans_CN">
             <Text>资源界面将按首都、城市、乡镇的顺序排列定居点</Text>
         </Row>
         <Replace Tag="LOC_OPTIONS_GROUP_BZ_MODS" Language="zh_Hans_CN">
