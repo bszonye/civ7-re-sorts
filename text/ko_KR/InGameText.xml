@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <LocalizedText>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_REQ" Language="ko_KR">
-            <Text>Resource Re-sorts • 공장 및 조건부 보너스별 정착지 그룹화.</Text>
-        </Row>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_REQ_DESCRIPTION" Language="ko_KR">
-            <Text>자원 화면에서, 공장이 있는 정착지를 먼저 나열한 다음 조건부 보너스가 있는 도시(철도역, 머나먼 땅)를 나열합니다.</Text>
-        </Row>
         <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE" Language="ko_KR">
             <Text>Resource Re-sorts • 자원 화면에서 도시와 마을을 분리</Text>
         </Row>

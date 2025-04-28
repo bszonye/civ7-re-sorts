@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <LocalizedText>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_REQ" Language="it_IT">
-            <Text>Riordinamento Risorse • raggruppa gli insediamenti per fabbriche e bonus condizionali</Text>
-        </Row>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_REQ_DESCRIPTION" Language="it_IT">
-            <Text>Nella schermata delle risorse, elenca prima gli insediamenti con fabbriche, poi i bonus condizionali (stazione ferroviaria, terre lontane).</Text>
-        </Row>
         <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE" Language="it_IT">
             <Text>Riordinamento Risorse • separa città e paesi nella schermata delle risorse</Text>
         </Row>

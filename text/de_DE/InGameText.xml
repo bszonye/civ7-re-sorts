@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <LocalizedText>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_REQ" Language="de_DE">
-            <Text>Resource Re-sorts • gruppiert Siedlungen nach Fabrik und nach bedingtem Bonus</Text>
-        </Row>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_REQ_DESCRIPTION" Language="de_DE">
-            <Text>Auf dem Ressourcenbildschirm werden zuerst Siedlungen mit Fabriken und dann Städte mit einem bedingten Bonus (Bahnhof, Ferne Länder) aufgelistet.</Text>
-        </Row>
         <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE" Language="de_DE">
             <Text>Resource Re-sorts • trennt Städte und Gemeinden auf dem Ressourcenbildschirm</Text>
         </Row>

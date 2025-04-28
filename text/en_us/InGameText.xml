@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <EnglishText>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_REQ">
-            <Text>Resource Re-sorts • group settlements by factory and by conditional bonus</Text>
-        </Row>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_REQ_DESCRIPTION">
-            <Text>On the resource screen, list settlements with factories first, then cities with a conditional bonus (Rail Station, Port, Distant Lands).</Text>
-        </Row>
         <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE">
             <Text>Resource Re-sorts • separate cities and towns on the resource screen</Text>
         </Row>
