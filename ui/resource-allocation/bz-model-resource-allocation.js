@@ -61,14 +61,14 @@ const yieldOrder = (a, b) => {
     const byield = b.yields.find(y => y.type == ResourceAllocation.bzSortOrder);
     return (ayield?.valueNum ?? 0) - (byield?.valueNum ?? 0);
 }
-export const sortSettlements = () => {
+const sortSettlements = () => {
     const list = ResourceAllocation.availableCities;
     const order = ResourceAllocation.bzSortOrder;
     const direction = ResourceAllocation.bzSortReverse ? -1 : +1;
     const f = order == "NAME" ? nullOrder : order == "SLOTS" ? slotsOrder : yieldOrder;
     const settlementOrder = (a, b) =>
         factoryOrder(a, b) || settlementTypeOrder(a, b) || bonusOrder(a, b) ||
-            -direction * f(a, b) || direction * localeOrder(a, b);
+            direction * f(a, b) || direction * localeOrder(a, b);
     list.sort(settlementOrder);
 };
 const updateSettlements = (list) => {
@@ -108,17 +108,14 @@ const updateSettlements = (list) => {
         }
         item.settlementTypeName = stype.join(" • ");
     }
-    // initialize sort order
-    if (!ResourceAllocation.bzSortOrder) {
-        ResourceAllocation.bzSortOrder = bzReSortsOptions.sortOrder;
-        ResourceAllocation.bzSortReverse = false;
-    }
     sortSettlements();
 }
 
 const initialize = () => {
     const proto = Object.getPrototypeOf(ResourceAllocation);
     const update = proto.update;
+    ResourceAllocation.bzSortOrder = "NAME";
+    ResourceAllocation.bzSortReverse = false;
     proto.update = function(...args) {
         update.apply(this, args);
         updateSettlements(this._availableCities);

@@ -13,18 +13,6 @@
         <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION">
             <Text>On the resource screen, list the capital first, then cities, then towns.</Text>
         </Row>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_SORT_ORDER">
-            <Text>Resource Re-sorts • settlement sort order</Text>
-        </Row>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_SORT_ORDER_DESCRIPTION">
-            <Text>Whether to order settlements by name, number of resource slots, or yield.</Text>
-        </Row>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_SORT_BY_NAME">
-            <Text>[icon:YIELD_CITIES] Name</Text>
-        </Row>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_SORT_BY_SLOTS">
-            <Text>[icon:RESOURCE_CAMELS] Resource Slots</Text>
-        </Row>
         <Replace Tag="LOC_OPTIONS_GROUP_BZ_MODS">
             <Text>trixie's mods</Text>
         </Replace>
