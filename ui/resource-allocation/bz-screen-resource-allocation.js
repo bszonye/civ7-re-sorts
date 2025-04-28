@@ -66,13 +66,13 @@ const CITY_ICON = 'url("blp:Yield_Cities_20")';
 const SLOTS_ICON = 'url("fs://game/res_addslot")';
 const bzSortOrderControls = [
     { order: 'NAME', icon: CITY_ICON, },
-    { order: 'YIELD_FOOD', },
-    { order: 'YIELD_PRODUCTION', },
-    { order: 'YIELD_GOLD', },
-    { order: 'YIELD_SCIENCE', },
-    { order: 'YIELD_CULTURE', },
-    { order: 'YIELD_HAPPINESS', },
-    { order: 'YIELD_DIPLOMACY', },
+    { order: 'YIELD_FOOD', reverse: true, },
+    { order: 'YIELD_PRODUCTION', reverse: true, },
+    { order: 'YIELD_GOLD', reverse: true, },
+    { order: 'YIELD_SCIENCE', reverse: true, },
+    { order: 'YIELD_CULTURE', reverse: true, },
+    { order: 'YIELD_HAPPINESS', reverse: true, },
+    { order: 'YIELD_DIPLOMACY', reverse: true, },
     { order: 'SLOTS', reverse: true, icon: SLOTS_ICON, style: 'bz-sort-slots'},
 ];
 export class bzScreenResourceAllocation {
