@@ -39,7 +39,7 @@ const BZ_HEAD_STYLE = [
 .bz-sort-arrow {
     position: absolute;
     pointer-events: none;
-    top: 0.6666666667rem;
+    top: 0.7222222222rem;
     transform: rotate(-90deg);
     background-image: url("blp:Action_Move");
     background-size: 1.3333333333rem;
@@ -51,7 +51,7 @@ const BZ_HEAD_STYLE = [
 .bz-sort-selected .bz-sort-arrow { opacity: 1; }
 .bz-sort-reversed .bz-sort-arrow {
     transform: rotate(-90deg) scale(-1, 1);
-    top: -0.6666666667rem;
+    top: -0.7222222222rem;
 }
 `,
 ];
