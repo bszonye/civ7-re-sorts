@@ -1,8 +1,8 @@
 ## Resource Re-sorts 2.0.0
-better resource screen organization
+better resource organization
 
-core features:
-- sort settlements by name, yield, or resource slots
+new sorting options for the resource allocation screen:
+- sort settlements by name, yield, or total resource slots
 - easily change sort order and direction
 - optionally separate cities and towns
 
