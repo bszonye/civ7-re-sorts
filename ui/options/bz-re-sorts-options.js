@@ -6,46 +6,33 @@ import ModSettings from '/bz-re-sorts/ui/options/mod-options-decorator.js';
 const MOD_ID = "bz-re-sorts";
 
 const BZ_DEFAULT_OPTIONS = {
-    sortCitiesByType: true,
-    sortCitiesByRequirement: true,
-    sortCitiesBySlots: false,
+    groupByType: false,
 };
 const bzReSortsOptions = new class {
     data = { ...BZ_DEFAULT_OPTIONS };
     constructor() {
         const modSettings = ModSettings.load(MOD_ID);
-        if (modSettings) this.data = modSettings;
+        this.data = {
+            groupByType: modSettings.groupByType ??  BZ_DEFAULT_OPTIONS.groupByType,
+        }
+        console.warn(`DATA bz-re-sorts=${JSON.stringify(this.data)}`);
     }
     save() {
         ModSettings.save(MOD_ID, this.data);
     }
-    get sortCitiesByRequirement() {
-        return this.data.sortCitiesByRequirement ??  BZ_DEFAULT_OPTIONS.sortCitiesByRequirement;
+    get groupByType() {
+        return this.data.groupByType;
     }
-    set sortCitiesByRequirement(flag) {
-        this.data.sortCitiesByRequirement = !!flag;
-        this.save();
-    }
-    get sortCitiesBySlots() {
-        return this.data.sortCitiesBySlots ??  BZ_DEFAULT_OPTIONS.sortCitiesBySlots;
-    }
-    set sortCitiesBySlots(flag) {
-        this.data.sortCitiesBySlots = !!flag;
-        this.save();
-    }
-    get sortCitiesByType() {
-        return this.data.sortCitiesByType ??  BZ_DEFAULT_OPTIONS.sortCitiesByType;
-    }
-    set sortCitiesByType(flag) {
-        this.data.sortCitiesByType = !!flag;
+    set groupByType(flag) {
+        this.data.groupByType = !!flag;
         this.save();
     }
 };
-const onInitSortCitiesByType = (info) => {
-    info.currentValue = bzReSortsOptions.sortCitiesByType;
+const onInitGroupByType = (info) => {
+    info.currentValue = bzReSortsOptions.groupByType;
 };
-const onUpdateSortCitiesByType = (_info, flag) => {
-    bzReSortsOptions.sortCitiesByType = flag;
+const onUpdateGroupByType = (_info, flag) => {
+    bzReSortsOptions.groupByType = flag;
 };
 Options.addInitCallback(() => {
     Options.addOption({
@@ -53,50 +40,11 @@ Options.addInitCallback(() => {
         // @ts-ignore
         group: "bz_mods",
         type: OptionType.Checkbox,
-        id: "bz-sort-cities-by-type",
-        initListener: onInitSortCitiesByType,
-        updateListener: onUpdateSortCitiesByType,
-        label: "LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE",
-        description: "LOC_OPTIONS_BZ_SORT_CITIES_BY_TYPE_DESCRIPTION",
+        id: "bz-re-sorts-group-by-type",
+        initListener: onInitGroupByType,
+        updateListener: onUpdateGroupByType,
+        label: "LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE",
+        description: "LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION",
     });
 });
-const onInitSortCitiesByRequirement = (info) => {
-    info.currentValue = bzReSortsOptions.sortCitiesByRequirement;
-};
-const onUpdateSortCitiesByRequirement = (_info, flag) => {
-    bzReSortsOptions.sortCitiesByRequirement = flag;
-};
-Options.addInitCallback(() => {
-    Options.addOption({
-        category: CategoryType.Mods,
-        // @ts-ignore
-        group: "bz_mods",
-        type: OptionType.Checkbox,
-        id: "bz-sort-cities-by-requirement",
-        initListener: onInitSortCitiesByRequirement,
-        updateListener: onUpdateSortCitiesByRequirement,
-        label: "LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT",
-        description: "LOC_OPTIONS_BZ_SORT_CITIES_BY_REQUIREMENT_DESCRIPTION",
-    });
-});
-const onInitSortCitiesBySlots = (info) => {
-    info.currentValue = bzReSortsOptions.sortCitiesBySlots;
-};
-const onUpdateSortCitiesBySlots = (_info, flag) => {
-    bzReSortsOptions.sortCitiesBySlots = flag;
-};
-Options.addInitCallback(() => {
-    Options.addOption({
-        category: CategoryType.Mods,
-        // @ts-ignore
-        group: "bz_mods",
-        type: OptionType.Checkbox,
-        id: "bz-sort-cities-by-slots",
-        initListener: onInitSortCitiesBySlots,
-        updateListener: onUpdateSortCitiesBySlots,
-        label: "LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS",
-        description: "LOC_OPTIONS_BZ_SORT_CITIES_BY_SLOTS_DESCRIPTION",
-    });
-});
-
 export { bzReSortsOptions as default };

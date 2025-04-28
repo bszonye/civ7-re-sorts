@@ -1,16 +1,14 @@
-## Resource Re-sorts 1.4.0
-better resource screen organization
+## Resource Re-sorts 2.0.0
+better resource organization
 
-sorts settlements by name, with multiple grouping options:
-- separate cities and towns
-- group factories and conditional bonuses
-- group by number of resource slots
+new sorting options for the resource allocation screen:
+- sort settlements by **name, yield,** or **total resource slots**
+- easily change sort order and direction
+- optionally separate cities and towns
 
-additional features:
-- highlights important features (Rail Station, Port, Distant Lands)
-- groups resources by type and class (city, bonus, treasure, factory)
-- uses locale-appropriate sorting for names
-- does not modify **any** game scripts, for maximum compatibility
+each settlement also shows local conditions that affect resource
+bonuses, like **Distant Lands** in the Exploration age, or **Port, Rail
+Station,** and **Factory** buildings in the Modern age.
 
 ## localization
 the mod is language-independent during play.
