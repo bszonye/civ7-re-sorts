@@ -42,8 +42,8 @@ const settlementTypeOrder = (a, b) => {
     const groupB = STypeOrder[b.settlementType] ?? -1;
     return groupA - groupB;
 };
-const slotsOrder = (a, b) =>
-    a.resourceCap * a.bzBonusFactor - b.resourceCap * b.bzBonusFactor;
+const slotsOrder = (a, b) => a.bzFactory - b.bzFactory ||
+    a.resourceCap - b.resourceCap || a.bzSlotBonus - b.bzSlotBonus;
 const yieldOrder = (a, b) => {
     const ayield = a.yields.find(y => y.type == ResourceAllocation.bzSortOrder);
     const byield = b.yields.find(y => y.type == ResourceAllocation.bzSortOrder);
@@ -70,17 +70,18 @@ const updateSettlements = (list) => {
         const stype = [Locale.compose(item.settlementTypeName)];
         const city = Cities.get(item.id);
         const hasBuilding = (b) => city.Constructibles?.hasConstructible(b, false);
-        // calculate slot bonus factor
-        item.bzBonusFactor = 1;
+        // calculate slot tiebreakers
+        item.bzFactory = 0;
+        item.bzSlotBonus = 0;
         switch (age.ChronologyIndex) {
             case 0:  // antiquity
                 if (!city.isCapital) {
-                    if (!city.isTown) item.bzBonusFactor = 2;  // double bonuses
+                    if (!city.isTown) item.bzSlotBonus += 1;
                 }
                 break;
             case 1:  // exploration
                 if (city.isDistantLands) {
-                    if (!city.isTown) item.bzBonusFactor = 2;  // double bonuses
+                    if (!city.isTown) item.bzSlotBonus += 1;
                     stype.push(Locale.compose("LOC_PLOT_TOOLTIP_HEMISPHERE_WEST"));
                 } else {
                     stype.push(Locale.compose("LOC_PLOT_TOOLTIP_HEMISPHERE_EAST"));
@@ -88,23 +89,23 @@ const updateSettlements = (list) => {
                 break;
             case 2:  // modern
                 if (city.isCapital) {
-                    item.bzBonusFactor = 2;  // double pearls & silk
+                    item.bzSlotBonus += 1;
                 }
                 if (hasBuilding("BUILDING_PORT")) {
-                    item.bzBonusFactor = 2;  // double fish
+                    item.bzSlotBonus += 1;
                     stype.push(Locale.compose("LOC_BUILDING_PORT_NAME"));
                 }
                 if (hasBuilding("BUILDING_RAIL_STATION")) {
-                    if (!city.isTown) item.bzBonusFactor = 2;  // many double bonuses
+                    if (!city.isTown) item.bzSlotBonus += 1;
                     stype.push(Locale.compose("LOC_BUILDING_RAIL_STATION_NAME"));
                 }
                 if (item.hasFactory) {
-                    item.bzBonusFactor += 3;  // empire-wide bonuses
+                    item.bzFactory = 1;
                     stype.push(Locale.compose("LOC_BUILDING_FACTORY_NAME"));
                 }
                 break;
         }
-        if (city.isTown) item.bzBonusFactor -= 0.5;  // less powerful choices
+        if (city.isTown) item.bzSlotBonus -= 0.5;
         item.settlementTypeName = stype.join(" • ");
     }
     sortSettlements();
