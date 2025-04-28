@@ -6,34 +6,19 @@ import ModSettings from '/bz-re-sorts/ui/options/mod-options-decorator.js';
 const MOD_ID = "bz-re-sorts";
 
 const BZ_DEFAULT_OPTIONS = {
-    groupByType: true,
-    groupByReq: true,
+    groupByType: false,
 };
 const bzReSortsOptions = new class {
     data = { ...BZ_DEFAULT_OPTIONS };
     constructor() {
         const modSettings = ModSettings.load(MOD_ID);
         this.data = {
-            groupByType:
-            modSettings.groupByType ??
-            modSettings.sortCitiesByType ??  // legacy
-            BZ_DEFAULT_OPTIONS.groupByType,
-            groupByReq:
-            modSettings.groupByReq ??
-            modSettings.sortCitiesByRequirement ??  // legacy
-            BZ_DEFAULT_OPTIONS.groupByReq,
+            groupByType: modSettings.groupByType ??  BZ_DEFAULT_OPTIONS.groupByType,
         }
         console.warn(`DATA bz-re-sorts=${JSON.stringify(this.data)}`);
     }
     save() {
         ModSettings.save(MOD_ID, this.data);
-    }
-    get groupByReq() {
-        return this.data.groupByReq;
-    }
-    set groupByReq(flag) {
-        this.data.groupByReq = !!flag;
-        this.save();
     }
     get groupByType() {
         return this.data.groupByType;
@@ -62,24 +47,4 @@ Options.addInitCallback(() => {
         description: "LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION",
     });
 });
-const onInitGroupByReq = (info) => {
-    info.currentValue = bzReSortsOptions.groupByReq;
-};
-const onUpdateGroupByReq = (_info, flag) => {
-    bzReSortsOptions.groupByReq = flag;
-};
-Options.addInitCallback(() => {
-    Options.addOption({
-        category: CategoryType.Mods,
-        // @ts-ignore
-        group: "bz_mods",
-        type: OptionType.Checkbox,
-        id: "bz-re-sorts-group-by-req",
-        initListener: onInitGroupByReq,
-        updateListener: onUpdateGroupByReq,
-        label: "LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_REQ",
-        description: "LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_REQ_DESCRIPTION",
-    });
-});
-
 export { bzReSortsOptions as default };

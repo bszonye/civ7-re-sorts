@@ -22,12 +22,16 @@ const BZ_HEAD_STYLE = [
     border-radius: 0.3333333333rem;
 }
 .bz-sort-button.bz-sort-slots {
-    background-size: 1.3333333333rem;
+    background-size: 1.1111111111rem;
+    background-position: center;
+    filter: sepia(0.5) brightness(1.5);
+}
+.bz-sort-button.bz-sort-bonuses {
+    background-size: 1.1111111111rem;
     background-position: center;
 }
 .bz-sort-button:hover {
     background-color: #E5D2AC;
-    /* filter: sepia(0.5) brightness(1.5); */
     transition-property: background-color;
     transition-duration: 0.25s;
     transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -44,8 +48,11 @@ const BZ_HEAD_STYLE = [
     filter: drop-shadow(0 0 0.0555555556rem black) fxs-color-tint(#E5D2AC);
     opacity: 0;
 }
-.bz-ascending .bz-sort-arrow, .bz-descending .bz-sort-arrow { opacity: 1; }
-.bz-descending .bz-sort-arrow { transform: rotate(-90deg) scale(-1, 1); }
+.bz-sort-selected .bz-sort-arrow { opacity: 1; }
+.bz-sort-reversed .bz-sort-arrow {
+    transform: rotate(-90deg) scale(-1, 1);
+    top: -0.6666666667rem;
+}
 `,
 ];
 BZ_HEAD_STYLE.map(style => {
@@ -55,17 +62,17 @@ BZ_HEAD_STYLE.map(style => {
 });
 document.body.classList.add("bz-re-sorts");
 
-const NAME_ICON = 'url("blp:Yield_Cities_20")';
+const CITY_ICON = 'url("blp:Yield_Cities_20")';
 const SLOTS_ICON = 'url("fs://game/res_addslot")';
 const bzSortOrderControls = [
-    { order: 'NAME', icon: NAME_ICON, },
-    { order: 'YIELD_FOOD', reverse: true, },
-    { order: 'YIELD_PRODUCTION', reverse: true, },
-    { order: 'YIELD_GOLD', reverse: true, },
-    { order: 'YIELD_SCIENCE', reverse: true, },
-    { order: 'YIELD_CULTURE', reverse: true, },
-    { order: 'YIELD_HAPPINESS', reverse: true, },
-    { order: 'YIELD_DIPLOMACY', reverse: true, },
+    { order: 'NAME', icon: CITY_ICON, },
+    { order: 'YIELD_FOOD', },
+    { order: 'YIELD_PRODUCTION', },
+    { order: 'YIELD_GOLD', },
+    { order: 'YIELD_SCIENCE', },
+    { order: 'YIELD_CULTURE', },
+    { order: 'YIELD_HAPPINESS', },
+    { order: 'YIELD_DIPLOMACY', },
     { order: 'SLOTS', reverse: true, icon: SLOTS_ICON, style: 'bz-sort-slots'},
 ];
 export class bzScreenResourceAllocation {
@@ -158,6 +165,8 @@ export class bzScreenResourceAllocation {
     beforeAttach() { }
     afterAttach() {
         // add sorting controls
+        const factories = this.Root.querySelector(".show-factories-container");
+        factories.classList.add("mr-3");  // make room
         this.filterContainer = this.component.filterContainer;
         const sortControls = document.createElement('div');
         sortControls.classList.value = "flex items-end mr-3";
@@ -172,11 +181,10 @@ export class bzScreenResourceAllocation {
             const icon = info.icon ?? UI.getIconCSS(info.order);
             button.style.backgroundImage = icon;
             button.setAttribute("tabindex", "-1");
-            // button.setAttribute('data-bind-attr-data-sort-order', '{{resource.value}}');
             button.setAttribute('data-bz-sort-order', info.order);
             button.setAttribute('data-bz-sort-reverse', info.reverse ?? false);
-            Databind.classToggle(button, 'bz-ascending', `{{g_ResourceAllocationModel.bzSortOrder}}=="${info.order}"&&!{{g_ResourceAllocationModel.bzSortReverse}}`);
-            Databind.classToggle(button, 'bz-descending', `{{g_ResourceAllocationModel.bzSortOrder}}=="${info.order}"&&{{g_ResourceAllocationModel.bzSortReverse}}`);
+            Databind.classToggle(button, 'bz-sort-selected', `{{g_ResourceAllocationModel.bzSortOrder}}=="${info.order}"`);
+            Databind.classToggle(button, 'bz-sort-reversed', `{{g_ResourceAllocationModel.bzSortReverse}}`);
             button.addEventListener('action-activate', this.sortOrderActivateListener);
             const arrow = document.createElement('div');
             arrow.classList.value = "bz-sort-arrow size-8";
