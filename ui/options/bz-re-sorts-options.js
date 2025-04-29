@@ -13,7 +13,7 @@ const bzReSortsOptions = new class {
     constructor() {
         const modSettings = ModSettings.load(MOD_ID);
         this.data = {
-            groupByType: modSettings.groupByType ??  BZ_DEFAULT_OPTIONS.groupByType,
+            groupByType: modSettings?.groupByType ??  BZ_DEFAULT_OPTIONS.groupByType,
         }
         console.warn(`DATA bz-re-sorts=${JSON.stringify(this.data)}`);
     }
