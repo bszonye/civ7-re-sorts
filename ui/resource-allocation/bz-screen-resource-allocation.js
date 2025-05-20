@@ -3,6 +3,9 @@ import Databind from '/core/ui/utilities/utilities-core-databinding.js';
 
 const BZ_HEAD_STYLE = [
 `
+.bz-hide-towns .bz-town {
+    display: none;
+}
 .bz-re-sorts screen-resource-allocation .available-resources-column.hover-enabled:hover {
     background-color: #0000;
     background-image: linear-gradient(180deg, #0000 0%, #E5D2ACB0 100%);
@@ -82,6 +85,7 @@ export class bzScreenResourceAllocation {
         component.bzComponent = this;
         this.Root = this.component.Root;
         this.availableResourceCol = null;
+        this.showTownsListener = this.onShowTownsChanged.bind(this);
         this.resourceInputListener = this.onResourceInput.bind(this);
         this.targetInputListener = this.onTargetInput.bind(this);
         this.sortOrderActivateListener = this.onSortOrderActivate.bind(this);
@@ -91,7 +95,25 @@ export class bzScreenResourceAllocation {
         const c_prototype = Object.getPrototypeOf(component);
         if (bzScreenResourceAllocation.c_prototype == c_prototype) return;
         // patch component methods
-        const _proto = bzScreenResourceAllocation.c_prototype = c_prototype;
+        const proto = bzScreenResourceAllocation.c_prototype = c_prototype;
+        // afterInitialize
+        const afterInitialize = this.afterInitialize;
+        const onInitialize = proto.onInitialize;
+        proto.onInitialize = function(...args) {
+            const c_rv = onInitialize.apply(this, args);
+            const after_rv = afterInitialize.apply(this.bzComponent, args);
+            return after_rv ?? c_rv;
+        }
+    }
+    afterInitialize() {
+        // replace Show Towns handler
+        const showTowns = this.Root.querySelector(".show-cities");
+        if (showTowns) {
+            showTowns.removeEventListener('component-value-changed',
+                this.component.onShowTownsChanged);
+            showTowns.addEventListener('component-value-changed',
+                this.showTownsListener);
+        }
     }
     unassignAllResources(cityID) {
         const bonusSlots = (res) => {
@@ -118,6 +140,9 @@ export class bzScreenResourceAllocation {
             tries = 0;
             if (slots < 1) clearInterval(unassignInterval);  // last loop
         }, 50);
+    }
+    onShowTownsChanged(event) {
+        document.body.classList.toggle("bz-hide-towns", !event.detail.value);
     }
     onResourceInput(event) {
         // only recognize completed middle-clicks
@@ -192,6 +217,10 @@ export class bzScreenResourceAllocation {
             sortControls.appendChild(button);
         }
         this.filterContainer.appendChild(sortControls);
+        // improved Show Towns filter
+        for (const cityEntry of this.Root.querySelectorAll(".city-outer")) {
+            cityEntry.setAttribute('data-bind-class-toggle', `bz-town:{{entry.settlementType}}=='Town'`);
+        }
         // restyle settlement type in bz capsule style
         const stypes = this.Root.querySelectorAll(".settlement-type-text");
         for (const stype of stypes) {
