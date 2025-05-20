@@ -92,6 +92,7 @@ export class bzScreenResourceAllocation {
         this.targetInputListener = this.onTargetInput.bind(this);
         this.sortOrderActivateListener = this.onSortOrderActivate.bind(this);
         this.patchPrototypes(this.component);
+        Controls.preloadImage('res_capital', 'screen-resource-allocation');
     }
     patchPrototypes(component) {
         const c_prototype = Object.getPrototypeOf(component);
@@ -244,15 +245,17 @@ export class bzScreenResourceAllocation {
             const title = inner.querySelector(".city-top-container");
             title.style.marginBottom = 0;
             const yields = inner.querySelector(".city-yield-bar");
-            yields.classList.add("text-xs", "leading-loose");
+            yields.style.lineHeight = 2;  // better spacing for large text
             yields.style.marginTop = 0;
             yields.lastChild.style.marginTop = yields.lastChild.style.marginBottom = 0;
             const factory = outer.querySelector(".city-factory-resource-container");
-            factory.classList.add("items-center");
-            factory.classList.remove("items-start");
-            factory.style.padding = '0.3333333333rem';
-            factory.firstChild.style.margin = 0;
-            factory.firstChild.style.marginLeft = '0.3333333333rem';
+            if (factory) {
+                factory.classList.add("items-center");
+                factory.classList.remove("items-start");
+                factory.style.padding = '0.3333333333rem';
+                factory.firstChild.style.margin = 0;
+                factory.firstChild.style.marginLeft = '0.3333333333rem';
+            }
             // restyle settlement type in bz capsule style
             const stype = title.querySelector(".settlement-type-text");
             stype.classList.remove('font-title', 'uppercase', 'ml-1');
