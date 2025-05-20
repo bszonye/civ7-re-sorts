@@ -230,7 +230,7 @@ export class bzScreenResourceAllocation {
             sortControls.appendChild(button);
         }
         this.filterContainer.appendChild(sortControls);
-        // improve Show Factories and Show Town filters
+        // improve filters (Show Factories, Show Towns)
         for (const cityEntry of this.Root.querySelectorAll(".city-outer")) {
             cityEntry.setAttribute('data-bind-class-toggle',
                 `bz-factory:{{entry.hasFactory}};bz-town:{{entry.settlementType}}=='Town'`);
