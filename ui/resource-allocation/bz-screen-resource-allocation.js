@@ -270,7 +270,6 @@ export class bzScreenResourceAllocation {
             const stype = title.querySelector(".settlement-type-text");
             stype.classList.remove('font-title', 'uppercase', 'ml-1');
             stype.classList.add('leading-snug', 'bg-primary-5', 'rounded-3xl', 'ml-2', 'px-2');
-            // const resources = outer.querySelector(".city-resource-container");
         }
         // event handlers
         for (const title of this.Root.querySelectorAll(".city-top-container")) {
