@@ -248,6 +248,16 @@ export class bzScreenResourceAllocation {
             yields.style.lineHeight = 2;  // better spacing for large text
             yields.style.marginTop = 0;
             yields.lastChild.style.marginTop = yields.lastChild.style.marginBottom = 0;
+            const treasure = outer.querySelector(".city-treasure-resource-container");
+            if (treasure) {
+                treasure.classList.add("flex-col", "justify-end");
+                treasure.style.top = 0;
+                treasure.style.right = '0.2222222222rem';
+                treasure.style.bottom = '-1.5555555556rem';
+                treasure.firstChild.classList.add("flex-auto");
+                treasure.firstChild.classList.remove("grow");
+                treasure.lastChild.classList.add("mr-1");
+            }
             const factory = outer.querySelector(".city-factory-resource-container");
             if (factory) {
                 factory.classList.add("items-center");
