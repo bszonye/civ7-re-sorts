@@ -3,6 +3,10 @@ import Databind from '/core/ui/utilities/utilities-core-databinding.js';
 
 const BZ_HEAD_STYLE = [
 `
+.bz-hide-factories .bz-factory,
+.bz-hide-towns .bz-town {
+    display: none;
+}
 .bz-re-sorts screen-resource-allocation .available-resources-column.hover-enabled:hover {
     background-color: #0000;
     background-image: linear-gradient(180deg, #0000 0%, #E5D2ACB0 100%);
@@ -82,16 +86,44 @@ export class bzScreenResourceAllocation {
         component.bzComponent = this;
         this.Root = this.component.Root;
         this.availableResourceCol = null;
+        this.showFactoriesListener = this.onShowFactoriesChanged.bind(this);
+        this.showTownsListener = this.onShowTownsChanged.bind(this);
         this.resourceInputListener = this.onResourceInput.bind(this);
         this.targetInputListener = this.onTargetInput.bind(this);
         this.sortOrderActivateListener = this.onSortOrderActivate.bind(this);
         this.patchPrototypes(this.component);
+        Controls.preloadImage('res_capital', 'screen-resource-allocation');
     }
     patchPrototypes(component) {
         const c_prototype = Object.getPrototypeOf(component);
         if (bzScreenResourceAllocation.c_prototype == c_prototype) return;
         // patch component methods
-        const _proto = bzScreenResourceAllocation.c_prototype = c_prototype;
+        const proto = bzScreenResourceAllocation.c_prototype = c_prototype;
+        // afterInitialize
+        const afterInitialize = this.afterInitialize;
+        const onInitialize = proto.onInitialize;
+        proto.onInitialize = function(...args) {
+            const c_rv = onInitialize.apply(this, args);
+            const after_rv = afterInitialize.apply(this.bzComponent, args);
+            return after_rv ?? c_rv;
+        }
+    }
+    afterInitialize() {
+        // replace filter handlers
+        const showFactories = this.Root.querySelector(".show-factories");
+        if (showFactories) {
+            showFactories.removeEventListener('component-value-changed',
+                this.component.onShowFactoriesChanged);
+            showFactories.addEventListener('component-value-changed',
+                this.showFactoriesListener);
+        }
+        const showTowns = this.Root.querySelector(".show-cities");
+        if (showTowns) {
+            showTowns.removeEventListener('component-value-changed',
+                this.component.onShowTownsChanged);
+            showTowns.addEventListener('component-value-changed',
+                this.showTownsListener);
+        }
     }
     unassignAllResources(cityID) {
         const bonusSlots = (res) => {
@@ -118,6 +150,12 @@ export class bzScreenResourceAllocation {
             tries = 0;
             if (slots < 1) clearInterval(unassignInterval);  // last loop
         }, 50);
+    }
+    onShowFactoriesChanged(event) {
+        document.body.classList.toggle("bz-hide-factories", !event.detail.value);
+    }
+    onShowTownsChanged(event) {
+        document.body.classList.toggle("bz-hide-towns", !event.detail.value);
     }
     onResourceInput(event) {
         // only recognize completed middle-clicks
@@ -192,9 +230,44 @@ export class bzScreenResourceAllocation {
             sortControls.appendChild(button);
         }
         this.filterContainer.appendChild(sortControls);
-        // restyle settlement type in bz capsule style
-        const stypes = this.Root.querySelectorAll(".settlement-type-text");
-        for (const stype of stypes) {
+        // improve filters (Show Factories, Show Towns)
+        for (const cityEntry of this.Root.querySelectorAll(".city-outer")) {
+            cityEntry.setAttribute('data-bind-class-toggle',
+                `bz-factory:{{entry.hasFactory}};bz-town:{{entry.settlementType}}=='Town'`);
+        }
+        // restyle settlement entries
+        for (const outer of this.Root.querySelectorAll(".city-outer")) {
+            // tighten margins
+            outer.style.marginBottom = '0.6666666667rem';
+            const inner = outer.querySelector(".city-entry-internal");
+            inner.style.margin = 0;
+            inner.style.marginTop = '0.2222222222rem';
+            const title = inner.querySelector(".city-top-container");
+            title.style.marginBottom = 0;
+            const yields = inner.querySelector(".city-yield-bar");
+            yields.style.lineHeight = 2;  // better spacing for large text
+            yields.style.marginTop = 0;
+            yields.lastChild.style.marginTop = yields.lastChild.style.marginBottom = 0;
+            const treasure = outer.querySelector(".city-treasure-resource-container");
+            if (treasure) {
+                // better fit and justification
+                treasure.classList.add("flex-col", "justify-end");
+                treasure.style.top = 0;
+                treasure.style.right = '0.2222222222rem';
+                treasure.style.bottom = '-1.5555555556rem';
+                treasure.lastChild.classList.add("mr-1");
+            }
+            const factory = outer.querySelector(".city-factory-resource-container");
+            if (factory) {
+                // better fit and centering
+                factory.classList.add("items-center");
+                factory.classList.remove("items-start");
+                factory.style.padding = '0.3333333333rem';
+                factory.firstChild.style.margin = 0;
+                factory.firstChild.style.marginLeft = '0.3333333333rem';
+            }
+            // restyle settlement type in bz capsule style
+            const stype = title.querySelector(".settlement-type-text");
             stype.classList.remove('font-title', 'uppercase', 'ml-1');
             stype.classList.add('leading-snug', 'bg-primary-5', 'rounded-3xl', 'ml-2', 'px-2');
         }

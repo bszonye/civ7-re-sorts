@@ -81,7 +81,7 @@ const updateSettlements = (list) => {
                 break;
             case 1:  // exploration
                 if (city.isDistantLands) {
-                    if (!city.isTown) item.bzSlotBonus += 1;
+                    item.bzSlotBonus += 1;
                     stype.push(Locale.compose("LOC_PLOT_TOOLTIP_HEMISPHERE_WEST"));
                 } else {
                     stype.push(Locale.compose("LOC_PLOT_TOOLTIP_HEMISPHERE_EAST"));
@@ -96,7 +96,7 @@ const updateSettlements = (list) => {
                     stype.push(Locale.compose("LOC_BUILDING_PORT_NAME"));
                 }
                 if (hasBuilding("BUILDING_RAIL_STATION")) {
-                    if (!city.isTown) item.bzSlotBonus += 1;
+                    item.bzSlotBonus += 1;
                     stype.push(Locale.compose("LOC_BUILDING_RAIL_STATION_NAME"));
                 }
                 if (item.hasFactory) {
