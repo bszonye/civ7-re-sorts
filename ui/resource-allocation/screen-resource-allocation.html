@@ -1,0 +1,127 @@
+<div class="resource-root h-full w-full flex flex-col">
+	<div class="resource-allocation-parent-slot flex flex-col flex-auto w-full mt-8 mb-16">
+		<div class="wait-turn img-modal-frame absolute flex p-4"
+			 data-bind-if="{{g_ResourceAllocationModel.isResourceAssignmentLocked}}">
+			<div class="img-city-ageless relative size-12 mr-1"></div>
+			<div class="relative flex flex-col flex-auto">
+				<div class="font-title text-xs uppercase" data-l10n-id="LOC_UI_RESOURCE_ALLOCATION_UNAVAILABLE"></div>
+				<div class="font-body text-xs" data-l10n-id="LOC_UI_RESOURCE_ALLOCATION_RESOURCE_SLOT_REQUIRED"></div>
+			</div>
+		</div>
+		<div class="resource-civ-symbol relative bg-center bg-contain self-center size-20"></div>
+		<fxs-header class="civilization-name relative font-title text-base uppercase text-secondary"
+					filigree-style="none"></fxs-header>
+		<fxs-header class="relative font-title text-xl uppercase text-secondary mb-" filigree-style="none"
+					title="LOC_UI_RESOURCE_ALLOCATION_RESOURCES"></fxs-header>
+		<fxs-vslot class="border-frame-container shrink grow w-full">
+			<fxs-frame frame-style="f2" class="resource-allocation-inner-frame grow"
+					   override-styling="items-center pt-5 relative flex max-w-full max-h-full px-10 pb-10"
+					   filigree-class="hidden" top-border-style="none">
+				<div class="empire-resources mx-4 mb-6">
+					<div class="empire-resource-box relative items-center">
+						<fxs-spatial-slot
+										  class="empire-resource-list flex items-center justify-center flex-wrap max-w-full"></fxs-spatial-slot>
+						<fxs-header filigree-style="none"
+									class="resource-column-header relative flex justify-center font-title text-2xs uppercase text-secondary"
+									title="LOC_UI_RESOURCE_ALLOCATION_EMPIRE_RESOURCES"></fxs-header>
+					</div>
+				</div>
+				<div class="city-header-filter-contaner mb-2 flow-row">
+					<div class="available-resources-header-container mb-2 mx-4 w-1\/4">
+						<p class="resource-column-header relative flex justify-start font-title text-base uppercase text-secondary"
+						   data-l10n-id="LOC_UI_RESOURCE_ALLOCATION_RESOURCES">
+						</p>
+						<p class="box-header flex justify-start font-body text-xs"
+						   data-l10n-id="LOC_UI_RESOURCE_ALLOCATION_ALLOCATE_RESOURCE_SETTLEMENT">
+						</p>
+					</div>
+					<div class="flow-row mx-8 flex-auto">
+						<div class="city-header-container grow h-full">
+							<p class="city-column-header relative flex justify-start font-title text-base uppercase text-secondary"
+							   data-l10n-id="LOC_UI_RESOURCE_ALLOCATION_SETTLEMENTS">
+							</p>
+							<p class="box-header flex justify-start font-body text-xs"
+							   data-l10n-id="LOC_UI_RESOURCE_ALLOCATION_SELECT_SETTLEMENT">
+							</p>
+						</div>
+						<fxs-hslot class="city-filter-container grow h-full justify-end items-end">
+							<div class="relative flex items-end mr-3">
+								<p class="font-body text-xs mb-1" data-l10n-id="LOC_UI_RESOURCE_ALLOCATION_SHOW_YIELDS"
+								   selected="true"></p>
+								<fxs-checkbox class="show-yields"></fxs-checkbox>
+							</div>
+							<div class="relative flex items-end mr-3">
+								<div class="font-body text-xs mb-1" data-l10n-id="LOC_UI_RESOURCE_ALLOCATION_SHOW_TOWNS"
+									 selected="true"></div>
+								<fxs-checkbox class="show-cities"></fxs-checkbox>
+							</div>
+							<div class="relative flex items-end show-factories-container">
+								<p class="font-body text-xs mb-1"
+								   data-l10n-id="LOC_UI_RESOURCE_ALLOCATION_SHOW_FACTORIES" selected="true"></p>
+								<fxs-checkbox class="show-factories"></fxs-checkbox>
+							</div>
+						</fxs-hslot>
+					</div>
+				</div>
+				<fxs-hslot class="resources-columns grow shrink w-full mb-4" focus-rule="last">
+					<fxs-vslot class="available-resources-column w-1\/4 mx-4 max-h-full" ignore-prior-focus="true">
+						<fxs-inner-frame class="resource-box relative items-stretch flex-auto">
+							<div
+								 class="no-resources-overlay flex flex-col items-center justify-center absolute w-full h-full">
+								<p class="font-body text-base" data-l10n-id="LOC_UI_RESOURCE_NO_RESOURCES_AVAILABLE">
+								</p>
+								<p class="font-body text-sm"
+								   data-l10n-id="LOC_UI_RESOURCE_RESOURCE_ALLOCATION_UNAVAILABLE"></p>
+							</div>
+							<div class="available-resources-wrapper flex flex-col max-h-full grow m-2">
+								<div class="available-city-resources-container flex-auto max-h-1\/3">
+									<div class="flex p-3">
+										<fxs-header filigree-style="none"
+													class="available-city-resources-header flex justify-start font-title text-sm uppercase text-secondary"
+													title="LOC_UI_RESOURCE_CITY">
+									</div>
+									<fxs-scrollable class="available-city-resources-scrollable flex-auto pr-4 w-full">
+										<fxs-spatial-slot class="available-city-resource-list flex w-full mb-8 flex-wrap flex-auto justify-start items-start"
+														  ignore-prior-focus="true"></fxs-spatial-slot>
+									</fxs-scrollable>
+								</div>
+								<div class="available-bonus-resources-container flex-auto max-h-1\/3">
+									<div class="flex p-3">
+										<fxs-header filigree-style="none"
+													class="available-bonus-resources-header flex justify-start font-title text-sm uppercase text-secondary"
+													title="LOC_UI_RESOURCE_BONUS">
+									</div>
+									<fxs-scrollable class="available-bonus-resources-scrollable flex-auto pr-4 w-full">
+										<fxs-spatial-slot class="available-bonus-resource-list flex w-full mb-8 flex-wrap flex-auto justify-start items-start"
+														  ignore-prior-focus="true"></fxs-spatial-slot>
+									</fxs-scrollable>
+								</div>
+								<div class="available-factory-resources-container flex-auto max-h-1\/3">
+									<div class="flex p-3">
+										<fxs-header filigree-style="none"
+													class="available-factory-resources-header flex justify-start font-title text-sm uppercase text-secondary"
+													title="LOC_UI_RESOURCE_FACTORY">
+									</div>
+									<fxs-scrollable
+													class="available-factory-resources-scrollable flex-auto pr-4 w-full">
+										<fxs-spatial-slot class="available-factory-resource-list flex w-full mb-8 flex-wrap flex-auto justify-start items-start"
+														  ignore-prior-focus="true"></fxs-spatial-slot>
+									</fxs-scrollable>
+								</div>
+							</div>
+						</fxs-inner-frame>
+					</fxs-vslot>
+					<div class="city-column flow-column flex-auto mx-2 relative">
+						<fxs-inner-frame class="absolute inset-0 city-inner-frame inset-x-6"></fxs-inner-frame>
+						<fxs-scrollable class="resource-allocation-scrollable my-4 flex-auto w-full">
+							<fxs-vslot class="city-list flex flex-col items-stretch" ignore-prior-focus="true"
+									   tabindex="-1"></fxs-vslot>
+						</fxs-scrollable>
+					</div>
+				</fxs-hslot>
+				<fxs-close-button data-audio-group-ref="audio-screen-resource-allocation"
+								  data-audio-close-selected="resource-alloc-close-selected"></fxs-close-button>
+			</fxs-frame>
+		</fxs-vslot>
+	</div>
+</div>

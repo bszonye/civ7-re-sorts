@@ -1,0 +1,111 @@
+/* DO NOT EDIT */
+/* Generated from screen-resource-allocation.scss */
+screen-resource-allocation .fxs-scrollbar-container {
+	right: 0.0555555556rem;
+}
+screen-resource-allocation .selected {
+	border-image-source: url("fs://game/hud_list-focus_frame");
+	border-image-slice: 20 32 20 32;
+	border-image-width: 1.1111111111rem;
+	border-image-outset: 0.2777777778rem;
+	background: linear-gradient(90deg, #4C473D 0%, rgba(5, 7, 13, 0.5) 100%);
+}
+screen-resource-allocation .hover-enabled:hover {
+	background-color: #E5D2AC;
+}
+screen-resource-allocation .resource-disabled {
+	opacity: 70;
+}
+screen-resource-allocation .city-list > :last-child {
+	margin-bottom: 0rem;
+}
+
+.wait-turn {
+	max-width: 44.4444444444rem;
+	top: 1rem;
+	right: 1rem;
+}
+@media (max-height: 1000px) {
+	.wait-turn {
+		top: 0.6666666667rem;
+		right: 0.6666666667rem;
+		max-width: 27.5rem;
+		max-height: 6.6666666667rem;
+	}
+}
+
+.wait-turn.img-frame-f2 {
+	border-image-width: 0.6666666667rem;
+}
+
+.more-info-toggle {
+	background-image: url("fs://game/chooser_showcity");
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.expand-empire-resources-activatable {
+	background-image: url("fs://game/chooser_showcity");
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.city-idle-overlay {
+	border-image-source: url("fs://game/hud_sidepanel_list-bg.png");
+	border-image-outset: 0 0 0 0;
+	border-image-repeat: stretch stretch;
+	border-image-slice: 8 8 8 8 fill;
+	border-image-width: 0.4444444444rem 0.4444444444rem 0.4444444444rem 0.4444444444rem;
+}
+
+.resource-count {
+	background-image: url("fs://game/prof_lvl_bk.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.treasure-ring {
+	background-image: url("hud_sub_circle_bk");
+}
+.treasure-ring .fxs-ring-meter__ring {
+	width: 125%;
+	height: 125%;
+}
+.treasure-ring .fxs-ring-meter__ring-right,
+.treasure-ring .fxs-ring-meter__ring-left {
+	background-image: url("fs://game/hud_age_circle_rad.png");
+	background-size: cover;
+}
+
+.treasure-ring-circle {
+	background-image: url("hud_sub_circle_bk");
+}
+
+@media (max-height: 55.5555555556rem) {
+	.empire-resources {
+		margin-bottom: 0.4444444444rem;
+	}
+}
+
+@media (max-height: 55.5555555556rem) {
+	.resource-allocation-parent-slot {
+		margin-top: 0rem;
+		margin-bottom: 1.3333333333rem;
+	}
+}
+
+@media (max-height: 55.5555555556rem) {
+	.resource-allocation-inner-frame {
+		padding-top: 0.6666666667rem;
+		padding-bottom: 0.6666666667rem;
+		padding-left: 0.2222222222rem;
+		padding-left: 0.2222222222rem;
+	}
+}
+
+@media (max-height: 55.5555555556rem) {
+	.resource-civ-symbol {
+		width: 4rem;
+		height: 4rem;
+	}
+}
