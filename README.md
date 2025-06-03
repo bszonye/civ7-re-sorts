@@ -1,4 +1,4 @@
-## Resource Re-sorts 2.1.0
+## Resource Re-sorts 2.1.1
 better resource organization
 
 new sorting options for the resource allocation screen:

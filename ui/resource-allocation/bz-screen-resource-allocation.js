@@ -251,11 +251,11 @@ export class bzScreenResourceAllocation {
             const treasure = outer.querySelector(".city-treasure-resource-container");
             if (treasure) {
                 // better fit and justification
-                treasure.classList.add("flex-col", "justify-end");
+                treasure.classList.add("flex-row-reverse", "items-center");
                 treasure.style.top = 0;
                 treasure.style.right = '0.2222222222rem';
-                treasure.style.bottom = '-1.5555555556rem';
                 treasure.lastChild.classList.add("mr-1");
+                treasure.lastChild.classList.remove("self-end");
             }
             const factory = outer.querySelector(".city-factory-resource-container");
             if (factory) {
