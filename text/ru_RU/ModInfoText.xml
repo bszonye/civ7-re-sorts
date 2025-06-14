@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <LocalizedText>
+        <Row Tag="LOC_MOD_BZ_RE_SORTS_NAME" Language="ru_RU">
+            <Text>Resource Re-sorts</Text>
+        </Row>
+        <Row Tag="LOC_MOD_BZ_RE_SORTS_DESCRIPTION" Language="ru_RU">
+            <Text>Улучшенное управление ресурсами</Text>
+        </Row>
+    </LocalizedText>
+</Database>
