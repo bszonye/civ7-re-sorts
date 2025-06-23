@@ -20,6 +20,7 @@ supported languages:
 - German (translated by Chr1Z93)
 - Italian (translated by leonardfactory)
 - Korean (translated by Hotsolidinfill)
+- Russian (translated by Webrok)
 - Simplified Chinese (translated by v480615)
 - Traditional Chinese (translated by v480615)
 
