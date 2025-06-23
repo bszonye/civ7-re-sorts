@@ -95,7 +95,7 @@ class ScreenResourceAllocation extends Panel {
             // Hide the available Factory Resources if we're not in Modern
             const availableFactoryResourcesContainer = MustGetElement(".available-factory-resources-container", this.Root);
             availableFactoryResourcesContainer.classList.add("hidden");
-            const showFactoriesCheckboxContainer = MustGetElement(".show-factories-container");
+            const showFactoriesCheckboxContainer = MustGetElement(".show-factories-container", document);
             showFactoriesCheckboxContainer.classList.add("hidden");
             // Set the max height of the remaining resources containers
             const availableCityResourcesContainer = MustGetElement(".available-city-resources-container", this.Root);
@@ -121,7 +121,7 @@ class ScreenResourceAllocation extends Panel {
     }
     onAttach() {
         super.onAttach();
-        const empireResourceList = MustGetElement('.empire-resource-list');
+        const empireResourceList = MustGetElement('.empire-resource-list', document);
         this.filterContainer.addEventListener("focusin", this.onfilterContainerFocusedListener);
         this.cityList.addEventListener("focusin", this.onCityListFocusedListener);
         this.availableResourceList.addEventListener("focusin", this.onResourceListFocusedListener);
@@ -285,8 +285,8 @@ class ScreenResourceAllocation extends Panel {
         this.cityList.appendChild(cityOuterDiv);
         engine.synchronizeModels();
         this.setButtonContainerVisible(!ActionHandler.isGamepadActive);
-        const availableResourcesWrapper = MustGetElement(".available-resources-wrapper");
-        const noResourcesOverlay = MustGetElement(".no-resources-overlay");
+        const availableResourcesWrapper = MustGetElement(".available-resources-wrapper", document);
+        const noResourcesOverlay = MustGetElement(".no-resources-overlay", document);
         Databind.classToggle(availableResourcesWrapper, "hidden", `!{{g_ResourceAllocationModel.shouldShowAvailableResources}}`);
         Databind.classToggle(noResourcesOverlay, "hidden", `{{g_ResourceAllocationModel.shouldShowAvailableResources}}`);
         ResourceAllocation.updateResources();
@@ -535,6 +535,10 @@ class ScreenResourceAllocation extends Panel {
         const target = event.target;
         if (target == null) {
             console.error("panel-build-queue: onCityFocus(): Invalid event target. It should be an HTMLElement");
+            return;
+        }
+        if (target.parentElement == null) {
+            console.error("panel-build-queue: onCityFocus(): Invalid event target.parentElement. It should be an HTMLElement");
             return;
         }
         const parent = target.parentElement;
@@ -864,4 +868,5 @@ Controls.define('screen-resource-allocation', {
     attributes: [],
     classNames: ["trigger-nav-help", "w-full", "h-full"]
 });
+
 //# sourceMappingURL=file:///base-standard/ui/resource-allocation/screen-resource-allocation.js.map

@@ -453,7 +453,7 @@ class ResourceAllocationModel {
 					// EXPLORATION
 					// *** EFB: temporary.  For now just append TreasureInfo on to "settlementAdditionalInfo". Very kludgy!
 					else if (uiCurrentAge == Game.getHash("AGE_EXPLORATION")) {
-						const bTreasureTechPrereqMet: boolean = cityResources.isTreasureTechPrereqMet();
+						const bTreasureTechPrereqMet: boolean = cityResources.isTreasureProgressionTreeNodePrereqMet();
 						const bTreasureConstructiblePrereqMet: boolean = cityResources.isTreasureConstructiblePrereqMet();
 						if (city.isCapital) {
 							settlementTypeString = "Capital";
