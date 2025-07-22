@@ -95,7 +95,7 @@ class ScreenResourceAllocation extends Panel {
             // Hide the available Factory Resources if we're not in Modern
             const availableFactoryResourcesContainer = MustGetElement(".available-factory-resources-container", this.Root);
             availableFactoryResourcesContainer.classList.add("hidden");
-            const showFactoriesCheckboxContainer = MustGetElement(".show-factories-container", document);
+            const showFactoriesCheckboxContainer = MustGetElement(".show-factories-container", this.Root);
             showFactoriesCheckboxContainer.classList.add("hidden");
             // Set the max height of the remaining resources containers
             const availableCityResourcesContainer = MustGetElement(".available-city-resources-container", this.Root);
@@ -121,7 +121,7 @@ class ScreenResourceAllocation extends Panel {
     }
     onAttach() {
         super.onAttach();
-        const empireResourceList = MustGetElement('.empire-resource-list', document);
+        const empireResourceList = MustGetElement('.empire-resource-list', this.Root);
         this.filterContainer.addEventListener("focusin", this.onfilterContainerFocusedListener);
         this.cityList.addEventListener("focusin", this.onCityListFocusedListener);
         this.availableResourceList.addEventListener("focusin", this.onResourceListFocusedListener);
@@ -283,10 +283,32 @@ class ScreenResourceAllocation extends Panel {
             cityOuterDiv.appendChild(cityOuterContainer);
         }
         this.cityList.appendChild(cityOuterDiv);
+        const frame = MustGetElement("fxs-frame", this.Root);
+        frame.setAttribute("outside-safezone-mode", "full");
+        const uiViewExperience = UI.getViewExperience();
+        if (uiViewExperience == UIViewExperience.Mobile) {
+            frame.setAttribute("frame-style", "f1");
+            frame.setAttribute("top-border-style", "");
+            frame.setAttribute("filigree-class", "mt-1");
+            frame.setAttribute("override-styling", "pt-5 relative flex size-full px-10 pb-10");
+            const headerResource = MustGetElement(".resource-header", this.Root);
+            if (frame.children.length > 0) {
+                frame.insertBefore(headerResource, frame.children[0]);
+            }
+            else {
+                frame.appendChild(headerResource);
+            }
+            const headerCivName = MustGetElement(".civilization-name", this.Root);
+            frame.insertBefore(headerCivName, frame.children[0]);
+            const headerCivIcon = MustGetElement(".resource-civ-symbol", this.Root);
+            frame.insertBefore(headerCivIcon, frame.children[0]);
+            const waitTurn = MustGetElement(".wait-turn", this.Root);
+            frame.insertBefore(waitTurn, frame.children[0]);
+        }
         engine.synchronizeModels();
         this.setButtonContainerVisible(!ActionHandler.isGamepadActive);
-        const availableResourcesWrapper = MustGetElement(".available-resources-wrapper", document);
-        const noResourcesOverlay = MustGetElement(".no-resources-overlay", document);
+        const availableResourcesWrapper = MustGetElement(".available-resources-wrapper", this.Root);
+        const noResourcesOverlay = MustGetElement(".no-resources-overlay", this.Root);
         Databind.classToggle(availableResourcesWrapper, "hidden", `!{{g_ResourceAllocationModel.shouldShowAvailableResources}}`);
         Databind.classToggle(noResourcesOverlay, "hidden", `{{g_ResourceAllocationModel.shouldShowAvailableResources}}`);
         ResourceAllocation.updateResources();
@@ -407,6 +429,7 @@ class ScreenResourceAllocation extends Panel {
             resourceActivatable.setAttribute('data-bind-attr-data-resource-class', '{{resource.classType}}');
             resourceActivatable.setAttribute('data-bind-attr-data-assignment-locked', '{{g_ResourceAllocationModel.isResourceAssignmentLocked}}');
             resourceActivatable.setAttribute('data-bind-attr-data-in-trade-network', '{{resource.isInTradeNetwork}}');
+            resourceActivatable.setAttribute('data-bind-attr-data-city-id', '{{entry.id.id}}');
             resourceActivatable.addEventListener('focus', this.assignedResourceFocusListener);
             resourceActivatable.addEventListener(InputEngineEventName, this.assignedResourceEngineInputListener);
             resourceActivatable.addEventListener('action-activate', this.assignedResourceActivateListener);
@@ -798,7 +821,7 @@ class ScreenResourceAllocation extends Panel {
             console.error("screen-resource-allocation: onAssignedResourceFocus(): Invalid event target. It should be an HTMLElement");
             return;
         }
-        const cityIDAttribute = target.parentElement?.getAttribute('data-city-id');
+        const cityIDAttribute = target.getAttribute('data-city-id');
         if (!cityIDAttribute) {
             console.error("screen-resource-allocation: onAssignedResourceFocus(): Invalid City ID");
             return;

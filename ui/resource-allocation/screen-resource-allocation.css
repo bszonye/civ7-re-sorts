@@ -33,6 +33,13 @@ screen-resource-allocation .city-list > :last-child {
 		max-height: 6.6666666667rem;
 	}
 }
+@media (experience: mobile) {
+	.wait-turn {
+		max-width: 27.5rem;
+		top: 1.6666666667rem;
+		left: 2.6666666667rem;
+	}
+}
 
 .wait-turn.img-frame-f2 {
 	border-image-width: 0.6666666667rem;
@@ -93,6 +100,12 @@ screen-resource-allocation .city-list > :last-child {
 		margin-bottom: 1.3333333333rem;
 	}
 }
+@media (experience: mobile) {
+	.resource-allocation-parent-slot {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+}
 
 @media (max-height: 55.5555555556rem) {
 	.resource-allocation-inner-frame {
@@ -100,6 +113,17 @@ screen-resource-allocation .city-list > :last-child {
 		padding-bottom: 0.6666666667rem;
 		padding-left: 0.2222222222rem;
 		padding-left: 0.2222222222rem;
+	}
+}
+@media (experience: mobile) {
+	.resource-allocation-inner-frame {
+		padding: 1.3333333333rem;
+	}
+}
+@media (experience: mobile) {
+	.resource-allocation-inner-frame .fxs-close-button {
+		top: 1.4444444444rem;
+		right: 2.1111111111rem;
 	}
 }
 

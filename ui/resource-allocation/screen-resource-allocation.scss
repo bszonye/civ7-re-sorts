@@ -45,6 +45,12 @@ screen-resource-allocation {
 		max-width: pixels(495);
 		max-height: pixels(120);
 	}
+
+	@media (experience: mobile) {
+		max-width: pixels(495);
+		top: pixels(30);
+		left: pixels(48);
+	}
 }
 
 .wait-turn.img-frame-f2 {
@@ -108,6 +114,11 @@ screen-resource-allocation {
 		margin-top: pixels(0);
 		margin-bottom: pixels(24);
 	}
+
+	@media (experience: mobile) {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
 }
 
 .resource-allocation-inner-frame {
@@ -116,6 +127,17 @@ screen-resource-allocation {
 		padding-bottom: pixels(12);
 		padding-left: pixels(4);
 		padding-left: pixels(4);
+	}
+
+	@media (experience: mobile) {
+		padding: pixels(24);
+	}
+
+	.fxs-close-button {
+		@media (experience: mobile) {
+			top: pixels(26);
+			right: pixels(38);
+		}
 	}
 }
 
