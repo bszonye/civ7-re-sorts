@@ -120,12 +120,13 @@ const initialize = () => {
         update.apply(this, args);
         updateSettlements(this._availableCities);
         this._empireResources.sort(resourceOrder);
+        this._treasureResources.sort(resourceOrder);
         this._uniqueEmpireResources.sort(resourceOrder);
+        this._uniqueTreasureResources.sort(resourceOrder);
         this._allAvailableResources.sort(resourceOrder);
         this._availableBonusResources.sort(resourceOrder);
         this._availableResources.sort(resourceOrder);
         this._availableFactoryResources.sort(resourceOrder);
-        this._treasureResources.sort(resourceOrder);
     }
 };
 engine.whenReady.then(initialize);
