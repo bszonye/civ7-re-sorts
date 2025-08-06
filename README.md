@@ -16,7 +16,7 @@ only the menu screens (Mods and Options) contain localized text.
 
 supported languages:
 
-- French (translated by Somchai2548)
+- French (translated by trixie)
 - German (translated by Chr1Z93)
 - Italian (translated by leonardfactory)
 - Korean (translated by Hotsolidinfill)

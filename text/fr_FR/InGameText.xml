@@ -2,10 +2,10 @@
 <Database>
     <LocalizedText>
         <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE" Language="fr_FR">
-            <Text>Resource Re-sorts • Sépare les villes et les communes sur l'écran des ressources.</Text>
+            <Text>Resource Re-sorts • séparer les villes et les communes sur l’écran des ressources</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION" Language="fr_FR">
-            <Text>L'écran des ressources répertorie d'abord la capitale, puis les villes, puis les communes.</Text>
+            <Text>Sur l’écran des ressources, énumérez d’abord la capitale, puis les villes, puis les communes.</Text>
         </Row>
         <Replace Tag="LOC_OPTIONS_GROUP_BZ_MODS" Language="fr_FR">
             <Text>mods de Trixie</Text>
