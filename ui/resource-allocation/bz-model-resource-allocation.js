@@ -1,5 +1,5 @@
 import bzReSortsOptions from '/bz-re-sorts/ui/options/bz-re-sorts-options.js';
-import ResourceAllocation from '/base-standard/ui/resource-allocation/model-resource-allocation.js';
+import { R as ResourceAllocation } from '/base-standard/ui/resource-allocation/model-resource-allocation.chunk.js';
 
 // name sorting
 const localeOrder = (a, b) => {
