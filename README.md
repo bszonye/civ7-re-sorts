@@ -1,4 +1,4 @@
-## Resource Re-sorts 2.2.1
+## Resource Re-sorts 2.2.2
 better resource organization
 
 new sorting options for the resource allocation screen:
@@ -16,7 +16,7 @@ only the menu screens (Mods and Options) contain localized text.
 
 supported languages:
 
-- French (translated by Somchai2548)
+- French (translated by trixie)
 - German (translated by Chr1Z93)
 - Italian (translated by leonardfactory)
 - Korean (translated by Hotsolidinfill)

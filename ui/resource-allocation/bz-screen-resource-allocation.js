@@ -1,5 +1,5 @@
-import ResourceAllocation from '/base-standard/ui/resource-allocation/model-resource-allocation.js';
-import Databind from '/core/ui/utilities/utilities-core-databinding.js';
+import { R as ResourceAllocation } from '/base-standard/ui/resource-allocation/model-resource-allocation.chunk.js';
+import { D as Databind } from '/core/ui/utilities/utilities-core-databinding.chunk.js';
 
 const BZ_HEAD_STYLE = [
 `
