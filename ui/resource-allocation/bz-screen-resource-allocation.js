@@ -266,6 +266,9 @@ export class bzScreenResourceAllocation {
                 factory.firstChild.style.margin = 0;
                 factory.firstChild.style.marginLeft = '0.3333333333rem';
             }
+            // add drop shadow to settlement icon
+            const sicon = title.querySelector(".size-8");
+            sicon.style.filter = "drop-shadow(0 0.0555555556rem 0.1111111111rem black)";
             // restyle settlement type in bz capsule style
             const stype = title.querySelector(".settlement-type-text");
             stype.classList.remove('font-title', 'uppercase', 'ml-1');

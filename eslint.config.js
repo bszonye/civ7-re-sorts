@@ -20,6 +20,7 @@ export default [
                 Controls: "readonly",
                 Game: "readonly",
                 GameInfo: "readonly",
+                GrowthTypes: "readonly",
                 HTMLElement: "readonly",
                 InputActionStatuses: "readonly",
                 Locale: "readonly",

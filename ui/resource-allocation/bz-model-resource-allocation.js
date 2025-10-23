@@ -67,10 +67,21 @@ const updateSettlements = (list) => {
         item.currentResources.sort(resourceOrder);
         item.visibleResources.sort(resourceOrder);
         item.treasureResources.sort(resourceOrder);
-        const stype = [Locale.compose(item.settlementTypeName)];
         const city = Cities.get(item.id);
-        const hasBuilding = (b) => city.Constructibles?.hasConstructible(b, false);
+        // get town focus info
+        if (city.isTown) {
+            const ptype = city.Growth?.projectType ?? null;
+            const focus = ptype && GameInfo.Projects.lookup(ptype);
+            if (focus) item.settlementTypeName = focus.Name;
+            if (city.Growth?.growthType == GrowthTypes.EXPAND) {
+                item.settlementIcon = "focus_growth";
+            } else if (focus) {
+                item.settlementIcon = UI.getIcon(focus.ProjectType);
+            }
+        }
         // calculate slot tiebreakers
+        const stype = [Locale.compose(item.settlementTypeName)];
+        const hasBuilding = (b) => city.Constructibles?.hasConstructible(b, false);
         item.bzFactory = 0;
         item.bzSlotBonus = 0;
         switch (age.ChronologyIndex) {
