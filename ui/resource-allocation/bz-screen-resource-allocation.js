@@ -18,6 +18,22 @@ const BZ_HEAD_STYLE = [
 }
 .bz-re-sorts .city-top-container:hover {
     color: #E5D2AC;
+    transition-property: color;
+    transition-duration: 0.25s;
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.bz-unassign-all-button {
+    display: flex;
+    position: absolute;
+    right: 1.7777777776rem;
+    bottom: -1.7777777776rem;
+    padding: 0 0.4444444444rem;
+}
+.bz-unassign-all-button:hover {
+    color: #E5D2AC;
+    transition-property: color;
+    transition-duration: 0.25s;
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .bz-sort-button {
     position: relative;
@@ -86,6 +102,7 @@ export class bzScreenResourceAllocation {
     playSoundGate = new UpdateGate(() => {
         this.component.playSound("data-audio-resource-assign");
     });
+    unassignAllButton = document.createElement("fxs-activatable");
     constructor(component) {
         this.component = component;
         component.bzComponent = this;
@@ -96,6 +113,7 @@ export class bzScreenResourceAllocation {
         this.resourceInputListener = this.onResourceInput.bind(this);
         this.targetInputListener = this.onTargetInput.bind(this);
         this.sortOrderActivateListener = this.onSortOrderActivate.bind(this);
+        this.unassignAllListener = this.unassignAllResources.bind(this);
         this.patchPrototypes(this.component);
         Controls.preloadImage('res_capital', 'screen-resource-allocation');
     }
@@ -135,6 +153,18 @@ export class bzScreenResourceAllocation {
             showTowns.addEventListener('component-value-changed',
                 this.showTownsListener);
         }
+        // add Unassign All button
+        const column = this.Root.querySelector(".city-column");
+        column.classList.add("relative");
+        this.unassignAllButton.className =
+            "bz-unassign-all-button img-hud-production-pill";
+        this.unassignAllButton
+            .addEventListener('action-activate', this.unassignAllListener);
+        // TODO: button shape
+        // TODO: empty slot icon
+        // TODO: localization
+        this.unassignAllButton.textContent = "UNASSIGN ALL";
+        column.appendChild(this.unassignAllButton);
     }
     onResourceMoved() {
         const c = this.component;
