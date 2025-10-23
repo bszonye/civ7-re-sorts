@@ -150,6 +150,11 @@ export class bzScreenResourceAllocation {
         this.unassignButton.addEventListener('action-activate', this.unassignListener);
         // TODO: localization
         this.unassignButton.setAttribute("caption", "Unassign All Resources");
+        Databind.attribute(
+            this.unassignButton,
+            "disabled",
+            "g_ResourceAllocationModel.isResourceAssignmentLocked"
+        );
         this.component.parentSlot.appendChild(this.unassignButton);
         this.component.parentSlot.classList.add("relative");
     }
