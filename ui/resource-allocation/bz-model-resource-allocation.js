@@ -122,22 +122,38 @@ const updateSettlements = (list) => {
     sortSettlements();
 }
 
-const initialize = () => {
-    const proto = Object.getPrototypeOf(ResourceAllocation);
-    const update = proto.update;
-    ResourceAllocation.bzSortOrder = "SLOTS";
-    ResourceAllocation.bzSortReverse = true;
-    proto.update = function(...args) {
-        update.apply(this, args);
-        updateSettlements(this._availableCities);
-        this._empireResources.sort(resourceOrder);
-        this._treasureResources.sort(resourceOrder);
-        this._uniqueEmpireResources.sort(resourceOrder);
-        this._uniqueTreasureResources.sort(resourceOrder);
-        this._allAvailableResources.sort(resourceOrder);
-        this._availableBonusResources.sort(resourceOrder);
-        this._availableResources.sort(resourceOrder);
-        this._availableFactoryResources.sort(resourceOrder);
+ResourceAllocation.bzSortOrder = "SLOTS";
+ResourceAllocation.bzSortReverse = true;
+ResourceAllocation.bzUnassignQueue = [];
+// patch ResourceAllocation.update
+const RA_update = ResourceAllocation.update;
+ResourceAllocation.update = function(...args) {
+    RA_update.apply(this, args);
+    updateSettlements(this._availableCities);
+    this._empireResources.sort(resourceOrder);
+    this._treasureResources.sort(resourceOrder);
+    this._uniqueEmpireResources.sort(resourceOrder);
+    this._uniqueTreasureResources.sort(resourceOrder);
+    this._allAvailableResources.sort(resourceOrder);
+    this._availableBonusResources.sort(resourceOrder);
+    this._availableResources.sort(resourceOrder);
+    this._availableFactoryResources.sort(resourceOrder);
+    this.bzUnassignResources();  // process remaining resources
+}
+// add ResourceAllocation.bzUnassignResources
+ResourceAllocation.bzUnassignResources = function(resources=[]) {
+    if (this.isResourceAssignmentLocked) return;
+    if (this.bzUnassignQueue.length + resources.length == 0) return;
+    // get all currently assigned resources
+    const assigned = new Set();
+    this.availableCities
+        .forEach(c => c.currentResources.forEach(r => assigned.add(r.value)));
+    // filter out already-unassigned resources
+    this.bzUnassignQueue = [...this.bzUnassignQueue, ...resources]
+        .filter(r => assigned.has(r.value));
+    // unassign the remaining list
+    console.warn(`TRIX UNASSIGN ${this.bzUnassignQueue.length}`);
+    for (const resource of this.bzUnassignQueue) {
+        ResourceAllocation.unassignResource(resource.value);
     }
-};
-engine.whenReady.then(initialize);
+}

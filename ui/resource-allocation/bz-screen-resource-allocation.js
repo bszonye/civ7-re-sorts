@@ -139,7 +139,7 @@ export class bzScreenResourceAllocation {
             showTowns.addEventListener('component-value-changed',
                 this.showTownsListener);
         }
-        // add Unassign All button
+        // add Unassign All Resources button
         this.unassignButton.classList.add(
             "absolute",
             "-bottom-2\\.5",
@@ -162,42 +162,27 @@ export class bzScreenResourceAllocation {
         this.playSoundGate.call("onResourceMoved");
     }
     unassignAllResources() {
-        const ids = ResourceAllocation.availableCities.map(e => e.id.id);
-        for (const id of ids) this.unassignSettlementResources(id);
+        console.warn(`TRIX UNASSIGN-ALL`);
+        const resources = [];
+        ResourceAllocation.availableCities
+            .forEach(c => resources.push(...c.currentResources));
+        if (ResourceAllocation.isResourceAssignmentLocked || !resources.length) {
+            this.component.playSound("data-audio-select-press");
+            return;
+        }
+        this.component.playSound("data-audio-resource-assign");
+        ResourceAllocation.bzUnassignResources(resources);
     }
     unassignSettlementResources(cityID) {
-        const bonusSlots = (res) => {
-            const slots = GameInfo.Resources.lookup(res.type)?.BonusResourceSlots ?? 0;
-            return slots && slots + 1;  // bonus also adds a slot for the camel itself
+        console.warn(`TRIX UNASSIGN-SETTLEMENT`);
+        const resources = ResourceAllocation.availableCities
+            .find(c => c.id.id == cityID)?.currentResources;
+        if (ResourceAllocation.isResourceAssignmentLocked || !resources.length) {
+            this.component.playSound("data-audio-select-press");
+            return;
         }
-        const currentResources = ((id) => {
-            // get all assigned resources (with camels last)
-            const resources = ResourceAllocation.availableCities
-                .find(e => e.id.id == id)?.currentResources ?? [];
-            resources.sort((a, b) => bonusSlots(a) - bonusSlots(b))
-            return resources;
-        });
-        const resources = currentResources(cityID);
-        if (!resources.length) return;
-        for (const resource of resources) {
-            ResourceAllocation.unassignResource(resource.value);
-        }
-        let tries = 0;
-        let slots = resources.length;
-        // repeat a few times to clear all camels
-        const unassignInterval = setInterval(() => {
-            const resources = currentResources(cityID);
-            if (!resources.length || 10 < ++tries) {
-                clearInterval(unassignInterval);
-                return;
-            }
-            if (resources.length == slots) return;
-            for (const resource of resources) {
-                ResourceAllocation.unassignResource(resource.value);
-            }
-            tries = 0;
-            slots = resources.length;
-        }, 100);
+        this.component.playSound("data-audio-resource-assign");
+        ResourceAllocation.bzUnassignResources(resources);
     }
     onShowFactoriesChanged(event) {
         document.body.classList.toggle("bz-hide-factories", !event.detail.value);
