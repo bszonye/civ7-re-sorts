@@ -1,5 +1,6 @@
 import { R as ResourceAllocation } from '/base-standard/ui/resource-allocation/model-resource-allocation.chunk.js';
 import { D as Databind } from '/core/ui/utilities/utilities-core-databinding.chunk.js';
+import { U as UpdateGate } from '/core/ui/utilities/utilities-update-gate.chunk.js';
 
 const BZ_HEAD_STYLE = [
 `
@@ -81,6 +82,10 @@ const bzSortOrderControls = [
 ];
 export class bzScreenResourceAllocation {
     static c_prototype;
+    static c_onResourceMoved;
+    playSoundGate = new UpdateGate(() => {
+        this.component.playSound("data-audio-resource-assign");
+    });
     constructor(component) {
         this.component = component;
         component.bzComponent = this;
@@ -107,6 +112,12 @@ export class bzScreenResourceAllocation {
             const after_rv = afterInitialize.apply(this.bzComponent, args);
             return after_rv ?? c_rv;
         }
+        // onResourceMoved
+        bzScreenResourceAllocation.c_onResourceMoved = proto.onResourceMoved;
+        proto.onResourceMoved = function() {
+            return this.bzComponent.onResourceMoved();
+        }
+        component.resourceMovedListener = component.onResourceMoved.bind(component);
     }
     afterInitialize() {
         // replace filter handlers
@@ -125,31 +136,51 @@ export class bzScreenResourceAllocation {
                 this.showTownsListener);
         }
     }
-    unassignAllResources(cityID) {
+    onResourceMoved() {
+        const c = this.component;
+        c.updateAllUnassignActivatable();
+        c.updateAvailableResourceColDisabledState();
+        c.updateCityEntriesDisabledState();
+        waitForLayout(() => c.determineInitialFocus());
+        this.playSoundGate.call("onResourceMoved");
+    }
+    unassignAllResources() {
+        const ids = ResourceAllocation.availableCities.map(e => e.id.id);
+        for (const id of ids) this.unassignSettlementResources(id);
+    }
+    unassignSettlementResources(cityID) {
         const bonusSlots = (res) => {
             const slots = GameInfo.Resources.lookup(res.type)?.BonusResourceSlots ?? 0;
-            // camels add an extra slot (possibly a bug)
-            return slots && slots + 1;
+            return slots && slots + 1;  // bonus also adds a slot for the camel itself
         }
-        const resources = ResourceAllocation.availableCities
-                .find(e => e.id.id == cityID)?.currentResources;
-        if (!resources || !resources.length) return;
-        resources.sort((a, b) => bonusSlots(b) - bonusSlots(a));
-        let slots = resources.length;
+        const currentResources = ((id) => {
+            // get all assigned resources (with camels last)
+            const resources = ResourceAllocation.availableCities
+                .find(e => e.id.id == id)?.currentResources ?? [];
+            resources.sort((a, b) => bonusSlots(a) - bonusSlots(b))
+            return resources;
+        });
+        const resources = currentResources(cityID);
+        if (!resources.length) return;
+        for (const resource of resources) {
+            ResourceAllocation.unassignResource(resource.value);
+        }
         let tries = 0;
-        // unassign resources over time to avoid loud clicks
-        // or camels getting stuck in their slots
+        let slots = resources.length;
+        // repeat a few times to clear all camels
         const unassignInterval = setInterval(() => {
-            if (10 <= ++tries) clearInterval(unassignInterval);  // failsafe
-            const current = ResourceAllocation.availableCities
-                .find(e => e.id.id == cityID)?.currentResources ?? [];
-            if (slots < current.length && tries < 5) return;
-            // unassign slots right to left
-            const res = resources[--slots];
-            ResourceAllocation.unassignResource(res.value);
+            const resources = currentResources(cityID);
+            if (!resources.length || 10 < ++tries) {
+                clearInterval(unassignInterval);
+                return;
+            }
+            if (resources.length == slots) return;
+            for (const resource of resources) {
+                ResourceAllocation.unassignResource(resource.value);
+            }
             tries = 0;
-            if (slots < 1) clearInterval(unassignInterval);  // last loop
-        }, 50);
+            slots = resources.length;
+        }, 100);
     }
     onShowFactoriesChanged(event) {
         document.body.classList.toggle("bz-hide-factories", !event.detail.value);
@@ -172,7 +203,8 @@ export class bzScreenResourceAllocation {
                 return;
             }
             const cityID = parseInt(cityIDAttribute);
-            this.unassignAllResources(cityID);
+            this.unassignSettlementResources(cityID);
+            // this.unassignAllResources();
         }
         // middle-click on resource
         if (event.target.classList.contains('city-resource')) {
