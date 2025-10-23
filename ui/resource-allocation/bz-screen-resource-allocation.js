@@ -162,27 +162,19 @@ export class bzScreenResourceAllocation {
         this.playSoundGate.call("onResourceMoved");
     }
     unassignAllResources() {
-        console.warn(`TRIX UNASSIGN-ALL`);
         const resources = [];
         ResourceAllocation.availableCities
             .forEach(c => resources.push(...c.currentResources));
-        if (ResourceAllocation.isResourceAssignmentLocked || !resources.length) {
-            this.component.playSound("data-audio-select-press");
-            return;
-        }
-        this.component.playSound("data-audio-resource-assign");
-        ResourceAllocation.bzUnassignResources(resources);
+        const queued = ResourceAllocation.bzUnassignResources(resources);
+        const sound = queued ? "data-audio-resource-assign" : "data-audio-select-press";
+        this.component.playSound(sound);
     }
     unassignSettlementResources(cityID) {
-        console.warn(`TRIX UNASSIGN-SETTLEMENT`);
         const resources = ResourceAllocation.availableCities
             .find(c => c.id.id == cityID)?.currentResources;
-        if (ResourceAllocation.isResourceAssignmentLocked || !resources.length) {
-            this.component.playSound("data-audio-select-press");
-            return;
-        }
-        this.component.playSound("data-audio-resource-assign");
-        ResourceAllocation.bzUnassignResources(resources);
+        const queued = ResourceAllocation.bzUnassignResources(resources);
+        const sound = queued ? "data-audio-resource-assign" : "data-audio-select-press";
+        this.component.playSound(sound);
     }
     onShowFactoriesChanged(event) {
         document.body.classList.toggle("bz-hide-factories", !event.detail.value);

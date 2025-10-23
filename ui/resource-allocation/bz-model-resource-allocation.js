@@ -142,27 +142,29 @@ ResourceAllocation.update = function(...args) {
 }
 // add ResourceAllocation.bzUnassignResources
 ResourceAllocation.bzUnassignResources = function(resources=[]) {
-    // perf check
-    if (resources.length || !this.bzUnassignQueue.length) this.start = this.now = performance.now();
-    const now = performance.now();
-    console.warn(`TRIX TIME ${(now-this.start).toFixed(2)} ${(now-this.now).toFixed(2)}`);
-    this.now = now;
-    // check for locked/empty queue
-    if (this.isResourceAssignmentLocked) return;
-    if (this.bzUnassignQueue.length + resources.length == 0) return;
-    // get all currently assigned resources
-    const assigned = new Set();
-    this.availableCities
-        .forEach(c => c.currentResources.forEach(r => assigned.add(r.value)));
-    // filter out already-unassigned resources
-    // TODO: filter network-locked resources
-    this.bzUnassignQueue = [...this.bzUnassignQueue, ...resources]
-        .filter(r => assigned.has(r.value));
-    // sort camels last to avoid blocking the queue
-    this.bzUnassignQueue.sort((a, b) => a.bonusResourceSlots - b.bonusResourceSlots);
-    // unassign the remaining list (up to 6 at a time)
-    console.warn(`TRIX UNASSIGN ${this.bzUnassignQueue.length}`);
-    for (const resource of this.bzUnassignQueue.slice(0, 6)) {
+    // filter out locked resources
+    if (this.isResourceAssignmentLocked) return 0;
+    resources = resources.filter(r => r.isInTradeNetwork && !r.isBeingRazed);
+    if (this.bzUnassignQueue.length + resources.length == 0) return 0;
+    // queue camels for followup
+    this.bzUnassignQueue.push(...resources.filter(r => r.bonusResourceSlots));
+    // unassign new resources, if any
+    if (resources.length) {
+        for (const resource of resources) {
+            ResourceAllocation.unassignResource(resource.value);
+        }
+        return resources.length;
+    }
+    // otherwise, unassign queued items
+    this.bzUnassignQueue = this.bzUnassignQueue.filter(({ value }) => {
+        for (const cityEntry of this.availableCities) {
+            if (cityEntry.currentResources.find(r => r.value == value)) return true;
+        }
+        return false;  // remove completed items from queue
+    });
+    // unassign remaining items
+    for (const resource of this.bzUnassignQueue) {
         ResourceAllocation.unassignResource(resource.value);
     }
+    return 0;
 }
