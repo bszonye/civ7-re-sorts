@@ -307,12 +307,7 @@ export class bzScreenResourceAllocation {
             stype.classList.add('leading-snug', 'bg-primary-5', 'rounded-3xl', 'ml-2', 'px-2');
         }
         // event handlers
-        for (const title of this.Root.querySelectorAll(".city-top-container")) {
-            title.addEventListener('engine-input', this.resourceInputListener);
-        }
-        for (const resource of this.Root.querySelectorAll(".city-resource")) {
-            resource.addEventListener('engine-input', this.resourceInputListener);
-        }
+        this.Root.addEventListener('engine-input', this.resourceInputListener);
         const acolumn = this.component.availableResourceCol;
         acolumn.classList.add('pointer-events-auto');
         acolumn.setAttribute('data-bind-class-toggle', 'hover-enabled:{{g_ResourceAllocationModel.hasSelectedAssignedResource}}');
@@ -321,7 +316,9 @@ export class bzScreenResourceAllocation {
             scrollable.addEventListener('engine-input', this.targetInputListener);
         }
     }
-    beforeDetach() { }
+    beforeDetach() {
+        this.Root.removeEventListener('engine-input', this.resourceInputListener);
+    }
     afterDetach() { }
     onAttributeChanged(_name, _prev, _next) { }
 }
