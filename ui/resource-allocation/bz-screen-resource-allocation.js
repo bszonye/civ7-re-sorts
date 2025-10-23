@@ -22,19 +22,6 @@ const BZ_HEAD_STYLE = [
     transition-duration: 0.25s;
     transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
 }
-.bz-unassign-all-button {
-    display: flex;
-    position: absolute;
-    right: 1.7777777776rem;
-    bottom: -1.7777777776rem;
-    padding: 0 0.4444444444rem;
-}
-.bz-unassign-all-button:hover {
-    color: #E5D2AC;
-    transition-property: color;
-    transition-duration: 0.25s;
-    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-}
 .bz-sort-button {
     position: relative;
     pointer-events: auto;
@@ -102,18 +89,17 @@ export class bzScreenResourceAllocation {
     playSoundGate = new UpdateGate(() => {
         this.component.playSound("data-audio-resource-assign");
     });
-    unassignAllButton = document.createElement("fxs-activatable");
+    showFactoriesListener = this.onShowFactoriesChanged.bind(this);
+    showTownsListener = this.onShowTownsChanged.bind(this);
+    sortOrderActivateListener = this.onSortOrderActivate.bind(this);
+    resourceInputListener = this.onResourceInput.bind(this);
+    targetInputListener = this.onTargetInput.bind(this);
+    unassignListener = this.unassignAllResources.bind(this);
+    unassignButton = document.createElement("fxs-button");
     constructor(component) {
         this.component = component;
         component.bzComponent = this;
         this.Root = this.component.Root;
-        this.availableResourceCol = null;
-        this.showFactoriesListener = this.onShowFactoriesChanged.bind(this);
-        this.showTownsListener = this.onShowTownsChanged.bind(this);
-        this.resourceInputListener = this.onResourceInput.bind(this);
-        this.targetInputListener = this.onTargetInput.bind(this);
-        this.sortOrderActivateListener = this.onSortOrderActivate.bind(this);
-        this.unassignAllListener = this.unassignAllResources.bind(this);
         this.patchPrototypes(this.component);
         Controls.preloadImage('res_capital', 'screen-resource-allocation');
     }
@@ -154,17 +140,18 @@ export class bzScreenResourceAllocation {
                 this.showTownsListener);
         }
         // add Unassign All button
-        const column = this.Root.querySelector(".city-column");
-        column.classList.add("relative");
-        this.unassignAllButton.className =
-            "bz-unassign-all-button img-hud-production-pill";
-        this.unassignAllButton
-            .addEventListener('action-activate', this.unassignAllListener);
-        // TODO: button shape
-        // TODO: empty slot icon
+        this.unassignButton.classList.add(
+            "absolute",
+            "-bottom-2\\.5",
+            "left-1\\/2",
+            "-translate-x-1\\/2",
+            "px-8",
+        );
+        this.unassignButton.addEventListener('action-activate', this.unassignListener);
         // TODO: localization
-        this.unassignAllButton.textContent = "UNASSIGN ALL";
-        column.appendChild(this.unassignAllButton);
+        this.unassignButton.setAttribute("caption", "Unassign All Resources");
+        this.component.parentSlot.appendChild(this.unassignButton);
+        this.component.parentSlot.classList.add("relative");
     }
     onResourceMoved() {
         const c = this.component;
