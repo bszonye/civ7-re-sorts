@@ -32,6 +32,7 @@ export default [
                 document: "readonly",
                 engine: "readonly",
                 localStorage: "readonly",
+                performance: "readonly",
                 setInterval: "readonly",
                 waitForLayout: "readonly",
             }

@@ -142,6 +142,12 @@ ResourceAllocation.update = function(...args) {
 }
 // add ResourceAllocation.bzUnassignResources
 ResourceAllocation.bzUnassignResources = function(resources=[]) {
+    // perf check
+    if (resources.length || !this.bzUnassignQueue.length) this.start = this.now = performance.now();
+    const now = performance.now();
+    console.warn(`TRIX TIME ${(now-this.start).toFixed(2)} ${(now-this.now).toFixed(2)}`);
+    this.now = now;
+    // check for locked/empty queue
     if (this.isResourceAssignmentLocked) return;
     if (this.bzUnassignQueue.length + resources.length == 0) return;
     // get all currently assigned resources
@@ -149,11 +155,14 @@ ResourceAllocation.bzUnassignResources = function(resources=[]) {
     this.availableCities
         .forEach(c => c.currentResources.forEach(r => assigned.add(r.value)));
     // filter out already-unassigned resources
+    // TODO: filter network-locked resources
     this.bzUnassignQueue = [...this.bzUnassignQueue, ...resources]
         .filter(r => assigned.has(r.value));
-    // unassign the remaining list
+    // sort camels last to avoid blocking the queue
+    this.bzUnassignQueue.sort((a, b) => a.bonusResourceSlots - b.bonusResourceSlots);
+    // unassign the remaining list (up to 6 at a time)
     console.warn(`TRIX UNASSIGN ${this.bzUnassignQueue.length}`);
-    for (const resource of this.bzUnassignQueue) {
+    for (const resource of this.bzUnassignQueue.slice(0, 6)) {
         ResourceAllocation.unassignResource(resource.value);
     }
 }

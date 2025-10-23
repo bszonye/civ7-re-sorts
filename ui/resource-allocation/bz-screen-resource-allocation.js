@@ -271,6 +271,10 @@ export class bzScreenResourceAllocation {
         }
         // restyle settlement entries
         for (const outer of this.Root.querySelectorAll(".city-outer")) {
+            // resize razed overlay
+            const razedOverlay = outer.querySelector(".razed-overlay");
+            razedOverlay.classList.remove("h-39");
+            razedOverlay.classList.add("h-36", "-top-1");
             // tighten margins
             outer.style.marginBottom = '0.6666666667rem';
             const inner = outer.querySelector(".city-entry-internal");
