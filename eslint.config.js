@@ -33,7 +33,9 @@ export default [
                 engine: "readonly",
                 localStorage: "readonly",
                 performance: "readonly",
+                requestAnimationFrame: "readonly",
                 setInterval: "readonly",
+                setTimeout: "readonly",
                 waitForLayout: "readonly",
             }
         }

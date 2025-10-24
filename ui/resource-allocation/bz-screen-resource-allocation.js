@@ -148,8 +148,10 @@ export class bzScreenResourceAllocation {
             "px-8",
         );
         this.unassignButton.addEventListener('action-activate', this.unassignListener);
-        // TODO: localization
-        this.unassignButton.setAttribute("caption", "Unassign All Resources");
+        this.unassignButton.setAttribute(
+            "caption",
+            "LOC_BZ_RESOURCE_ALLOCATION_UNASSIGN_ALL"
+        );
         Databind.attribute(
             this.unassignButton,
             "disabled",
@@ -233,6 +235,9 @@ export class bzScreenResourceAllocation {
     }
     beforeAttach() { }
     afterAttach() {
+        // fix centering for narrow labels
+        requestAnimationFrame(() =>
+            this.unassignButton.lastChild?.classList.add("flex-auto"));
         // add sorting controls
         const factories = this.Root.querySelector(".show-factories-container");
         factories.classList.add("mr-3");  // make room

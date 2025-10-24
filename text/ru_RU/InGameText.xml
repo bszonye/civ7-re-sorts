@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <LocalizedText>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE" Language="ru_RU">
+        <Replace Tag="LOC_BZ_RESOURCE_ALLOCATION_UNASSIGN_ALL" Language="ru_RU">
+            <Text>Отменить все назначения</Text>
+        </Replace>
+        <Replace Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE" Language="ru_RU">
             <Text>Resource Re-sorts • Группировать поселения по типу</Text>
-        </Row>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION" Language="ru_RU">
+        </Replace>
+        <Replace Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION" Language="ru_RU">
             <Text>В окне управления ресурсами сначала показывается столицу, затем города и городки.</Text>
-        </Row>
+        </Replace>
         <Replace Tag="LOC_OPTIONS_GROUP_BZ_MODS" Language="ru_RU">
             <Text>Моды от Trixie</Text>
         </Replace>
