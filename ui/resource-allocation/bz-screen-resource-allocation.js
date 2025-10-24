@@ -61,6 +61,9 @@ const BZ_HEAD_STYLE = [
     transform: rotate(-90deg) scale(-1, 1);
     top: -0.7222222222rem;
 }
+.bz-unassign-button [data-l10n-id] {
+    flex: 1 1 auto;
+}
 `,
 ];
 BZ_HEAD_STYLE.map(style => {
@@ -141,6 +144,7 @@ export class bzScreenResourceAllocation {
         }
         // add Unassign All Resources button
         this.unassignButton.classList.add(
+            "bz-unassign-button",
             "absolute",
             "-bottom-2\\.5",
             "left-1\\/2",
@@ -235,9 +239,6 @@ export class bzScreenResourceAllocation {
     }
     beforeAttach() { }
     afterAttach() {
-        // fix centering for narrow labels
-        requestAnimationFrame(() =>
-            this.unassignButton.lastChild?.classList.add("flex-auto"));
         // add sorting controls
         const factories = this.Root.querySelector(".show-factories-container");
         factories.classList.add("mr-3");  // make room
