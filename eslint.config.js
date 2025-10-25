@@ -17,6 +17,7 @@ export default [
             globals: {
                 CategoryType: "readonly",
                 Cities: "readonly",
+                Configuration: "readonly",
                 Controls: "readonly",
                 Game: "readonly",
                 GameContext: "readonly",

@@ -1,49 +1,48 @@
 import '/core/ui/options/screen-options.js';  // make sure this loads first
 import { C as CategoryType, O as Options, a as OptionType } from '/core/ui/options/editors/index.chunk.js';
-import ModSettings from '/bz-re-sorts/ui/options/mod-options-decorator.js';
+// set up mod options tab
+import ModOptions from '/bz-re-sorts/ui/options/mod-options.js';
 
-const MOD_ID = "bz-re-sorts";
-
-const BZ_DEFAULT_OPTIONS = {
-    groupByType: false,
-};
 const bzReSortsOptions = new class {
-    data = { ...BZ_DEFAULT_OPTIONS };
-    constructor() {
-        const modSettings = ModSettings.load(MOD_ID);
-        this.data = {
-            groupByType: modSettings?.groupByType ??  BZ_DEFAULT_OPTIONS.groupByType,
+    modID = "bz-re-sorts";
+    defaults = {
+        groupByType: Number(true),
+    };
+    data = {};
+    load(optionID) {
+        const value = ModOptions.load(this.modID, optionID);
+        if (value == null) {
+            const value = this.defaults[optionID];
+            console.warn(`LOAD ${this.modID}.${optionID}=${value} (default)`);
+            return value;
         }
-        console.warn(`DATA bz-re-sorts=${JSON.stringify(this.data)}`);
+        return value;
     }
-    save() {
-        ModSettings.save(MOD_ID, this.data);
+    save(optionID) {
+        const value = Number(this.data[optionID]);
+        ModOptions.save(this.modID, optionID, value);
     }
     get groupByType() {
+        this.data.groupByType ??= Boolean(this.load("groupByType"));
         return this.data.groupByType;
     }
     set groupByType(flag) {
-        this.data.groupByType = !!flag;
-        this.save();
+        this.data.groupByType = Boolean(flag);
+        this.save("groupByType");
     }
 };
-const onInitGroupByType = (info) => {
-    info.currentValue = bzReSortsOptions.groupByType;
-};
-const onUpdateGroupByType = (_info, flag) => {
-    bzReSortsOptions.groupByType = flag;
-};
+
 Options.addInitCallback(() => {
     Options.addOption({
         category: CategoryType.Mods,
-        // @ts-ignore
         group: "bz_mods",
         type: OptionType.Checkbox,
         id: "bz-re-sorts-group-by-type",
-        initListener: onInitGroupByType,
-        updateListener: onUpdateGroupByType,
+        initListener: (info) => info.currentValue = bzReSortsOptions.groupByType,
+        updateListener: (_info, value) => bzReSortsOptions.groupByType = value,
         label: "LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE",
         description: "LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION",
     });
 });
+
 export { bzReSortsOptions as default };
