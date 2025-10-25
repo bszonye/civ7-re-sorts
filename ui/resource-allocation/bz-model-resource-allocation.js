@@ -145,26 +145,37 @@ ResourceAllocation.bzUnassignResources = function(resources=[]) {
     // filter out locked resources
     if (this.isResourceAssignmentLocked) return 0;
     resources = resources.filter(r => r.isInTradeNetwork && !r.isBeingRazed);
-    if (this.bzUnassignQueue.length + resources.length == 0) return 0;
-    // queue camels for followup
-    this.bzUnassignQueue.push(...resources.filter(r => r.bonusResourceSlots));
-    // unassign new resources, if any
-    if (resources.length) {
-        for (const resource of resources) {
-            ResourceAllocation.unassignResource(resource.value);
+    if (resources.length + this.bzUnassignQueue.length == 0) return 0;
+    // get operation parameters for all assigned resources
+    const lpid = GameContext.localPlayerID;
+    const op = PlayerOperationTypes.ASSIGN_RESOURCE;
+    const assignment = new Map();
+    for (const ac of this.availableCities) {
+        for (const resource of ac.currentResources) {
+            const args = {
+                Location: GameplayMap.getLocationFromIndex(resource.value),
+                City: ac.id.id,
+                Action: PlayerOperationParameters.Deactivate,
+            };
+            assignment.set(resource.value, args);
         }
-        return resources.length;
     }
-    // otherwise, unassign queued items
-    this.bzUnassignQueue = this.bzUnassignQueue.filter(({ value }) => {
-        for (const cityEntry of this.availableCities) {
-            if (cityEntry.currentResources.find(r => r.value == value)) return true;
+    // unassign resources
+    resources.push(...this.bzUnassignQueue);
+    const done = [];
+    this.bzUnassignQueue = [];
+    for (const resource of resources) {
+        const args = assignment.get(resource.value);
+        if (!args) continue;  // not assigned
+        const result = Game.PlayerOperations.canStart(lpid, op, args, false);
+        if (result.Success) {
+            // ready to unassign
+            Game.PlayerOperations.sendRequest(lpid, op, args);
+            done.push(resource);
+        } else if (resource.bonusResourceSlots) {
+            // queue for later
+            this.bzUnassignQueue.push(resource);
         }
-        return false;  // remove completed items from queue
-    });
-    // unassign remaining items
-    for (const resource of this.bzUnassignQueue) {
-        ResourceAllocation.unassignResource(resource.value);
     }
-    return 0;
+    return done.length + this.bzUnassignQueue.length;
 }

@@ -173,18 +173,20 @@ export class bzScreenResourceAllocation {
         this.playSoundGate.call("onResourceMoved");
     }
     unassignAllResources() {
+        ResourceAllocation.clearSelectedResource();
         const resources = [];
         ResourceAllocation.availableCities
             .forEach(c => resources.push(...c.currentResources));
-        const queued = ResourceAllocation.bzUnassignResources(resources);
-        const sound = queued ? "data-audio-resource-assign" : "data-audio-select-press";
+        const success = ResourceAllocation.bzUnassignResources(resources);
+        const sound = success ? "data-audio-resource-assign" : "data-audio-select-press";
         this.component.playSound(sound);
     }
     unassignSettlementResources(cityID) {
+        ResourceAllocation.clearSelectedResource();
         const resources = ResourceAllocation.availableCities
             .find(c => c.id.id == cityID)?.currentResources;
-        const queued = ResourceAllocation.bzUnassignResources(resources);
-        const sound = queued ? "data-audio-resource-assign" : "data-audio-select-press";
+        const success = ResourceAllocation.bzUnassignResources(resources);
+        const sound = success ? "data-audio-resource-assign" : "data-audio-select-press";
         this.component.playSound(sound);
     }
     onShowFactoriesChanged(event) {
@@ -209,7 +211,6 @@ export class bzScreenResourceAllocation {
             }
             const cityID = parseInt(cityIDAttribute);
             this.unassignSettlementResources(cityID);
-            // this.unassignAllResources();
         }
         // middle-click on resource
         if (event.target.classList.contains('city-resource')) {
