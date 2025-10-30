@@ -142,8 +142,8 @@ ResourceAllocation.update = function(...args) {
 }
 // add ResourceAllocation.bzUnassignResources
 ResourceAllocation.bzUnassignResources = function(resources=[]) {
-    // filter out locked resources
     if (this.isResourceAssignmentLocked) return 0;
+    // skip locked resources (outside trade network or being razed)
     resources = resources.filter(r => r.isInTradeNetwork && !r.isBeingRazed);
     if (resources.length + this.bzUnassignQueue.length == 0) return 0;
     // get operation parameters for all assigned resources
