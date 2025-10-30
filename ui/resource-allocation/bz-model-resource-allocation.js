@@ -124,8 +124,8 @@ const updateSettlements = (list) => {
 
 ResourceAllocation.bzSortOrder = "SLOTS";
 ResourceAllocation.bzSortReverse = true;
-ResourceAllocation.bzUnassignQueue = [];
-ResourceAllocation.bzUnassignSet = new Set();
+ResourceAllocation.bzUnassignAll = new Map();
+ResourceAllocation.bzUnassignQueue = new Map();
 // patch ResourceAllocation.update
 const RA_update = ResourceAllocation.update;
 ResourceAllocation.update = function(...args) {
@@ -144,12 +144,15 @@ ResourceAllocation.update = function(...args) {
 // add ResourceAllocation.bzUnassignResources
 ResourceAllocation.bzUnassignResources = function(resources=[]) {
     if (this.isResourceAssignmentLocked) return 0;
-    // skip locked and in-progress resources
-    resources = resources.filter(r =>
-        r.isInTradeNetwork && !r.isBeingRazed &&
-        !this.bzUnassignSet.has(r.value)
-    );
-    if (resources.length + this.bzUnassignSet.size == 0) return 0;
+    // skip locked resources (out of network or being razed)
+    resources = resources.filter(r => r.isInTradeNetwork && !r.isBeingRazed);
+    // add new resources for unassignment
+    for (const resource of resources) {
+        if (this.bzUnassignAll.has(resource.value)) continue;
+        this.bzUnassignAll.set(resource.value, resource);
+        this.bzUnassignQueue.set(resource.value, resource);
+    }
+    if (this.bzUnassignAll.size == 0) return 0;
     // get operation parameters for all assigned resources
     const lpid = GameContext.localPlayerID;
     const op = PlayerOperationTypes.ASSIGN_RESOURCE;
@@ -164,26 +167,18 @@ ResourceAllocation.bzUnassignResources = function(resources=[]) {
             assignment.set(resource.value, args);
         }
     }
-    // record new and completed unassignments
-    resources.forEach(r => this.bzUnassignSet.add(r.value));
-    for (const value of this.bzUnassignSet) {
-        if (!assignment.has(value)) this.bzUnassignSet.delete(value);
+    // remove completed unassignments
+    for (const value of this.bzUnassignAll.keys()) {
+        if (assignment.has(value)) continue;
+        this.bzUnassignAll.delete(value);
+        this.bzUnassignQueue.delete(value);
     }
     // unassign resources
-    const queue = [...this.bzUnassignQueue, ...resources];
-    this.bzUnassignQueue = [];
-    for (const resource of queue) {
+    for (const resource of this.bzUnassignQueue.values()) {
         const args = assignment.get(resource.value);
-        if (!args) continue;
         const result = Game.PlayerOperations.canStart(lpid, op, args, false);
-        if (result.Success) {
-            // ready to unassign
-            Game.PlayerOperations.sendRequest(lpid, op, args);
-        }
-        if (resource.bonusResourceSlots) {
-            // queue camels for followup processing
-            this.bzUnassignQueue.push(resource);
-        }
+        if (result.Success) Game.PlayerOperations.sendRequest(lpid, op, args);
+        if (!resource.bonusResourceSlots) this.bzUnassignQueue.delete(resource.value);
     }
     return resources.length;
 }
