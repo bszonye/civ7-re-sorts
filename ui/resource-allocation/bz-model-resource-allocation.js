@@ -125,6 +125,7 @@ const updateSettlements = (list) => {
 ResourceAllocation.bzSortOrder = "SLOTS";
 ResourceAllocation.bzSortReverse = true;
 ResourceAllocation.bzUnassignQueue = [];
+ResourceAllocation.bzUnassignSet = new Set();
 // patch ResourceAllocation.update
 const RA_update = ResourceAllocation.update;
 ResourceAllocation.update = function(...args) {
@@ -143,9 +144,12 @@ ResourceAllocation.update = function(...args) {
 // add ResourceAllocation.bzUnassignResources
 ResourceAllocation.bzUnassignResources = function(resources=[]) {
     if (this.isResourceAssignmentLocked) return 0;
-    // skip locked resources (outside trade network or being razed)
-    resources = resources.filter(r => r.isInTradeNetwork && !r.isBeingRazed);
-    if (resources.length + this.bzUnassignQueue.length == 0) return 0;
+    // skip locked and in-progress resources
+    resources = resources.filter(r =>
+        r.isInTradeNetwork && !r.isBeingRazed &&
+        !this.bzUnassignSet.has(r.value)
+    );
+    if (resources.length + this.bzUnassignSet.size == 0) return 0;
     // get operation parameters for all assigned resources
     const lpid = GameContext.localPlayerID;
     const op = PlayerOperationTypes.ASSIGN_RESOURCE;
@@ -160,22 +164,25 @@ ResourceAllocation.bzUnassignResources = function(resources=[]) {
             assignment.set(resource.value, args);
         }
     }
+    // record new and completed unassignments
+    resources.forEach(r => this.bzUnassignSet.add(r.value));
+    for (const value of this.bzUnassignSet) {
+        if (!assignment.has(value)) this.bzUnassignSet.delete(value);
+    }
     // unassign resources
-    resources.push(...this.bzUnassignQueue);
-    const done = [];
+    const queue = [...this.bzUnassignQueue, ...resources];
     this.bzUnassignQueue = [];
-    for (const resource of resources) {
+    for (const resource of queue) {
         const args = assignment.get(resource.value);
-        if (!args) continue;  // not assigned
+        if (!args) continue;
         const result = Game.PlayerOperations.canStart(lpid, op, args, false);
         if (result.Success) {
             // ready to unassign
             Game.PlayerOperations.sendRequest(lpid, op, args);
-            done.push(resource);
         } else if (resource.bonusResourceSlots) {
             // queue for later
             this.bzUnassignQueue.push(resource);
         }
     }
-    return done.length + this.bzUnassignQueue.length;
+    return resources.length;
 }
