@@ -179,8 +179,9 @@ ResourceAllocation.bzUnassignResources = function(resources=[]) {
         if (result.Success) {
             // ready to unassign
             Game.PlayerOperations.sendRequest(lpid, op, args);
-        } else if (resource.bonusResourceSlots) {
-            // queue for later
+        }
+        if (resource.bonusResourceSlots) {
+            // queue camels for followup processing
             this.bzUnassignQueue.push(resource);
         }
     }
