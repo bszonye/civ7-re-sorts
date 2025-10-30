@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <LocalizedText>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE" Language="ko_KR">
+        <Replace Tag="LOC_BZ_RESOURCE_ALLOCATION_UNASSIGN_ALL" Language="ko_KR">
+            <Text>모든 자원 할당 해제</Text>
+        </Replace>
+        <Replace Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE" Language="ko_KR">
             <Text>Resource Re-sorts • 자원 화면에서 도시와 마을을 분리</Text>
-        </Row>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION" Language="ko_KR">
+        </Replace>
+        <Replace Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION" Language="ko_KR">
             <Text>자원 화면에서 정착지를 수도, 도시, 마을 순으로 정렬합니다.</Text>
-        </Row>
+        </Replace>
         <Replace Tag="LOC_OPTIONS_GROUP_BZ_MODS" Language="ko_KR">
             <Text>trixie의 다양한 모드</Text>
         </Replace>

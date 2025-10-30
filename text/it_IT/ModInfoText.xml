@@ -5,7 +5,7 @@
             <Text>Riordinamento Risorse</Text>
         </Row>
         <Row Tag="LOC_MOD_BZ_RE_SORTS_DESCRIPTION" Language="it_IT">
-            <Text>miglioramenti all'ordinamento delle risorse</Text>
+            <Text>miglioramenti all’ordinamento delle risorse</Text>
         </Row>
     </LocalizedText>
 </Database>

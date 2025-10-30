@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <LocalizedText>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE" Language="zh_Hans_CN">
+        <Replace Tag="LOC_BZ_RESOURCE_ALLOCATION_UNASSIGN_ALL" Language="zh_Hans_CN">
+            <Text>取消所有分配资源</Text>
+        </Replace>
+        <Replace Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE" Language="zh_Hans_CN">
             <Text>资源智能分配 • 在资源界面分离城市与乡镇</Text>
-        </Row>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION" Language="zh_Hans_CN">
+        </Replace>
+        <Replace Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION" Language="zh_Hans_CN">
             <Text>资源界面将按首都、城市、乡镇的顺序排列定居点</Text>
-        </Row>
+        </Replace>
         <Replace Tag="LOC_OPTIONS_GROUP_BZ_MODS" Language="zh_Hans_CN">
             <Text>trixie系列模组</Text>
         </Replace>

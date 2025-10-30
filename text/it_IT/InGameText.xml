@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <LocalizedText>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE" Language="it_IT">
+        <Replace Tag="LOC_BZ_RESOURCE_ALLOCATION_UNASSIGN_ALL" Language="it_IT">
+            <Text>Annulla assegnazione tutte le risorse</Text>
+        </Replace>
+        <Replace Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE" Language="it_IT">
             <Text>Riordinamento Risorse • separa città e paesi nella schermata delle risorse</Text>
-        </Row>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION" Language="it_IT">
+        </Replace>
+        <Replace Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION" Language="it_IT">
             <Text>Nella schermata delle risorse, elenca prima la capitale, poi le città e infine i paesi.</Text>
-        </Row>
+        </Replace>
         <Replace Tag="LOC_OPTIONS_GROUP_BZ_MODS" Language="it_IT">
             <Text>mod di Trixie</Text>
         </Replace>

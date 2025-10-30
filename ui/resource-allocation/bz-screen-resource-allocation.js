@@ -1,5 +1,6 @@
 import { R as ResourceAllocation } from '/base-standard/ui/resource-allocation/model-resource-allocation.chunk.js';
 import { D as Databind } from '/core/ui/utilities/utilities-core-databinding.chunk.js';
+import { U as UpdateGate } from '/core/ui/utilities/utilities-update-gate.chunk.js';
 
 const BZ_HEAD_STYLE = [
 `
@@ -17,6 +18,9 @@ const BZ_HEAD_STYLE = [
 }
 .bz-re-sorts .city-top-container:hover {
     color: #E5D2AC;
+    transition-property: color;
+    transition-duration: 0.25s;
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .bz-sort-button {
     position: relative;
@@ -57,6 +61,9 @@ const BZ_HEAD_STYLE = [
     transform: rotate(-90deg) scale(-1, 1);
     top: -0.7222222222rem;
 }
+.bz-unassign-button [data-l10n-id] {
+    flex: 1 1 auto;
+}
 `,
 ];
 BZ_HEAD_STYLE.map(style => {
@@ -81,16 +88,21 @@ const bzSortOrderControls = [
 ];
 export class bzScreenResourceAllocation {
     static c_prototype;
+    static c_onResourceMoved;
+    playSoundGate = new UpdateGate(() => {
+        this.component.playSound("data-audio-resource-assign");
+    });
+    showFactoriesListener = this.onShowFactoriesChanged.bind(this);
+    showTownsListener = this.onShowTownsChanged.bind(this);
+    sortOrderActivateListener = this.onSortOrderActivate.bind(this);
+    resourceInputListener = this.onResourceInput.bind(this);
+    targetInputListener = this.onTargetInput.bind(this);
+    unassignListener = this.unassignAllResources.bind(this);
+    unassignButton = document.createElement("fxs-button");
     constructor(component) {
         this.component = component;
         component.bzComponent = this;
         this.Root = this.component.Root;
-        this.availableResourceCol = null;
-        this.showFactoriesListener = this.onShowFactoriesChanged.bind(this);
-        this.showTownsListener = this.onShowTownsChanged.bind(this);
-        this.resourceInputListener = this.onResourceInput.bind(this);
-        this.targetInputListener = this.onTargetInput.bind(this);
-        this.sortOrderActivateListener = this.onSortOrderActivate.bind(this);
         this.patchPrototypes(this.component);
         Controls.preloadImage('res_capital', 'screen-resource-allocation');
     }
@@ -107,6 +119,12 @@ export class bzScreenResourceAllocation {
             const after_rv = afterInitialize.apply(this.bzComponent, args);
             return after_rv ?? c_rv;
         }
+        // onResourceMoved
+        bzScreenResourceAllocation.c_onResourceMoved = proto.onResourceMoved;
+        proto.onResourceMoved = function() {
+            return this.bzComponent.onResourceMoved();
+        }
+        component.resourceMovedListener = component.onResourceMoved.bind(component);
     }
     afterInitialize() {
         // replace filter handlers
@@ -124,32 +142,52 @@ export class bzScreenResourceAllocation {
             showTowns.addEventListener('component-value-changed',
                 this.showTownsListener);
         }
+        // add Unassign All Resources button
+        this.unassignButton.classList.add(
+            "bz-unassign-button",
+            "absolute",
+            "-bottom-2\\.5",
+            "left-1\\/2",
+            "-translate-x-1\\/2",
+            "px-8",
+        );
+        this.unassignButton.addEventListener('action-activate', this.unassignListener);
+        this.unassignButton.setAttribute(
+            "caption",
+            "LOC_BZ_RESOURCE_ALLOCATION_UNASSIGN_ALL"
+        );
+        Databind.attribute(
+            this.unassignButton,
+            "disabled",
+            "g_ResourceAllocationModel.isResourceAssignmentLocked"
+        );
+        this.component.parentSlot.appendChild(this.unassignButton);
+        this.component.parentSlot.classList.add("relative");
     }
-    unassignAllResources(cityID) {
-        const bonusSlots = (res) => {
-            const slots = GameInfo.Resources.lookup(res.type)?.BonusResourceSlots ?? 0;
-            // camels add an extra slot (possibly a bug)
-            return slots && slots + 1;
-        }
+    onResourceMoved() {
+        const c = this.component;
+        c.updateAllUnassignActivatable();
+        c.updateAvailableResourceColDisabledState();
+        c.updateCityEntriesDisabledState();
+        waitForLayout(() => c.determineInitialFocus());
+        this.playSoundGate.call("onResourceMoved");
+    }
+    unassignAllResources() {
+        ResourceAllocation.clearSelectedResource();
+        const resources = [];
+        ResourceAllocation.availableCities
+            .forEach(c => resources.push(...c.currentResources));
+        const success = ResourceAllocation.bzUnassignResources(resources);
+        const sound = success ? "data-audio-resource-assign" : "data-audio-select-press";
+        this.component.playSound(sound);
+    }
+    unassignSettlementResources(cityID) {
+        ResourceAllocation.clearSelectedResource();
         const resources = ResourceAllocation.availableCities
-                .find(e => e.id.id == cityID)?.currentResources;
-        if (!resources || !resources.length) return;
-        resources.sort((a, b) => bonusSlots(b) - bonusSlots(a));
-        let slots = resources.length;
-        let tries = 0;
-        // unassign resources over time to avoid loud clicks
-        // or camels getting stuck in their slots
-        const unassignInterval = setInterval(() => {
-            if (10 <= ++tries) clearInterval(unassignInterval);  // failsafe
-            const current = ResourceAllocation.availableCities
-                .find(e => e.id.id == cityID)?.currentResources ?? [];
-            if (slots < current.length && tries < 5) return;
-            // unassign slots right to left
-            const res = resources[--slots];
-            ResourceAllocation.unassignResource(res.value);
-            tries = 0;
-            if (slots < 1) clearInterval(unassignInterval);  // last loop
-        }, 50);
+            .find(c => c.id.id == cityID)?.currentResources;
+        const success = ResourceAllocation.bzUnassignResources(resources);
+        const sound = success ? "data-audio-resource-assign" : "data-audio-select-press";
+        this.component.playSound(sound);
     }
     onShowFactoriesChanged(event) {
         document.body.classList.toggle("bz-hide-factories", !event.detail.value);
@@ -172,7 +210,7 @@ export class bzScreenResourceAllocation {
                 return;
             }
             const cityID = parseInt(cityIDAttribute);
-            this.unassignAllResources(cityID);
+            this.unassignSettlementResources(cityID);
         }
         // middle-click on resource
         if (event.target.classList.contains('city-resource')) {
@@ -237,6 +275,10 @@ export class bzScreenResourceAllocation {
         }
         // restyle settlement entries
         for (const outer of this.Root.querySelectorAll(".city-outer")) {
+            // resize razed overlay
+            const razedOverlay = outer.querySelector(".razed-overlay");
+            razedOverlay.classList.remove("h-39");
+            razedOverlay.classList.add("h-36", "-top-1");
             // tighten margins
             outer.style.marginBottom = '0.6666666667rem';
             const inner = outer.querySelector(".city-entry-internal");
@@ -266,18 +308,16 @@ export class bzScreenResourceAllocation {
                 factory.firstChild.style.margin = 0;
                 factory.firstChild.style.marginLeft = '0.3333333333rem';
             }
+            // add drop shadow to settlement icon
+            const sicon = title.querySelector(".size-8");
+            sicon.style.filter = "drop-shadow(0 0.0555555556rem 0.1111111111rem black)";
             // restyle settlement type in bz capsule style
             const stype = title.querySelector(".settlement-type-text");
             stype.classList.remove('font-title', 'uppercase', 'ml-1');
             stype.classList.add('leading-snug', 'bg-primary-5', 'rounded-3xl', 'ml-2', 'px-2');
         }
         // event handlers
-        for (const title of this.Root.querySelectorAll(".city-top-container")) {
-            title.addEventListener('engine-input', this.resourceInputListener);
-        }
-        for (const resource of this.Root.querySelectorAll(".city-resource")) {
-            resource.addEventListener('engine-input', this.resourceInputListener);
-        }
+        this.Root.addEventListener('engine-input', this.resourceInputListener);
         const acolumn = this.component.availableResourceCol;
         acolumn.classList.add('pointer-events-auto');
         acolumn.setAttribute('data-bind-class-toggle', 'hover-enabled:{{g_ResourceAllocationModel.hasSelectedAssignedResource}}');
@@ -286,7 +326,9 @@ export class bzScreenResourceAllocation {
             scrollable.addEventListener('engine-input', this.targetInputListener);
         }
     }
-    beforeDetach() { }
+    beforeDetach() {
+        this.Root.removeEventListener('engine-input', this.resourceInputListener);
+    }
     afterDetach() { }
     onAttributeChanged(_name, _prev, _next) { }
 }

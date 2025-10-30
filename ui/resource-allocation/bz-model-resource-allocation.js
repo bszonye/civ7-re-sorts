@@ -67,10 +67,21 @@ const updateSettlements = (list) => {
         item.currentResources.sort(resourceOrder);
         item.visibleResources.sort(resourceOrder);
         item.treasureResources.sort(resourceOrder);
-        const stype = [Locale.compose(item.settlementTypeName)];
         const city = Cities.get(item.id);
-        const hasBuilding = (b) => city.Constructibles?.hasConstructible(b, false);
+        // get town focus info
+        if (city.isTown) {
+            const ptype = city.Growth?.projectType ?? null;
+            const focus = ptype && GameInfo.Projects.lookup(ptype);
+            if (focus) item.settlementTypeName = focus.Name;
+            if (city.Growth?.growthType == GrowthTypes.EXPAND) {
+                item.settlementIcon = "focus_growth";
+            } else if (focus) {
+                item.settlementIcon = UI.getIcon(focus.ProjectType);
+            }
+        }
         // calculate slot tiebreakers
+        const stype = [Locale.compose(item.settlementTypeName)];
+        const hasBuilding = (b) => city.Constructibles?.hasConstructible(b, false);
         item.bzFactory = 0;
         item.bzSlotBonus = 0;
         switch (age.ChronologyIndex) {
@@ -111,22 +122,63 @@ const updateSettlements = (list) => {
     sortSettlements();
 }
 
-const initialize = () => {
-    const proto = Object.getPrototypeOf(ResourceAllocation);
-    const update = proto.update;
-    ResourceAllocation.bzSortOrder = "SLOTS";
-    ResourceAllocation.bzSortReverse = true;
-    proto.update = function(...args) {
-        update.apply(this, args);
-        updateSettlements(this._availableCities);
-        this._empireResources.sort(resourceOrder);
-        this._treasureResources.sort(resourceOrder);
-        this._uniqueEmpireResources.sort(resourceOrder);
-        this._uniqueTreasureResources.sort(resourceOrder);
-        this._allAvailableResources.sort(resourceOrder);
-        this._availableBonusResources.sort(resourceOrder);
-        this._availableResources.sort(resourceOrder);
-        this._availableFactoryResources.sort(resourceOrder);
+ResourceAllocation.bzSortOrder = "SLOTS";
+ResourceAllocation.bzSortReverse = true;
+ResourceAllocation.bzUnassignAll = new Map();
+ResourceAllocation.bzUnassignQueue = new Map();
+// patch ResourceAllocation.update
+const RA_update = ResourceAllocation.update;
+ResourceAllocation.update = function(...args) {
+    RA_update.apply(this, args);
+    updateSettlements(this._availableCities);
+    this._empireResources.sort(resourceOrder);
+    this._treasureResources.sort(resourceOrder);
+    this._uniqueEmpireResources.sort(resourceOrder);
+    this._uniqueTreasureResources.sort(resourceOrder);
+    this._allAvailableResources.sort(resourceOrder);
+    this._availableBonusResources.sort(resourceOrder);
+    this._availableResources.sort(resourceOrder);
+    this._availableFactoryResources.sort(resourceOrder);
+    this.bzUnassignResources();  // process remaining resources
+}
+// add ResourceAllocation.bzUnassignResources
+ResourceAllocation.bzUnassignResources = function(resources=[]) {
+    if (this.isResourceAssignmentLocked) return 0;
+    // skip locked resources (out of network or being razed)
+    resources = resources.filter(r => r.isInTradeNetwork && !r.isBeingRazed);
+    // add new resources for unassignment
+    for (const resource of resources) {
+        if (this.bzUnassignAll.has(resource.value)) continue;
+        this.bzUnassignAll.set(resource.value, resource);
+        this.bzUnassignQueue.set(resource.value, resource);
     }
-};
-engine.whenReady.then(initialize);
+    if (this.bzUnassignAll.size == 0) return 0;
+    // get operation parameters for all assigned resources
+    const lpid = GameContext.localPlayerID;
+    const op = PlayerOperationTypes.ASSIGN_RESOURCE;
+    const assignment = new Map();
+    for (const ac of this.availableCities) {
+        for (const resource of ac.currentResources) {
+            const args = {
+                Location: GameplayMap.getLocationFromIndex(resource.value),
+                City: ac.id.id,
+                Action: PlayerOperationParameters.Deactivate,
+            };
+            assignment.set(resource.value, args);
+        }
+    }
+    // remove completed unassignments
+    for (const value of this.bzUnassignAll.keys()) {
+        if (assignment.has(value)) continue;
+        this.bzUnassignAll.delete(value);
+        this.bzUnassignQueue.delete(value);
+    }
+    // unassign resources
+    for (const resource of this.bzUnassignQueue.values()) {
+        const args = assignment.get(resource.value);
+        const result = Game.PlayerOperations.canStart(lpid, op, args, false);
+        if (result.Success) Game.PlayerOperations.sendRequest(lpid, op, args);
+        if (!resource.bonusResourceSlots) this.bzUnassignQueue.delete(resource.value);
+    }
+    return resources.length;
+}

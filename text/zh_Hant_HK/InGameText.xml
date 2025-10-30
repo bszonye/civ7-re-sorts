@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <LocalizedText>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE" Language="zh_Hant_HK">
+        <Replace Tag="LOC_BZ_RESOURCE_ALLOCATION_UNASSIGN_ALL" Language="zh_Hant_HK">
+            <Text>取消所有指派資源</Text>
+        </Replace>
+        <Replace Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE" Language="zh_Hant_HK">
             <Text>資源智能分配 • 在資源介面分離城市與鄉鎮</Text>
-        </Row>
-        <Row Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION" Language="zh_Hant_HK">
+        </Replace>
+        <Replace Tag="LOC_OPTIONS_BZ_RE_SORTS_GROUP_BY_TYPE_DESCRIPTION" Language="zh_Hant_HK">
             <Text>資源介面將按首都、城市、鄉鎮的順序排列定居點</Text>
-        </Row>
+        </Replace>
         <Replace Tag="LOC_OPTIONS_GROUP_BZ_MODS" Language="zh_Hant_HK">
             <Text>trixie系列模組</Text>
         </Replace>
