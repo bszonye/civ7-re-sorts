@@ -11,7 +11,7 @@
             <Text>On the resource screen, list the capital first, then cities, then towns.</Text>
         </Replace>
         <Replace Tag="LOC_OPTIONS_GROUP_BZ_MODS">
-            <Text>trixie's mods</Text>
+            <Text>trixie’s mods</Text>
         </Replace>
     </EnglishText>
 </Database>
