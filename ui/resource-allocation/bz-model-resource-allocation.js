@@ -1,5 +1,6 @@
 import bzReSortsOptions from '/bz-re-sorts/ui/options/bz-re-sorts-options.js';
 import { R as ResourceAllocation } from '/base-standard/ui/resource-allocation/model-resource-allocation.chunk.js';
+import { C as ConstructibleHasTagType } from '/base-standard/ui/utilities/utilities-tags.chunk.js';
 
 // name sorting
 const localeOrder = (a, b) => {
@@ -44,10 +45,10 @@ const settlementTypeOrder = (a, b) => {
 };
 const slotsOrder = (a, b) => a.bzFactory - b.bzFactory ||
     a.resourceCap - b.resourceCap || a.bzSlotBonus - b.bzSlotBonus;
+const warehouseOrder = (a, b) => a.bzWarehouses.length - b.bzWarehouses.length;
 const yieldOrder = (a, b) => {
-    const ayield = a.yields.find(y => y.type == ResourceAllocation.bzSortOrder);
-    const byield = b.yields.find(y => y.type == ResourceAllocation.bzSortOrder);
-    return (ayield?.valueNum ?? 0) - (byield?.valueNum ?? 0);
+    const type = ResourceAllocation.bzSortOrder;
+    return (a.bzYields.get(type) ?? 0) - (b.bzYields.get(type) ?? 0);
 }
 const sortSettlements = () => {
     const list = ResourceAllocation.availableCities;
@@ -55,6 +56,7 @@ const sortSettlements = () => {
     const direction = ResourceAllocation.bzSortReverse ? -1 : +1;
     const f =
         order == "NAME" ? localeOrder :
+        order == "YIELD_WAREHOUSE" ? warehouseOrder :
         order == "SLOTS" ? slotsOrder :
         yieldOrder;
     const settlementOrder = (a, b) =>
@@ -79,6 +81,17 @@ const updateSettlements = (list) => {
                 item.settlementIcon = UI.getIcon(focus.ProjectType);
             }
         }
+        // get numeric yields
+        item.bzYields = new Map();
+        for (const y of GameInfo.Yields) {
+            const type = y.YieldType;
+            item.bzYields.set(type, city.Yields?.getYield(type) ?? 0);
+        }
+        // count warehouses
+        item.bzWarehouses = city.Constructibles.getIds()
+            .map(id => Constructibles.getByComponentID(id))
+            .map(item => GameInfo.Constructibles.lookup(item.type)?.ConstructibleType)
+            .filter(type => ConstructibleHasTagType(type, "WAREHOUSE"));
         // calculate slot tiebreakers
         const stype = [Locale.compose(item.settlementTypeName)];
         const hasBuilding = (b) => city.Constructibles?.hasConstructible(b, false);
