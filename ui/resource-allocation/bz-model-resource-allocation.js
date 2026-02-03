@@ -47,9 +47,8 @@ const slotsOrder = (a, b) => a.bzFactory - b.bzFactory ||
     a.resourceCap - b.resourceCap || a.bzSlotBonus - b.bzSlotBonus;
 const warehouseOrder = (a, b) => a.bzWarehouses.length - b.bzWarehouses.length;
 const yieldOrder = (a, b) => {
-    const ayield = a.yields.find(y => y.type == ResourceAllocation.bzSortOrder);
-    const byield = b.yields.find(y => y.type == ResourceAllocation.bzSortOrder);
-    return (ayield?.valueNum ?? 0) - (byield?.valueNum ?? 0);
+    const type = ResourceAllocation.bzSortOrder;
+    return (a.bzYields.get(type) ?? 0) - (b.bzYields.get(type) ?? 0);
 }
 const sortSettlements = () => {
     const list = ResourceAllocation.availableCities;
@@ -81,6 +80,12 @@ const updateSettlements = (list) => {
             } else if (focus) {
                 item.settlementIcon = UI.getIcon(focus.ProjectType);
             }
+        }
+        // get numeric yields
+        item.bzYields = new Map();
+        for (const y of GameInfo.Yields) {
+            const type = y.YieldType;
+            item.bzYields.set(type, city.Yields?.getYield(type) ?? 0);
         }
         // count warehouses
         item.bzWarehouses = city.Constructibles.getIds()
