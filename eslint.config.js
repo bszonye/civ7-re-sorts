@@ -18,6 +18,7 @@ export default [
                 CategoryType: "readonly",
                 Cities: "readonly",
                 Configuration: "readonly",
+                Constructibles: "readonly",
                 Controls: "readonly",
                 Game: "readonly",
                 GameContext: "readonly",

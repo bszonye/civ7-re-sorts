@@ -1,5 +1,6 @@
 import bzReSortsOptions from '/bz-re-sorts/ui/options/bz-re-sorts-options.js';
 import { R as ResourceAllocation } from '/base-standard/ui/resource-allocation/model-resource-allocation.chunk.js';
+import { C as ConstructibleHasTagType } from '/base-standard/ui/utilities/utilities-tags.chunk.js';
 
 // name sorting
 const localeOrder = (a, b) => {
@@ -44,6 +45,7 @@ const settlementTypeOrder = (a, b) => {
 };
 const slotsOrder = (a, b) => a.bzFactory - b.bzFactory ||
     a.resourceCap - b.resourceCap || a.bzSlotBonus - b.bzSlotBonus;
+const warehouseOrder = (a, b) => a.bzWarehouses.length - b.bzWarehouses.length;
 const yieldOrder = (a, b) => {
     const ayield = a.yields.find(y => y.type == ResourceAllocation.bzSortOrder);
     const byield = b.yields.find(y => y.type == ResourceAllocation.bzSortOrder);
@@ -55,6 +57,7 @@ const sortSettlements = () => {
     const direction = ResourceAllocation.bzSortReverse ? -1 : +1;
     const f =
         order == "NAME" ? localeOrder :
+        order == "YIELD_WAREHOUSE" ? warehouseOrder :
         order == "SLOTS" ? slotsOrder :
         yieldOrder;
     const settlementOrder = (a, b) =>
@@ -79,6 +82,11 @@ const updateSettlements = (list) => {
                 item.settlementIcon = UI.getIcon(focus.ProjectType);
             }
         }
+        // count warehouses
+        item.bzWarehouses = city.Constructibles.getIds()
+            .map(id => Constructibles.getByComponentID(id))
+            .map(item => GameInfo.Constructibles.lookup(item.type)?.ConstructibleType)
+            .filter(type => ConstructibleHasTagType(type, "WAREHOUSE"));
         // calculate slot tiebreakers
         const stype = [Locale.compose(item.settlementTypeName)];
         const hasBuilding = (b) => city.Constructibles?.hasConstructible(b, false);

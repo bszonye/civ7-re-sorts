@@ -84,6 +84,7 @@ const bzSortOrderControls = [
     { order: 'YIELD_CULTURE', reverse: true, },
     { order: 'YIELD_HAPPINESS', reverse: true, },
     { order: 'YIELD_DIPLOMACY', reverse: true, },
+    { order: 'YIELD_WAREHOUSE', reverse: true, },
     { order: 'SLOTS', reverse: true, icon: SLOTS_ICON, style: 'bz-sort-slots'},
 ];
 export class bzScreenResourceAllocation {
