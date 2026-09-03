@@ -2,6 +2,9 @@
 screen-resource-allocation .scroll-area_track.mx-2 {
   margin-right: 0;
 }
+screen-resource-allocation .w-11.h-24 {
+  height: 4.4444444444rem;
+}
 
 /* vanilla */
 .city-type-pill {
