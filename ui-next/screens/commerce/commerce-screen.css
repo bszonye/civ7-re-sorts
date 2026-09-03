@@ -1,0 +1,50 @@
+.city-type-pill {
+  border: solid 0.0555555556rem rgb(83, 86, 93);
+}
+
+@keyframes grow {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+@keyframes selection-pulse {
+  from {
+    transform: scale(1.25);
+  }
+  to {
+    transform: scale(1.3);
+  }
+}
+.draggable-resource {
+  transition: transform 0.07s ease-out;
+}
+
+.framed-resource {
+  transition: transform 0.07s ease-out, opacity 0.07s ease-out;
+}
+
+.focused-resource {
+  animation: selection-pulse 0.3s alternate infinite ease-in-out;
+}
+
+.pulse-highlight {
+  display: none;
+}
+
+.last-slotted .pulse-highlight {
+  display: flex;
+  animation: grow 1s forwards ease-out;
+  animation-iteration-count: 2;
+}
+
+.focusable-card-activatable:focus .focusable-card, .focusable-card-activatable:focus-within .focusable-card {
+  border-image-source: url("blp:base_ticket-select-bg");
+}
+.focusable-card-activatable:focus .ornate-card-bg, .focusable-card-activatable:focus-within .ornate-card-bg {
+  border-image-source: url("blp:hud_mini_box_highlight");
+}

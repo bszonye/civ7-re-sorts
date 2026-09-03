@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Mod id="bz-re-sorts" version="20400"
+<Mod id="bz-re-sorts" version="3.0.0"
     xmlns="ModInfo">
     <Properties>
         <Name>LOC_MOD_BZ_RE_SORTS_NAME</Name>
-        <Version>2.4.0</Version>
+        <Version>3.0.0</Version>
         <Description>LOC_MOD_BZ_RE_SORTS_DESCRIPTION</Description>
         <Authors>beezany</Authors>
-        <URL>https://forums.civfanatics.com/resources/resource-re-sorts.32032/</URL>
         <Package>Mod</Package>
         <AffectsSavedGames>0</AffectsSavedGames>
+        <bzIcon>blp:ntf_discover_resource_blk</bzIcon>
+        <bzIconGlow>#ff9900</bzIconGlow>
     </Properties>
     <Dependencies>
         <Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME" />
@@ -19,6 +20,7 @@
         </Criteria>
     </ActionCriteria>
     <ActionGroups>
+        <!--
         <ActionGroup id="bz-re-sorts-menu" scope="shell" criteria="always">
             <Properties>
                 <LoadOrder>1000</LoadOrder>
@@ -40,11 +42,30 @@
                 </UpdateText>
             </Actions>
         </ActionGroup>
+        -->
         <ActionGroup id="bz-re-sorts-ui" scope="game" criteria="always">
             <Properties>
                 <LoadOrder>1000</LoadOrder>
             </Properties>
             <Actions>
+                <ImportFiles>
+                    <Item>ui-next/screens/commerce/commerce-criteria-display.js</Item>
+                    <Item>ui-next/screens/commerce/commerce-screen-base-tab-content.js</Item>
+                    <Item>ui-next/screens/commerce/commerce-screen-empire-tab.js</Item>
+                    <Item>ui-next/screens/commerce/commerce-screen-model.js</Item>
+                    <Item>ui-next/screens/commerce/commerce-screen-resources-tab.js</Item>
+                    <Item>ui-next/screens/commerce/commerce-screen-trade-tab.js</Item>
+                    <Item>ui-next/screens/commerce/commerce-screen-treasure-tab.js</Item>
+                    <Item>ui-next/screens/commerce/commerce-screen.css</Item>
+                    <Item>ui-next/screens/commerce/commerce-screen.js</Item>
+                    <Item>ui-next/screens/commerce/commerce-screen.scss.js</Item>
+                    <Item>ui-next/screens/commerce/commerce-screen.scss2.js</Item>
+                    <Item>ui-next/screens/commerce/factory-type-display.js</Item>
+                    <Item>ui-next/screens/commerce/trade-route-card.js</Item>
+                    <Item>ui-next/screens/commerce/treasure-convoy-card.js</Item>
+                    <Item>ui-next/screens/commerce/treasure-convoy-progress-bar.js</Item>
+                </ImportFiles>
+                <!--
                 <UIScripts>
                     <Item>ui/options/bz-re-sorts-options.js</Item>
                     <Item>ui/options/mod-options.js</Item>
@@ -61,6 +82,7 @@
                     <Item locale="zh_Hans_CN">text/zh_Hans_CN/InGameText.xml</Item>
                     <Item locale="zh_Hant_HK">text/zh_Hant_HK/InGameText.xml</Item>
                 </UpdateText>
+                -->
             </Actions>
         </ActionGroup>
     </ActionGroups>
