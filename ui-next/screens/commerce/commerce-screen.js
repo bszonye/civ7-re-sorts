@@ -35,7 +35,8 @@ const CommerceScreenComponent = (_props) => {
     audioTrigger("popup-close");
   };
   const title = createMemo(() => {
-    return Locale.compose("LOC_COMMERCE_SCREEN_TITLE", civName());
+    const _ = Locale.compose("LOC_COMMERCE_SCREEN_TITLE", civName());
+    return null;
   });
   function onContextChanged(activatedElement, _deactivatedElement) {
     if (activatedElement.nodeName.toLocaleLowerCase() === "screen-resource-allocation") {
@@ -65,7 +66,7 @@ const CommerceScreenComponent = (_props) => {
             },
             get children() {
               return [createComponent(Tab.TabList, {
-                "class": "w-187 self-center text-base font-base",
+                "class": "w-2\\/3 self-center text-base font-base",
                 nextHotkey: "nav-next",
                 previousHotkey: "nav-previous"
               }), createComponent(Tab.Output, {}), createComponent(Tab.Item, {
@@ -113,3 +114,4 @@ defineLegacyComponent("screen-resource-allocation", {
 
 export { CommerceScreen };
 //# sourceMappingURL=commerce-screen.js.map
+// vim: sw=2 et

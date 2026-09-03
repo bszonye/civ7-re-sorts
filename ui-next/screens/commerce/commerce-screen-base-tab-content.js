@@ -6,17 +6,17 @@ import { L10n } from '../../../../core/ui-next/components/l10n.js';
 import { ThrobberSuspense } from '../../../../core/ui-next/components/throbber.js';
 import { ComponentRegistry } from '../../../../core/ui-next/services/component-registry.js';
 
-var _tmpl$ = /* @__PURE__ */ template(`<div class="text-base w-full text-center my-4"></div>`), _tmpl$2 = /* @__PURE__ */ template(`<div class="flex flex-col flex-auto pb-4 relative w-full"data-name=commerce-screen-base-tab-content></div>`), _tmpl$3 = /* @__PURE__ */ template(`<div class="flex flex-col flex-auto items-center mx-8 mb-5 pl-8 pr-8 pt-2 relative"><div class="absolute h-6 -top-0\\.5 -left-1\\.5 -right-1\\.5"></div><div class="absolute h-6 -bottom-0\\.5 -left-1\\.5 -right-1\\.5 -scale-y-100"></div></div>`), _tmpl$4 = /* @__PURE__ */ template(`<div class="flex flex-col w-full min-h-6"></div>`), _tmpl$5 = /* @__PURE__ */ template(`<div class="flex flex-col w-full"><div class="flex flex-row w-full items-center"><div class="grow text-secondary uppercase font-title"></div></div></div>`);
+var _tmpl$ = /* @__PURE__ */ template(`<div class="text-base w-full text-center my-4"></div>`), _tmpl$2 = /* @__PURE__ */ template(`<div class="flex flex-col flex-auto pb-2 relative w-full"data-name=commerce-screen-base-tab-content></div>`), _tmpl$3 = /* @__PURE__ */ template(`<div class="flex flex-col flex-auto items-center mx-3 mb-2\\.5 pl-2 pr-2 pt-2 relative"><div class="absolute h-6 -top-0\\.5 -left-1\\.5 -right-1\\.5"></div><div class="absolute h-6 -bottom-0\\.5 -left-1\\.5 -right-1\\.5 -scale-y-100"></div></div>`), _tmpl$4 = /* @__PURE__ */ template(`<div class="flex flex-col w-full min-h-6"></div>`), _tmpl$5 = /* @__PURE__ */ template(`<div class="flex flex-col w-full"><div class="flex flex-row w-full items-center"><div class="grow text-secondary uppercase font-title"></div></div></div>`);
 const CommerceScreenBaseTabContentComponent = (props) => {
   return [(() => {
-    var _el$ = _tmpl$();
-    insert(_el$, createComponent(L10n.Compose, {
-      get text() {
-        return props.description;
-      }
-    }));
-    return _el$;
-  })(), (() => {
+  //   var _el$ = _tmpl$();
+  //   insert(_el$, createComponent(L10n.Compose, {
+  //     get text() {
+  //       return props.description;
+  //     }
+  //   }));
+  //   return _el$;
+  // })(), (() => {
     var _el$2 = _tmpl$3(), _el$3 = _el$2.firstChild, _el$5 = _el$3.nextSibling;
     _el$2.style.setProperty("background-color", "rgba(5, 7, 13,0.8)");
     _el$3.style.setProperty("border-image-source", "url(blp:hud_section-line)");

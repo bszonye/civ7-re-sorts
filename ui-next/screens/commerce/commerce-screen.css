@@ -1,3 +1,9 @@
+/* bz-re-sorts */
+screen-resource-allocation .scroll-area_track.mx-2 {
+  margin-right: 0;
+}
+
+/* vanilla */
 .city-type-pill {
   border: solid 0.0555555556rem rgb(83, 86, 93);
 }
@@ -48,3 +54,5 @@
 .focusable-card-activatable:focus .ornate-card-bg, .focusable-card-activatable:focus-within .ornate-card-bg {
   border-image-source: url("blp:hud_mini_box_highlight");
 }
+
+/* vim :sw=2 et: */
