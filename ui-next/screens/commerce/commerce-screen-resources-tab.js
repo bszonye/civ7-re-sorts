@@ -59,7 +59,7 @@ var
   _tmpl$21 = template(`<div class="text-secondary w-full text-center -top-9 left-0"></div>`),
   _tmpl$22 = template(`<div class="flex flex-row flex-auto relative"></div>`),
   _tmpl$23 = template(`<div class="font-title uppercase text-secondary"></div>`),
-  _tmpl$24 = template(`<div class="flex flex-row w-full items-center"><div class="flex flex-row items-center"><div class="text-secondary uppercase font-title flex-auto"></div><div class="flex flex-row"></div></div><div class="text-secondary uppercase font-title ml-5 pointer-events-none"></div></div>`),
+  _tmpl$24 = template(`<div class="flex flex-row w-full items-center"><div class="flex flex-row items-center"><div class="text-secondary uppercase font-title flex-auto"></div><div class="flex flex-row mr-6"></div></div><div class="text-secondary uppercase font-title ml-2 pointer-events-none"></div></div>`),
   _tmpl$25 = template(`<div class="ml-2 flex flex-row"><div class="size-6 mr-1 bg-cover bg-center"></div></div>`),
   _tmpl$26 = template(`<div class=ml-2></div>`);
 const DEBUG_DRAG_AND_DROP = false;
@@ -303,6 +303,7 @@ const AvailableResourcesContainer = (props) => {
     _el$2.style.setProperty("width", "28%");
     insert(_el$3, createComponent(ScrollArea, {
       "class": "flex-auto",
+      reserveSpace: true,
       get allowGamepadPan() {
         return createMemo(() => model.focusedResource().resourceValue !== -1)() && model.focusedResource().cityID === void 0;
       },
