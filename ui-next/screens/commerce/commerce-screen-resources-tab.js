@@ -40,7 +40,8 @@ var
   _tmpl$4 = template(`<div class="text-accent-2 m-2"></div>`),
   _tmpl$5 = template(`<div class="flex flex-row mb-1 relative"><div class=text-secondary></div></div>`),
   _tmpl$6 = template(`<div class="w-full h-0\\.5 mt-1 mb-2 opacity-50"></div>`),
-  _tmpl$7 = template(`<div class="flex flex-row flex-wrap relative"></div>`),
+//_tmpl$7 = template(`<div class="flex flex-row flex-wrap relative"></div>`),
+  _tmpl$7 = template(`<div class="flex flex-row flex-wrap -mr-3 relative"></div>`),
   _tmpl$8 = template(`<div class="flex flex-row items-center justify-center self-end pr-4"></div>`),
 //_tmpl$9 = template(`<div tabindex=2 data-name=slotted-resource-container class="flex flex-col flex-auto pb-4 relative"></div>`),
   _tmpl$9 = template(`<div tabindex=2 data-name=slotted-resource-container class="flex flex-col flex-auto pb-0 relative"></div>`),
@@ -51,7 +52,7 @@ var
   _tmpl$14 = template(`<div class="flex flex-row items-center"><div class="mr-2 size-9 bg-center bg-cover bg-no-repeat relative"></div><div class="text-secondary font-title uppercase text-lg"></div></div>`),
   _tmpl$15 = template(`<div class="flex flex-row flex-wrap relative w-full justify-between"></div>`),
 //_tmpl$16 = template(`<div class="flex flex-row items-center"><div class="flex flex-row max-h-full items-end"></div><div class="flex-auto flex flex-row"><div class=flex-auto><div class="flex flex-row flex-wrap mt-4 flex-auto"></div></div></div></div>`),
-  _tmpl$16 = template(`<div class="flex flex-row items-start"><div class="flex flex-row max-h-full items-start"></div><div class="flex-auto flex flex-row"><div class=flex-auto><div class="flex flex-row flex-wrap mt-1 flex-auto"></div></div></div></div>`),
+  _tmpl$16 = template(`<div class="flex flex-row items-start"><div class="flex flex-row max-h-full items-start"></div><div class="relative flex-auto flex flex-row"><div class=flex-auto><div class="flex flex-row flex-wrap mt-1 -mr-3 flex-auto"></div></div></div></div>`),
   _tmpl$17 = template(`<div class="flex items-center flex-col relative"></div>`),
   _tmpl$18 = template(`<div class=hidden></div>`),
   _tmpl$19 = template(`<div class="size-16 mr-3 relative flex flex-row justify-center"></div>`),
@@ -300,7 +301,7 @@ const AvailableResourcesContainer = (props) => {
   const model = useCommerceScreenContext();
   return (() => {
     var _el$2 = _tmpl$2(), _el$3 = _el$2.firstChild;
-    _el$2.style.setProperty("width", "28%");
+    _el$2.style.setProperty("width", "22.8888888889rem");
     insert(_el$3, createComponent(ScrollArea, {
       "class": "flex-auto",
       reserveSpace: true,
@@ -421,7 +422,7 @@ const AvailableResourcesSectionInternal = (props) => {
     debugTrace: DEBUG_DRAG_AND_DROP,
     get children() {
       return createComponent(CardFrame, {
-        "class": "w-full my-2 py-2 pl-3 pr-0 flex flex-col",
+        "class": "w-full my-2 py-2 pl-2 pr-2 flex flex-col",
         get style() {
           return createMemo(() => !!isResourceSelected())() ? createMemo(() => props.section.isConnectedToTradeNetwork === model.resourceIsConnectedToTradeNetwork(model.selectedResource().resourceValue))() ? sectionIsActiveDropzone() || props.isParentFocused() ? {
             "border-image-source": images.ticketSelectedCSS
@@ -616,7 +617,7 @@ const SlottedResourcesContainer = (props) => {
                         segment: "ReturnAllResources",
                         get children() {
                           return createComponent(ReturnResourceButton, {
-                            "class": "ml-2 mr-1",
+                            "class": "ml-0 mr-0",
                             get classList() {
                               return {
                                 "opacity-50": !isReturnResourcesEnabled()
@@ -881,7 +882,7 @@ const CityResourceContainerInternal = (props) => {
       onFocus: () => setMouseIsOverCity(true),
       onBlur: () => setMouseIsOverCity(false),
       get ["class"]() {
-        return `w-full mt-2 mb-2 px-2 pb-0 ${selectionState() === ResourceContainerSelectionState.CanSelect || selectionState() === ResourceContainerSelectionState.CanNotSelect ? "pt-2" : "pt-1"} flex flex-col relative`;
+        return `w-full mt-2 mb-2 px-2 pb-0 ${selectionState() === ResourceContainerSelectionState.CanSelect || selectionState() === ResourceContainerSelectionState.CanNotSelect ? "pt-1" : "pt-1"} flex flex-col relative`;
       },
       get style() {
         return createMemo(() => !!(IsControllerActive() && props.parentIsFocusedOrSelected()))() ? {
@@ -1123,13 +1124,13 @@ const CityResourceContainerInternal = (props) => {
                             },
                             get fallback() {
                               return createComponent(ReturnResourceButton, {
-                                "class": "mr-1",
+                                "class": "absolute -top-10 right-0",
                                 disabled: true
                               });
                             },
                             get children() {
                               return createComponent(ReturnResourceButton, {
-                                "class": "mr-0",
+                                "class": "absolute -top-10 right-0",
                                 onActivate: () => {
                                   model.clearAllResources(props.cityID);
                                 }
@@ -1431,7 +1432,7 @@ const CommerceResourcesContainerComponent = (props) => {
     get headerBar() {
       return (() => {
         var _el$47 = _tmpl$24(), _el$48 = _el$47.firstChild, _el$49 = _el$48.firstChild, _el$50 = _el$49.nextSibling, _el$51 = _el$48.nextSibling;
-        _el$48.style.setProperty("width", "28%");
+        _el$48.style.setProperty("width", "22.8888888889rem");
         insert(_el$49, createComponent(L10n.Compose, {
           text: "LOC_COMMERCE_AVAILABLE_RESOURCES_TITLE"
         }));
