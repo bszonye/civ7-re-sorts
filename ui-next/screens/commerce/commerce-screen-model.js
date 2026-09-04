@@ -386,19 +386,25 @@ function createCommerceScreenModel() {
   resourceSettlementSortItems["LOC_COMMERCE_SORT_BY_SETTLEMENT_NAME"] = 1 /* Name */;
   resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_OPEN_SLOTS"] = 2 /* OpenSlots */;
   resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_TOTAL_SLOTS"] = 3 /* TotalSlots */;
-  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_WAREHOUSE_COUNT"] = 4 /* WarehouseCount */;
   resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_DISTANCE_TYPE"] = 5 /* DistanceType */;
   if (Game.age == Game.getHash("AGE_MODERN")) {
     resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_RAIL_CONNECTED"] = 6 /* RailConnected */;
     resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_HAS_FACTORY"] = 7 /* HasFactory */;
   }
-  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_FOOD_YIELD"] = 8 /* Food */;
-  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_PRODUCTION_YIELD"] = 9 /* Production */;
-  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_GOLD_YIELD"] = 10 /* Gold */;
-  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_SCIENCE_YIELD"] = 11 /* Science */;
-  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_CULTURE_YIELD"] = 12 /* Culture */;
-  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_HAPPINESS_YIELD"] = 13 /* Happiness */;
-  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_INFLUENCE_YIELD"] = 14 /* Influence */;
+  const yieldKey = (y) => {
+    const icon = `[icon:YIELD_${y == "INFLUENCE" ? "DIPLOMACY" : y}]`;
+    const type = y == "WAREHOUSE" ? "COUNT" : "YIELD";
+    const name = Locale.compose(`LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_${y}_${type}`);
+    return [icon, name].join(" ");
+  }
+  resourceSettlementSortItems[yieldKey("FOOD")] = 8 /* Food */;
+  resourceSettlementSortItems[yieldKey("PRODUCTION")] = 9 /* Production */;
+  resourceSettlementSortItems[yieldKey("GOLD")] = 10 /* Gold */;
+  resourceSettlementSortItems[yieldKey("SCIENCE")] = 11 /* Science */;
+  resourceSettlementSortItems[yieldKey("CULTURE")] = 12 /* Culture */;
+  resourceSettlementSortItems[yieldKey("HAPPINESS")] = 13 /* Happiness */;
+  resourceSettlementSortItems[yieldKey("INFLUENCE")] = 14 /* Influence */;
+  resourceSettlementSortItems[yieldKey("WAREHOUSE")] = 4 /* WarehouseCount */;
   const [selectedSettlementSortType, setSelectedSettlementSortType] = createSignal(
     0 /* SettlementType */
   );

@@ -1465,23 +1465,14 @@ const CommerceResourcesContainerComponent = (props) => {
               get children() {
                 return [createComponent(Dropdown, {
                   "class": "ml-2 mr-4 max-w-60 flex-auto pointer-events-auto min-h-14",
-                  selectedItemTemplate: (item) => createComponent(Show, {
-                    when: item !== "DEFAULT",
-                    get fallback() {
-                      return (() => {
-                        var _el$56 = _tmpl$26();
-                        insert(_el$56, createComponent(L10n.Stylize, {
-                          text: "LOC_COMMERCE_RESOURCE_SORT_FILTER_DEFAULT_LABEL"
-                        }));
-                        return _el$56;
-                      })();
-                    },
-                    get children() {
-                      return createComponent(L10n.Stylize, {
-                        text: `LOC_${item}`
-                      });
-                    }
-                  }),
+                  selectedItemTemplate: (item) => (() => {
+                    var _el$56 = _tmpl$26();
+                    insert(_el$56, createComponent(L10n.Stylize, {
+                      text: item !== "DEFAULT" ?  `LOC_${item}` :
+                      "LOC_COMMERCE_RESOURCE_SORT_FILTER_DEFAULT_LABEL"
+                    }));
+                    return _el$56;
+                  })(),
                   get defaultValue() {
                     return yieldHighlightDropdownItems[0];
                   },
@@ -1497,6 +1488,7 @@ const CommerceResourcesContainerComponent = (props) => {
                     return createComponent(For, {
                       each: yieldHighlightDropdownItems,
                       children: (item) => createComponent(DropdownItem, {
+                        "class": "text-sm py-1\\.5 px-2",
                         value: item,
                         get children() {
                           return createComponent(Show, {
@@ -1528,17 +1520,23 @@ const CommerceResourcesContainerComponent = (props) => {
                   return _el$53;
                 })(), createComponent(Dropdown, {
                   "class": "ml-2 max-w-60 flex-auto pointer-events-auto min-h-14",
-                  selectedItemTemplate: ([key]) => (() => {
+                  selectedItemTemplate: (json) => (() => {
+                    const [key, _value] = JSON.parse(json);
                     var _el$58 = _tmpl$26();
-                    insert(_el$58, createComponent(L10n.Compose, {
+                    insert(_el$58, createComponent(L10n.Stylize, {
                       text: key
                     }));
                     return _el$58;
                   })(),
                   get defaultValue() {
-                    return Object.entries(model.resourceSettlementSortItems)[0];
+                    const [key, value] =
+                      Object.entries(model.resourceSettlementSortItems)[0];
+                    return JSON.stringify([ key, value ]);
                   },
-                  onItemSelected: ([_, value]) => model.setSelectedSettlementSortType(value),
+                  onItemSelected: (json) => {
+                    const [_key, value] = JSON.parse(json);
+                    model.setSelectedSettlementSortType(value)
+                  },
                   get disableFocus() {
                     return disableFilters();
                   },
@@ -1549,9 +1547,10 @@ const CommerceResourcesContainerComponent = (props) => {
                         return Object.entries(model.resourceSettlementSortItems);
                       },
                       children: ([key, value]) => createComponent(DropdownItem, {
-                        value: [key, value],
+                        "class": "text-sm py-1\\.5 px-2",
+                        value: JSON.stringify([ key, value ]),
                         get children() {
-                          return createComponent(L10n.Compose, {
+                          return createComponent(L10n.Stylize, {
                             text: key
                           });
                         }
