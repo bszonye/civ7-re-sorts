@@ -1372,13 +1372,11 @@ const CommerceResourcesContainerComponent = (props) => {
       }
     } else if (cityID) {
       if (resource.cityID === void 0 || !ComponentID.isMatch(cityID, resource.cityID)) {
-        // TODO: move multiple with Input.isShiftDown()
-        model.slotSelectedResource(cityID, void 0, Input.isShiftDown());
+        model.slotSelectedResource(cityID, Input.isShiftDown());
       } else {
         model.deselectSelectedResource();
       }
     } else {
-      // TODO: move multiple with Input.isShiftDown()
       model.unslotSelectedResource(Input.isShiftDown());
     }
   };

@@ -1222,43 +1222,84 @@ function createCommerceScreenModel() {
       model.isResourceSelected = true;
     }
   }
-  function handleSlotSelectedResource(targetCityID, targetResourceValue, all) {
-    console.warn(`TRIX SLOT ${JSON.stringify(targetCityID)} ${JSON.stringify(targetResourceValue)} ALL=${all}`);
+  function handleSlotSelectedResource(targetCityID, targetResourceValue) {
     const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
-    if (model.selectedResource().cityID?.id === targetCityID?.id) {
+    const selection = model.selectedResource();
+    if (selection.cityID?.id === targetCityID?.id) {
       handleDeselectSelectedResource();
       return;
     }
-    if (model.selectedResource().resourceValue != -1) {
-      if (targetResourceValue && model.selectedResource().cityID != void 0) {
+    if (selection.resourceValue != -1) {
+      const resourceType = resourceNameShort(
+        getResourceTypeFromValue(selection.resourceValue)
+      );
+      if (targetResourceValue === true) {
+        // move all resources of the same type
+        const resource = Game.Resources.getResourceOnPlot(selection.resourceValue);
+        const type = resource.resource;
+        const info = GameInfo.Resources.lookup(resource.resource);
+        // get the pool of resources
+        const pool = ((plot, cityID) => {
+          const data = model.data.resourceTabData;
+          if (cityID) {
+            // get slotted resources for city
+            const index = +(!Cities.get(cityID)?.Trade?.isInTradeNetwork());
+            const section = data.slottedResourceSectionData[index];
+            const city = section.cityResources
+              .find(city => ComponentID.isMatch(city.cityID, cityID));
+            return city.slottedResources;
+          } else {
+            // get available resources for resource class
+            const loc = GameplayMap.getLocationFromIndex(plot);
+            const cityID = GameplayMap.getOwningCityFromXY(loc.x, loc.y);
+            const index = +(!Cities.get(cityID)?.Trade?.isInTradeNetwork());
+            const section = data.availableResourceSectionData[index];
+            const rctype = section.subSections
+              .find(sub => sub.type == info.ResourceClassType);
+            return rctype.resourceSlotData;
+          }
+        })(selection.resourceValue, selection.cityID);
+        // get the plots for all the matching resources
+        const plots = pool.map(r => r.resourceValue)
+          .filter(plot => Game.Resources.getResourceOnPlot(plot)?.resource == type);
+        // move the resources
+        const moved = [];
+        for (const plot of plots) {
+          addItemSlotIndex(targetCityID, plot);
+          const assignResult = assignResource(targetCityID, plot);
+          if (!assignResult) break;
+          moved.push(plot);
+        }
+        setLastSlottedResourceValues(plots);
+        if (moved.length) {
+          audioTrigger("dropAccept", { resourceType });
+        } else {
+          audioTrigger("dropReject");
+        }
+        return;
+      } else if (targetResourceValue && selection.cityID != void 0) {
         const location = GameplayMap.getLocationFromIndex(targetResourceValue);
-        const location2 = GameplayMap.getLocationFromIndex(model.selectedResource().resourceValue);
+        const location2 = GameplayMap.getLocationFromIndex(selection.resourceValue);
         const swapResult = swapResources(location, location2);
         if (swapResult) {
           swapItemSlotIndices(
-            model.selectedResource().cityID,
-            model.selectedResource().resourceValue,
+            selection.cityID,
+            selection.resourceValue,
             targetCityID,
             targetResourceValue
           );
-          setLastSlottedResourceValues([model.selectedResource().resourceValue, targetResourceValue]);
+          setLastSlottedResourceValues([selection.resourceValue, targetResourceValue]);
           audioTrigger("dropSwap");
-          const resourceType = resourceNameShort(
-            getResourceTypeFromValue(model.selectedResource().resourceValue)
-          );
           audioTrigger("dropAccept", { resourceType });
           return;
         }
         audioTrigger("dropReject");
         return;
       }
-      addItemSlotIndex(targetCityID, model.selectedResource().resourceValue);
-      const assignResult = assignResource(targetCityID, model.selectedResource().resourceValue);
-      setLastSlottedResourceValues([model.selectedResource().resourceValue]);
+      addItemSlotIndex(targetCityID, selection.resourceValue);
+      const assignResult = assignResource(targetCityID, selection.resourceValue);
+      setLastSlottedResourceValues([selection.resourceValue]);
       if (assignResult) {
-        const resourceType = resourceNameShort(
-          getResourceTypeFromValue(model.selectedResource().resourceValue)
-        );
         audioTrigger("dropAccept", { resourceType });
       } else {
         audioTrigger("dropReject");
