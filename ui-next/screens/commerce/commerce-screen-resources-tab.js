@@ -51,7 +51,7 @@ var
   _tmpl$14 = template(`<div class="flex flex-row items-center"><div class="mr-2 size-9 bg-center bg-cover bg-no-repeat relative"></div><div class="text-secondary font-title uppercase text-lg"></div></div>`),
   _tmpl$15 = template(`<div class="flex flex-row flex-wrap relative w-full justify-between"></div>`),
 //_tmpl$16 = template(`<div class="flex flex-row items-center"><div class="flex flex-row max-h-full items-end"></div><div class="flex-auto flex flex-row"><div class=flex-auto><div class="flex flex-row flex-wrap mt-4 flex-auto"></div></div></div></div>`),
-  _tmpl$16 = template(`<div class="flex flex-row items-center"><div class="flex flex-row max-h-full items-start"></div><div class="flex-auto flex flex-row"><div class=flex-auto><div class="flex flex-row flex-wrap mt-0 flex-auto"></div></div></div></div>`),
+  _tmpl$16 = template(`<div class="flex flex-row items-start"><div class="flex flex-row max-h-full items-start"></div><div class="flex-auto flex flex-row"><div class=flex-auto><div class="flex flex-row flex-wrap mt-1 flex-auto"></div></div></div></div>`),
   _tmpl$17 = template(`<div class="flex items-center flex-col relative"></div>`),
   _tmpl$18 = template(`<div class=hidden></div>`),
   _tmpl$19 = template(`<div class="size-16 mr-3 relative flex flex-row justify-center"></div>`),
@@ -738,7 +738,7 @@ const SettlementName = (props) => {
               get children() {
                 var _el$21 = _tmpl$11(), _el$22 = _el$21.firstChild;
                 insert(_el$21, createComponent(Icon, {
-                  "class": "size-7",
+                  "class": "size-7 -my-1 -ml-2",
                   get name() {
                     return props.townFocusIcon;
                   },
@@ -880,7 +880,7 @@ const CityResourceContainerInternal = (props) => {
       onFocus: () => setMouseIsOverCity(true),
       onBlur: () => setMouseIsOverCity(false),
       get ["class"]() {
-        return `w-full mt-2 mb-2 px-4 pb-0 ${selectionState() === ResourceContainerSelectionState.CanSelect || selectionState() === ResourceContainerSelectionState.CanNotSelect ? "pt-3" : "pt-2"} flex flex-col relative`;
+        return `w-full mt-2 mb-2 px-2 pb-0 ${selectionState() === ResourceContainerSelectionState.CanSelect || selectionState() === ResourceContainerSelectionState.CanNotSelect ? "pt-2" : "pt-1"} flex flex-col relative`;
       },
       get style() {
         return createMemo(() => !!(IsControllerActive() && props.parentIsFocusedOrSelected()))() ? {
@@ -943,6 +943,7 @@ const CityResourceContainerInternal = (props) => {
               margin: 1
             }), (() => {
               var _el$27 = _tmpl$16(), _el$28 = _el$27.firstChild, _el$29 = _el$28.nextSibling, _el$30 = _el$29.firstChild, _el$31 = _el$30.firstChild;
+              _el$31.style.rowGap = '0.2222222222rem';  // TRIX
               insert(_el$28, () => createComponent(For, {
                 get each() {
                   return props.yieldDeltas;
@@ -994,7 +995,7 @@ const CityResourceContainerInternal = (props) => {
                       return createComponent(
                         Dropzone,
                         {
-                          "class": "size-19 mt-1",
+                          "class": "size-19 mb-0",
                           get debugId() {
                             return "Resource Dropzone-" + resourceName();
                           },
@@ -1127,7 +1128,7 @@ const CityResourceContainerInternal = (props) => {
                             },
                             get children() {
                               return createComponent(ReturnResourceButton, {
-                                "class": "mr-1",
+                                "class": "mr-0",
                                 onActivate: () => {
                                   model.clearAllResources(props.cityID);
                                 }
