@@ -5,6 +5,9 @@ screen-resource-allocation .scroll-area_track.mx-2 {
 screen-resource-allocation .w-11.h-24 {
   height: 4.4444444444rem;
 }
+screen-resource-allocation .w-11.mb-1 {
+  margin: 0.1111111111rem 0 0 0;
+}
 
 /* vanilla */
 .city-type-pill {
@@ -58,4 +61,4 @@ screen-resource-allocation .w-11.h-24 {
   border-image-source: url("blp:hud_mini_box_highlight");
 }
 
-/* vim :sw=2 et: */
+/* vim: set sw=2 et : */

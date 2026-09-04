@@ -31,7 +31,37 @@ import { FactoryTypeDisplay } from './factory-type-display.js';
 import { ResourceTooltip } from '../../tooltips/resource-tooltip.js';
 import style from './commerce-screen.scss.js';
 
-var _tmpl$ = /* @__PURE__ */ template(`<div></div>`), _tmpl$2 = /* @__PURE__ */ template(`<div><div tabindex=1 data-name=available-resources-container class="flex flex-col h-full w-full relative pb-0"></div></div>`), _tmpl$3 = /* @__PURE__ */ template(`<div data-name=commerce-unassigned-resources class=flex-auto></div>`), _tmpl$4 = /* @__PURE__ */ template(`<div class="text-accent-2 m-2"></div>`), _tmpl$5 = /* @__PURE__ */ template(`<div class="flex flex-row mb-1 relative"><div class=text-secondary></div></div>`), _tmpl$6 = /* @__PURE__ */ template(`<div class="w-full h-0\\.5 mt-1 mb-2 opacity-50"></div>`), _tmpl$7 = /* @__PURE__ */ template(`<div class="flex flex-row flex-wrap relative"></div>`), _tmpl$8 = /* @__PURE__ */ template(`<div class="flex flex-row items-center justify-center self-end pr-4"></div>`), _tmpl$9 = /* @__PURE__ */ template(`<div tabindex=2 data-name=slotted-resource-container class="flex flex-col flex-auto pb-0 relative"></div>`), _tmpl$10 = /* @__PURE__ */ template(`<div class="w-full flex flex-col"></div>`), _tmpl$11 = /* @__PURE__ */ template(`<div class="city-type-pill rounded-full min-w-7 flex flex-row justify-center items-center px-2 ml-2"><span></span></div>`), _tmpl$12 = /* @__PURE__ */ template(`<div class="city-type-pill rounded-full min-w-7 flex flex-row justify-center items-center px-2 ml-2"></div>`), _tmpl$13 = /* @__PURE__ */ template(`<div class="flex flex-row items-center text-xs text-accent-1"></div>`), _tmpl$14 = /* @__PURE__ */ template(`<div class="flex flex-row items-center"><div class="mr-2 size-9 bg-center bg-cover bg-no-repeat relative"></div><div class="text-secondary font-title uppercase text-lg"></div></div>`), _tmpl$15 = /* @__PURE__ */ template(`<div class="flex flex-row flex-wrap relative w-full justify-between"></div>`), _tmpl$16 = /* @__PURE__ */ template(`<div class="flex flex-row items-center"><div class="flex flex-row max-h-full items-end"></div><div class="flex-auto flex flex-row"><div class=flex-auto><div class="flex flex-row flex-wrap mt-0 flex-auto"></div></div></div></div>`), _tmpl$17 = /* @__PURE__ */ template(`<div class="flex items-center flex-col relative"></div>`), _tmpl$18 = /* @__PURE__ */ template(`<div class=hidden></div>`), _tmpl$19 = /* @__PURE__ */ template(`<div class="size-16 mr-3 relative flex flex-row justify-center"></div>`), _tmpl$20 = /* @__PURE__ */ template(`<div class="w-full p-2 mb-2 relative"><div class="bg-center bg-no-repeat absolute inset-0 bg-cover opacity-20"></div><div class="absolute top-1 left-1 rotate-180 size-4 bg-contain opacity-30"></div><div class="absolute top-1 right-1 -rotate-90 size-4 bg-contain opacity-30"></div><div class="absolute bottom-1 left-1 rotate-90 size-4 bg-contain opacity-30"></div><div class="absolute bottom-1 right-1 size-4 bg-contain opacity-30"></div><div class="flex flex-row"><div class="flex flex-col relative items-start justify-center ml-3"><div class="uppercase mr-2 text-secondary font-title"></div><div class=text-accent-2></div></div></div></div>`), _tmpl$21 = /* @__PURE__ */ template(`<div class="text-secondary w-full text-center -top-9 left-0"></div>`), _tmpl$22 = /* @__PURE__ */ template(`<div class="flex flex-row flex-auto relative"></div>`), _tmpl$23 = /* @__PURE__ */ template(`<div class="font-title uppercase text-secondary"></div>`), _tmpl$24 = /* @__PURE__ */ template(`<div class="flex flex-row w-full items-center"><div class="flex flex-row items-center"><div class="text-secondary uppercase font-title flex-auto"></div><div class="flex flex-row"></div></div><div class="text-secondary uppercase font-title ml-5 pointer-events-none"></div></div>`), _tmpl$25 = /* @__PURE__ */ template(`<div class="ml-2 flex flex-row"><div class="size-6 mr-1 bg-cover bg-center"></div></div>`), _tmpl$26 = /* @__PURE__ */ template(`<div class=ml-2></div>`);
+var
+  _tmpl$ = template(`<div></div>`),
+//_tmpl$2 = template(`<div><div tabindex=1 data-name=available-resources-container class="flex flex-col h-full w-full relative pb-4"></div></div>`),
+  _tmpl$2 = template(`<div><div tabindex=1 data-name=available-resources-container class="flex flex-col h-full w-full relative pb-0"></div></div>`),
+//_tmpl$3 = template(`<div data-name=commerce-unassigned-resources class=flex-auto></div>`),
+  _tmpl$3 = template(`<div data-name=commerce-unassigned-resources class=flex-auto></div>`),
+  _tmpl$4 = template(`<div class="text-accent-2 m-2"></div>`),
+  _tmpl$5 = template(`<div class="flex flex-row mb-1 relative"><div class=text-secondary></div></div>`),
+  _tmpl$6 = template(`<div class="w-full h-0\\.5 mt-1 mb-2 opacity-50"></div>`),
+  _tmpl$7 = template(`<div class="flex flex-row flex-wrap relative"></div>`),
+  _tmpl$8 = template(`<div class="flex flex-row items-center justify-center self-end pr-4"></div>`),
+//_tmpl$9 = template(`<div tabindex=2 data-name=slotted-resource-container class="flex flex-col flex-auto pb-4 relative"></div>`),
+  _tmpl$9 = template(`<div tabindex=2 data-name=slotted-resource-container class="flex flex-col flex-auto pb-0 relative"></div>`),
+  _tmpl$10 = template(`<div class="w-full flex flex-col"></div>`),
+  _tmpl$11 = template(`<div class="city-type-pill rounded-full min-w-7 flex flex-row justify-center items-center px-2 ml-2"><span></span></div>`),
+  _tmpl$12 = template(`<div class="city-type-pill rounded-full min-w-7 flex flex-row justify-center items-center px-2 ml-2"></div>`),
+  _tmpl$13 = template(`<div class="flex flex-row items-center text-xs text-accent-1"></div>`),
+  _tmpl$14 = template(`<div class="flex flex-row items-center"><div class="mr-2 size-9 bg-center bg-cover bg-no-repeat relative"></div><div class="text-secondary font-title uppercase text-lg"></div></div>`),
+  _tmpl$15 = template(`<div class="flex flex-row flex-wrap relative w-full justify-between"></div>`),
+//_tmpl$16 = template(`<div class="flex flex-row items-center"><div class="flex flex-row max-h-full items-end"></div><div class="flex-auto flex flex-row"><div class=flex-auto><div class="flex flex-row flex-wrap mt-4 flex-auto"></div></div></div></div>`),
+  _tmpl$16 = template(`<div class="flex flex-row items-center"><div class="flex flex-row max-h-full items-start"></div><div class="flex-auto flex flex-row"><div class=flex-auto><div class="flex flex-row flex-wrap mt-0 flex-auto"></div></div></div></div>`),
+  _tmpl$17 = template(`<div class="flex items-center flex-col relative"></div>`),
+  _tmpl$18 = template(`<div class=hidden></div>`),
+  _tmpl$19 = template(`<div class="size-16 mr-3 relative flex flex-row justify-center"></div>`),
+  _tmpl$20 = template(`<div class="w-full p-2 mb-2 relative"><div class="bg-center bg-no-repeat absolute inset-0 bg-cover opacity-20"></div><div class="absolute top-1 left-1 rotate-180 size-4 bg-contain opacity-30"></div><div class="absolute top-1 right-1 -rotate-90 size-4 bg-contain opacity-30"></div><div class="absolute bottom-1 left-1 rotate-90 size-4 bg-contain opacity-30"></div><div class="absolute bottom-1 right-1 size-4 bg-contain opacity-30"></div><div class="flex flex-row"><div class="flex flex-col relative items-start justify-center ml-3"><div class="uppercase mr-2 text-secondary font-title"></div><div class=text-accent-2></div></div></div></div>`),
+  _tmpl$21 = template(`<div class="text-secondary w-full text-center -top-9 left-0"></div>`),
+  _tmpl$22 = template(`<div class="flex flex-row flex-auto relative"></div>`),
+  _tmpl$23 = template(`<div class="font-title uppercase text-secondary"></div>`),
+  _tmpl$24 = template(`<div class="flex flex-row w-full items-center"><div class="flex flex-row items-center"><div class="text-secondary uppercase font-title flex-auto"></div><div class="flex flex-row"></div></div><div class="text-secondary uppercase font-title ml-5 pointer-events-none"></div></div>`),
+  _tmpl$25 = template(`<div class="ml-2 flex flex-row"><div class="size-6 mr-1 bg-cover bg-center"></div></div>`),
+  _tmpl$26 = template(`<div class=ml-2></div>`);
 const DEBUG_DRAG_AND_DROP = false;
 const [DragAndDrop, Draggable, Dropzone] = createTypedDragAndDrop();
 const DraggableResource = (props) => {
@@ -910,7 +940,7 @@ const CityResourceContainerInternal = (props) => {
               }), null);
               return _el$26;
             })(), createComponent(Divider.Horizontal, {
-              margin: 2
+              margin: 1
             }), (() => {
               var _el$27 = _tmpl$16(), _el$28 = _el$27.firstChild, _el$29 = _el$28.nextSibling, _el$30 = _el$29.firstChild, _el$31 = _el$30.firstChild;
               insert(_el$28, () => createComponent(For, {
@@ -920,7 +950,9 @@ const CityResourceContainerInternal = (props) => {
                 children: (yieldDelta, index) => createComponent(YieldDelta, {
                   get classList() {
                     return {
+                      "flex-col-reverse": true,
                       "text-sm": true,
+                      "mb-1": true,
                       "ml-3": index() > 0 && index() < props.yieldDeltas.length
                     };
                   },
@@ -962,7 +994,7 @@ const CityResourceContainerInternal = (props) => {
                       return createComponent(
                         Dropzone,
                         {
-                          "class": "size-19 mb-1",
+                          "class": "size-19 mt-1",
                           get debugId() {
                             return "Resource Dropzone-" + resourceName();
                           },
