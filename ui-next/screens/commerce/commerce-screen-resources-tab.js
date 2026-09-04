@@ -1372,12 +1372,14 @@ const CommerceResourcesContainerComponent = (props) => {
       }
     } else if (cityID) {
       if (resource.cityID === void 0 || !ComponentID.isMatch(cityID, resource.cityID)) {
-        model.slotSelectedResource(cityID);
+        // TODO: move multiple with Input.isShiftDown()
+        model.slotSelectedResource(cityID, void 0, Input.isShiftDown());
       } else {
         model.deselectSelectedResource();
       }
     } else {
-      model.unslotSelectedResource();
+      // TODO: move multiple with Input.isShiftDown()
+      model.unslotSelectedResource(Input.isShiftDown());
     }
   };
   const disableDND = createMemo(() => {

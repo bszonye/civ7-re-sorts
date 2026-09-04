@@ -858,7 +858,7 @@ function createCommerceScreenModel() {
     const originCity = Cities.get(originCityID);
     return cityIsConnectedToTradeNetwork(originCity);
   }
-  function clearAllResources(cityID) {
+  function clearAllResources(cityID, type) {
     function clearResourcesFromCity(cityIDInternal) {
       const city = Cities.get(cityIDInternal);
       if (!city || !city.Resources) {
@@ -866,9 +866,11 @@ function createCommerceScreenModel() {
       }
       const previouslyAssignedResources = city.Resources.getAssignedResources().map(
         (uniqueResourceValue) => uniqueResourceValue.value
+      ).filter(
+        (plot) => !type || Game.Resources.getResourceOnPlot(plot)?.resource == type
       );
       const args = {
-        ResourceType: ResourceTypes.NO_RESOURCE,
+        ResourceType: type ?? ResourceTypes.NO_RESOURCE,
         City: cityIDInternal.id,
         Action: PlayerOperationParameters.Clear
       };
@@ -1220,7 +1222,8 @@ function createCommerceScreenModel() {
       model.isResourceSelected = true;
     }
   }
-  function handleSlotSelectedResource(targetCityID, targetResourceValue) {
+  function handleSlotSelectedResource(targetCityID, targetResourceValue, all) {
+    console.warn(`TRIX SLOT ${JSON.stringify(targetCityID)} ${JSON.stringify(targetResourceValue)} ALL=${all}`);
     const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
     if (model.selectedResource().cityID?.id === targetCityID?.id) {
       handleDeselectSelectedResource();
@@ -1294,11 +1297,17 @@ function createCommerceScreenModel() {
     setLastSlottedResourceValues([resource.resourceValue]);
     return { success: true, resourcesRemaining: remainingIndexCount };
   }
-  function handleUnslotSelectedResource() {
-    if (model.selectedResource().resourceValue == -1) {
+  function handleUnslotSelectedResource(all) {
+    const selection = model.selectedResource();
+    if (selection.resourceValue == -1) return;
+    if (all) {
+      const resource = Game.Resources.getResourceOnPlot(selection.resourceValue);
+      clearAllResources(selection.cityID, resource.resource);
+      const audioTrigger = useAudio("CommerceScreen/ReturnResources");
+      audioTrigger("activate");
       return;
     }
-    handleUnslotResource(model.selectedResource());
+    handleUnslotResource(selection);
     handleDeselectSelectedResource();
   }
   function handleDeselectSelectedResource() {
@@ -2475,3 +2484,4 @@ function useCommerceScreenContext() {
 
 export { CommerceScreenContext, CommerceScreenModel, ResourceContainerSelectionState, TradeRouteAvailabiltyType, TradeRouteSortType, createCommerceScreenModel, gamepadLog, getCityName, getResourceName, useCommerceScreenContext };
 //# sourceMappingURL=commerce-screen-model.js.map
+// vim: sw=2 et
