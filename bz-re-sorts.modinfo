@@ -8,8 +8,8 @@
         <Authors>beezany</Authors>
         <Package>Mod</Package>
         <AffectsSavedGames>0</AffectsSavedGames>
-        <bzIcon>blp:ntf_discover_resource_blk</bzIcon>
-        <bzIconGlow>#ff9900</bzIconGlow>
+        <bzIcon>blp:ntf_discover_resource</bzIcon>
+        <bzIconGlow>#66bbff</bzIconGlow>
     </Properties>
     <Dependencies>
         <Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME" />
