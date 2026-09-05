@@ -1519,26 +1519,29 @@ const CommerceResourcesContainerComponent = (props) => {
                   var _el$53 = _tmpl$23();
                   const sortDirection = createMemo(() => {
                     return model.selectedSortDirection() < 0 ?
-                      "bz-sort-reverse" : "bz-sort-default";
+                      "bz-sort-descending" : "bz-sort-ascending";
                   });
-                  insert(_el$53, createComponent(HSlot, {
-                    "class": "relative min-h-14 min-w-14 items-center",
+                  insert(_el$53, createComponent(Activatable, {
+                    "class": "bz-sort-button relative -my-1 h-16 min-w-14 flex-col justify-center items-center",
+                    onActivate: () => {
+                      model.toggleSelectedSortDirection();
+                    },
                     get children() {
-                      return [createComponent(ImageButton, {
+                      return [createComponent(Icon, {
                         get ["class"]() {
-                          return `bz-sort-button ${sortDirection()}`;
+                          return `bz-sort-up ${sortDirection()}`;
                         },
-                        imageData: {
-                          base: "url(blp:fi_action_move_64.png)",
-                          focus: "url(blp:fi_action_move_64.png)"
-                        },
-                        size: "14",
-                        onActivate: () => {
-                          model.toggleSelectedSortDirection();
-                        },
+                        name: "url(blp:fi_action_move_64.png)",
+                        isUrl: true
                       }), createComponent(L10n.Stylize, {
                         "class": "bz-sort-label",
                         text: "LOC_COMMERCE_SORT_LABEL"
+                      }), createComponent(Icon, {
+                        get ["class"]() {
+                          return `bz-sort-down ${sortDirection()}`;
+                        },
+                        name: "url(blp:fi_action_move_64.png)",
+                        isUrl: true
                       })];
                     }
                   }));

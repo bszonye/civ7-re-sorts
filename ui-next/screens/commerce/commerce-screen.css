@@ -12,29 +12,32 @@ screen-resource-allocation .bz-tab-list .img-tab-bar,
 screen-resource-allocation .bz-tab-list .img-tab-end-cap {
   display: none;
 }
-screen-resource-allocation .bz-sort-button {
-  z-index: 0;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-}
 screen-resource-allocation .bz-sort-button:hover,
 screen-resource-allocation .bz-sort-button:focus,
 screen-resource-allocation .bz-sort-button.pressed {
-  filter: brightness(2);
+  filter: brightness(150%);
 }
-screen-resource-allocation .bz-sort-button {
-  transform: rotate(-90deg);  /* point up */
+screen-resource-allocation .bz-sort-button .bz-sort-up,
+screen-resource-allocation .bz-sort-button .bz-sort-down {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  flex-shrink: 1;
 }
-screen-resource-allocation .bz-sort-button.bz-sort-reverse {
-  transform: rotate(90deg) scaleY(-1);  /* point down */
+screen-resource-allocation .bz-sort-button .bz-sort-up {
+  transform: rotate(-90deg);
+}
+screen-resource-allocation .bz-sort-button .bz-sort-down {
+  transform: rotate(90deg) scaleY(-1);
+}
+screen-resource-allocation .bz-sort-button .bz-sort-up.bz-sort-descending,
+screen-resource-allocation .bz-sort-button .bz-sort-down.bz-sort-ascending {
+  opacity: 0.125;
 }
 screen-resource-allocation .bz-sort-label {
-  z-index: 1;
-  pointer-events: none;
-  background-color: #080b10dd;  /* match panel background */
-  text-shadow: 0.0555555556rem 0.0555555556rem black;
-  line-height: 1.375;
+  line-height: 1.25;
 }
 
 /* vanilla */
