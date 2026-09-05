@@ -94,7 +94,7 @@ const EmpireResourceContainer = (props) => {
       setHasCheckedForWrap(true);
       return;
     }
-    const fittedWidth = (availableWidth - EMPIRE_CARD_MARGIN_RIGHT * rowCardCount) / rowCardCount;
+    const fittedWidth = (availableWidth - EMPIRE_CARD_MARGIN_RIGHT * (rowCardCount - 1)) / rowCardCount;
     const nextWidth = Math.max(1, Math.floor(fittedWidth * 100) / 100) + "px";
     const needsRowCountUpdate = numCardsInFirstRow() !== rowCardCount;
     const needsWidthUpdate = empireResourceCardWidth() !== nextWidth;
