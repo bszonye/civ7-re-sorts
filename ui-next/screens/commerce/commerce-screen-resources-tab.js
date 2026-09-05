@@ -1,4 +1,3 @@
-// TODO: persistent sorting
 import { template, insert, className, setAttribute } from '../../../../core/vendor/solid-js/web/dist/web.js';
 import { createSignal, createMemo, createEffect, on, createComponent, untrack, Show, mergeProps, createRenderEffect, For } from '../../../../core/vendor/solid-js/dist/solid.js';
 import { ComponentID } from '../../../../core/ui/utilities/utilities-component-id.js';
@@ -1557,8 +1556,10 @@ const CommerceResourcesContainerComponent = (props) => {
                     return _el$58;
                   })(),
                   get defaultValue() {
+                    const type = model.defaultSettlementSortType();
+                    const items = Object.entries(model.resourceSettlementSortItems);
                     const [key, value] =
-                      Object.entries(model.resourceSettlementSortItems)[0];
+                      items.find(([_, value]) => value == type) ?? items[0];
                     return JSON.stringify([ key, value ]);
                   },
                   onItemSelected: (json) => {

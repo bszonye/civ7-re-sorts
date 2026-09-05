@@ -15,6 +15,28 @@ import { compareSettlementTypes, compareSettlementNames } from '../../../../core
 import CityYields from '../../../ui/utilities/utilities-city-yields.js';
 import { ConstructibleHasTagType } from '../../../ui/utilities/utilities-tags.js';
 
+// TRIX: persistent sort directions
+// TODO: store configuration across reloads?
+let persistSettlementSortType = -1;
+const persistSettlementSortDirection = [
+  // starting sort directions
+  +1,  // Default
+  +1,  // Settlement Name
+  -1,  // Available Resource Slots
+  -1,  // Total Resource Slots
+  -1,  // Warehouse Count
+  +1,  // Home/Distant Lands
+  +1,  // Rail Connected
+  +1,  // Has Factory
+  -1,  // Food Yield
+  -1,  // Production Yield
+  -1,  // Gold Yield
+  -1,  // Science Yield
+  -1,  // Culture Yield
+  -1,  // Happiness Yield
+  -1,  // Influence Yield
+];
+
 const DEBUG_RESOURCE_SWAPPING = false;
 const DEBUG_GAMEPAD = false;
 var TradeRouteAvailabiltyType = /* @__PURE__ */ ((TradeRouteAvailabiltyType2) => {
@@ -406,28 +428,9 @@ function createCommerceScreenModel() {
   resourceSettlementSortItems[yieldKey("INFLUENCE")] = 14 /* Influence */;
   resourceSettlementSortItems[yieldKey("WAREHOUSE")] = 4 /* WarehouseCount */;
   const [selectedSettlementSortType, setSelectedSettlementSortType] = createSignal(
-    0 /* SettlementType */
+    persistSettlementSortType /* SettlementType */
   );
   const [selectedSortDirection, setSelectedSortDirection] = createSignal(1);
-  const resourceSettlementSortDirection = [
-    // starting sort directions
-    // TODO: load from config
-    +1,  // Default
-    +1,  // Settlement Name
-    -1,  // Available Resource Slots
-    -1,  // Total Resource Slots
-    -1,  // Warehouse Count
-    +1,  // Home/Distant Lands
-    +1,  // Rail Connected
-    +1,  // Has Factory
-    -1,  // Food Yield
-    -1,  // Production Yield
-    -1,  // Gold Yield
-    -1,  // Science Yield
-    -1,  // Culture Yield
-    -1,  // Happiness Yield
-    -1,  // Influence Yield
-  ];
   createEffect(() => {
     function compareYields(a, b, yieldIndex) {
       const yieldComparison = b.yieldDeltas[yieldIndex].yieldTotal - a.yieldDeltas[yieldIndex].yieldTotal;
@@ -438,7 +441,8 @@ function createCommerceScreenModel() {
     }
     model.data.resourceTabData.slottedResourceSectionData.forEach((slottedResourceSection) => {
       const type = selectedSettlementSortType();
-      const d = resourceSettlementSortDirection[type];
+      persistSettlementSortType = type;
+      const d = persistSettlementSortDirection[type];
       if (d != selectedSortDirection()) setSelectedSortDirection(d);
       switch (selectedSettlementSortType()) {
         default:
@@ -2437,10 +2441,13 @@ function createCommerceScreenModel() {
     };
     return commerceScreenData;
   }
+  function defaultSettlementSortType() {  // TRIX
+    return persistSettlementSortType;
+  }
   function toggleSelectedSortDirection(direction) {  // TRIX
     const type = selectedSettlementSortType();
-    if (!direction) direction = resourceSettlementSortDirection[type] * -1;
-    setSelectedSortDirection(resourceSettlementSortDirection[type] = direction);
+    if (!direction) direction = persistSettlementSortDirection[type] * -1;
+    setSelectedSortDirection(persistSettlementSortDirection[type] = direction);
     const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
     audioTrigger("dropSwap");
   }
@@ -2504,6 +2511,7 @@ function createCommerceScreenModel() {
     resourceSettlementSortItems,
     selectedSettlementSortType,
     setSelectedSettlementSortType,
+    defaultSettlementSortType,  // TRIX
     selectedSortDirection,  // TRIX
     setSelectedSortDirection,  // TRIX
     toggleSelectedSortDirection,  // TRIX
