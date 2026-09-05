@@ -60,13 +60,13 @@ const CommerceScreenComponent = (_props) => {
         onContextChanged,
         get children() {
           return createComponent(Tab, {
-            "class": "w-full flex flex-col flex-auto pointer-events-auto relative",
+            "class": "w-full -mt-7 flex flex-col flex-auto pointer-events-auto relative",
             get onTabChanged() {
               return model.onTabChanged;
             },
             get children() {
               return [createComponent(Tab.TabList, {
-                "class": "w-2\\/3 self-center text-base font-base",
+                "class": "bz-tab-list w-full self-center text-base font-base",
                 nextHotkey: "nav-next",
                 previousHotkey: "nav-previous"
               }), createComponent(Tab.Output, {}), createComponent(Tab.Item, {

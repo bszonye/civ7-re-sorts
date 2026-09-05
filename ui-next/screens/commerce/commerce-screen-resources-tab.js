@@ -49,7 +49,8 @@ var
   _tmpl$11 = template(`<div class="city-type-pill rounded-full min-w-7 flex flex-row justify-center items-center px-2 ml-2"><span></span></div>`),
   _tmpl$12 = template(`<div class="city-type-pill rounded-full min-w-7 flex flex-row justify-center items-center px-2 ml-2"></div>`),
   _tmpl$13 = template(`<div class="flex flex-row items-center text-xs text-accent-1"></div>`),
-  _tmpl$14 = template(`<div class="flex flex-row items-center"><div class="mr-2 size-9 bg-center bg-cover bg-no-repeat relative"></div><div class="text-secondary font-title uppercase text-lg"></div></div>`),
+//_tmpl$14 = template(`<div class="flex flex-row items-center"><div class="mr-2 size-9 bg-center bg-cover bg-no-repeat relative"></div><div class="text-secondary font-title uppercase text-lg"></div></div>`),
+  _tmpl$14 = template(`<div class="flex flex-row items-center"><div class="mr-2 -my-0\\.5 size-9 bg-center bg-cover bg-no-repeat relative"></div><div class="text-secondary font-title uppercase text-lg"></div></div>`),
   _tmpl$15 = template(`<div class="flex flex-row flex-wrap relative w-full justify-between"></div>`),
 //_tmpl$16 = template(`<div class="flex flex-row items-center"><div class="flex flex-row max-h-full items-end"></div><div class="flex-auto flex flex-row"><div class=flex-auto><div class="flex flex-row flex-wrap mt-4 flex-auto"></div></div></div></div>`),
   _tmpl$16 = template(`<div class="flex flex-row items-start"><div class="flex flex-row max-h-full items-start"></div><div class="relative flex-auto flex flex-row"><div class=flex-auto><div class="flex flex-row flex-wrap mt-1 -mr-3 flex-auto"></div></div></div></div>`),
@@ -617,7 +618,7 @@ const SlottedResourcesContainer = (props) => {
                         segment: "ReturnAllResources",
                         get children() {
                           return createComponent(ReturnResourceButton, {
-                            "class": "ml-0 mr-0",
+                            "class": "ml-2 mr-0",
                             get classList() {
                               return {
                                 "opacity-50": !isReturnResourcesEnabled()
