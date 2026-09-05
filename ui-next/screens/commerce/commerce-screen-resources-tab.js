@@ -1,3 +1,5 @@
+// TODO: sorting hotkeys
+// TODO: persistent sorting
 import { template, insert, className, setAttribute } from '../../../../core/vendor/solid-js/web/dist/web.js';
 import { createSignal, createMemo, createEffect, on, createComponent, untrack, Show, mergeProps, createRenderEffect, For } from '../../../../core/vendor/solid-js/dist/solid.js';
 import { ComponentID } from '../../../../core/ui/utilities/utilities-component-id.js';
@@ -1515,8 +1517,30 @@ const CommerceResourcesContainerComponent = (props) => {
                   }
                 }), (() => {
                   var _el$53 = _tmpl$23();
-                  insert(_el$53, createComponent(L10n.Compose, {
-                    text: "LOC_COMMERCE_SORT_LABEL"
+                  const sortDirection = createMemo(() => {
+                    return model.selectedSortDirection() < 0 ?
+                      "bz-sort-reverse" : "bz-sort-default";
+                  });
+                  insert(_el$53, createComponent(HSlot, {
+                    "class": "relative min-h-14 min-w-14 items-center",
+                    get children() {
+                      return [createComponent(ImageButton, {
+                        get ["class"]() {
+                          return `bz-sort-button ${sortDirection()}`;
+                        },
+                        imageData: {
+                          base: "url(blp:fi_action_move_64.png)",
+                          focus: "url(blp:fi_action_move_64.png)"
+                        },
+                        size: "14",
+                        onActivate: () => {
+                          model.toggleSelectedSortDirection();
+                        },
+                      }), createComponent(L10n.Stylize, {
+                        "class": "bz-sort-label",
+                        text: "LOC_COMMERCE_SORT_LABEL"
+                      })];
+                    }
                   }));
                   return _el$53;
                 })(), createComponent(Dropdown, {

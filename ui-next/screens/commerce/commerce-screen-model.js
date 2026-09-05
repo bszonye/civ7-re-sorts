@@ -408,6 +408,26 @@ function createCommerceScreenModel() {
   const [selectedSettlementSortType, setSelectedSettlementSortType] = createSignal(
     0 /* SettlementType */
   );
+  const [selectedSortDirection, setSelectedSortDirection] = createSignal(1);
+  const resourceSettlementSortDirection = [
+    // starting sort directions
+    // TODO: load from config
+    +1,  // Default
+    +1,  // Settlement Name
+    -1,  // Available Resource Slots
+    -1,  // Total Resource Slots
+    -1,  // Warehouse Count
+    +1,  // Home/Distant Lands
+    +1,  // Rail Connected
+    +1,  // Has Factory
+    -1,  // Food Yield
+    -1,  // Production Yield
+    -1,  // Gold Yield
+    -1,  // Science Yield
+    -1,  // Culture Yield
+    -1,  // Happiness Yield
+    -1,  // Influence Yield
+  ];
   createEffect(() => {
     function compareYields(a, b, yieldIndex) {
       const yieldComparison = b.yieldDeltas[yieldIndex].yieldTotal - a.yieldDeltas[yieldIndex].yieldTotal;
@@ -417,24 +437,27 @@ function createCommerceScreenModel() {
       return yieldComparison;
     }
     model.data.resourceTabData.slottedResourceSectionData.forEach((slottedResourceSection) => {
+      const type = selectedSettlementSortType();
+      const d = resourceSettlementSortDirection[type];
+      if (d != selectedSortDirection()) setSelectedSortDirection(d);
       switch (selectedSettlementSortType()) {
         default:
         case 0 /* SettlementType */: {
           slottedResourceSection.cityResources.sort((a, b) => {
-            return compareSettlementTypes(a.cityID, b.cityID);
+            return d * compareSettlementTypes(a.cityID, b.cityID);
           });
           break;
         }
         case 1 /* Name */: {
           slottedResourceSection.cityResources.sort((a, b) => {
-            return compareSettlementNames(a.cityID, b.cityID);
+            return d * compareSettlementNames(a.cityID, b.cityID);
           });
           break;
         }
         case 2 /* OpenSlots */: {
           slottedResourceSection.cityResources.sort((a, b) => {
             const availableSlotComparison = b.availableSlots.length - a.availableSlots.length;
-            return availableSlotComparison === 0 ? compareSettlementTypes(a.cityID, b.cityID) : availableSlotComparison;
+            return -d * (availableSlotComparison === 0 ? compareSettlementTypes(a.cityID, b.cityID) : availableSlotComparison);
           });
           break;
         }
@@ -443,14 +466,14 @@ function createCommerceScreenModel() {
             const aSlots = a.slottedResources.length + a.availableSlots.length;
             const bSlots = b.slottedResources.length + b.availableSlots.length;
             const totalSlotComparison = bSlots - aSlots;
-            return totalSlotComparison === 0 ? compareSettlementTypes(a.cityID, b.cityID) : totalSlotComparison;
+            return -d * (totalSlotComparison || compareSettlementTypes(a.cityID, b.cityID));
           });
           break;
         }
         case 4 /* WarehouseCount */: {
           slottedResourceSection.cityResources.sort((a, b) => {
             const warehouseComparison = b.settlementNameData.warehouseCount - a.settlementNameData.warehouseCount;
-            return warehouseComparison === 0 ? compareSettlementTypes(a.cityID, b.cityID) : warehouseComparison;
+            return -d * (warehouseComparison === 0 ? compareSettlementTypes(a.cityID, b.cityID) : warehouseComparison);
           });
           break;
         }
@@ -459,67 +482,67 @@ function createCommerceScreenModel() {
             if (a.isDistantLands === b.isDistantLands) {
               return 0;
             }
-            return b.isDistantLands ? -1 : 1;
+            return d * (b.isDistantLands ? -1 : 1);
           });
           break;
         }
         case 6 /* RailConnected */: {
           slottedResourceSection.cityResources.sort((a, b) => {
             if (a.settlementNameData.hasRail === b.settlementNameData.hasRail) {
-              return compareSettlementTypes(a.cityID, b.cityID);
+              return d * compareSettlementTypes(a.cityID, b.cityID);
             }
-            return b.settlementNameData.hasRail ? 1 : -1;
+            return d * (b.settlementNameData.hasRail ? 1 : -1);
           });
           break;
         }
         case 7 /* HasFactory */: {
           slottedResourceSection.cityResources.sort((a, b) => {
             if (a.factoryResourceData.hasFactory === b.factoryResourceData.hasFactory) {
-              return compareSettlementTypes(a.cityID, b.cityID);
+              return d * compareSettlementTypes(a.cityID, b.cityID);
             }
-            return b.factoryResourceData.hasFactory ? 1 : -1;
+            return d * (b.factoryResourceData.hasFactory ? 1 : -1);
           });
           break;
         }
         case 8 /* Food */: {
           slottedResourceSection.cityResources.sort((a, b) => {
-            return compareYields(a, b, 0);
+            return -d * compareYields(a, b, 0);
           });
           break;
         }
         case 9 /* Production */: {
           slottedResourceSection.cityResources.sort((a, b) => {
-            return compareYields(a, b, 1);
+            return -d * compareYields(a, b, 1);
           });
           break;
         }
         case 10 /* Gold */: {
           slottedResourceSection.cityResources.sort((a, b) => {
-            return compareYields(a, b, 2);
+            return -d * compareYields(a, b, 2);
           });
           break;
         }
         case 11 /* Science */: {
           slottedResourceSection.cityResources.sort((a, b) => {
-            return compareYields(a, b, 3);
+            return -d * compareYields(a, b, 3);
           });
           break;
         }
         case 12 /* Culture */: {
           slottedResourceSection.cityResources.sort((a, b) => {
-            return compareYields(a, b, 4);
+            return -d * compareYields(a, b, 4);
           });
           break;
         }
         case 13 /* Happiness */: {
           slottedResourceSection.cityResources.sort((a, b) => {
-            return compareYields(a, b, 5);
+            return -d * compareYields(a, b, 5);
           });
           break;
         }
         case 14 /* Influence */: {
           slottedResourceSection.cityResources.sort((a, b) => {
-            return compareYields(a, b, 6);
+            return -d * compareYields(a, b, 6);
           });
           break;
         }
@@ -2414,6 +2437,13 @@ function createCommerceScreenModel() {
     };
     return commerceScreenData;
   }
+  function toggleSelectedSortDirection() {  // TRIX
+    const type = selectedSettlementSortType();
+    const direction = resourceSettlementSortDirection[type] *= -1;
+    setSelectedSortDirection(direction);
+    const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
+    audioTrigger("dropSwap");
+  }
   function clearFactoryResources(CityID) {
     const city = Cities.get(CityID);
     if (!city) {
@@ -2468,6 +2498,9 @@ function createCommerceScreenModel() {
     resourceSettlementSortItems,
     selectedSettlementSortType,
     setSelectedSettlementSortType,
+    selectedSortDirection,  // TRIX
+    setSelectedSortDirection,  // TRIX
+    toggleSelectedSortDirection,  // TRIX
     selectedTradeRouteSorting: selectedTradeRouteFilter,
     setSelectedTradeRouteSorting: setSelectedTradeRouteFilter,
     clearFactoryResources,
