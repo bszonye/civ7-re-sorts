@@ -2437,12 +2437,18 @@ function createCommerceScreenModel() {
     };
     return commerceScreenData;
   }
-  function toggleSelectedSortDirection() {  // TRIX
+  function toggleSelectedSortDirection(direction) {  // TRIX
     const type = selectedSettlementSortType();
-    const direction = resourceSettlementSortDirection[type] *= -1;
-    setSelectedSortDirection(direction);
+    if (!direction) direction = resourceSettlementSortDirection[type] * -1;
+    setSelectedSortDirection(resourceSettlementSortDirection[type] = direction);
     const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
     audioTrigger("dropSwap");
+  }
+  function onSortAscending() {  // TRIX
+    toggleSelectedSortDirection(+1);
+  }
+  function onSortDescending() {  // TRIX
+    toggleSelectedSortDirection(-1);
   }
   function clearFactoryResources(CityID) {
     const city = Cities.get(CityID);
@@ -2501,6 +2507,8 @@ function createCommerceScreenModel() {
     selectedSortDirection,  // TRIX
     setSelectedSortDirection,  // TRIX
     toggleSelectedSortDirection,  // TRIX
+    onSortAscending,  // TRIX
+    onSortDescending,  // TRIX
     selectedTradeRouteSorting: selectedTradeRouteFilter,
     setSelectedTradeRouteSorting: setSelectedTradeRouteFilter,
     clearFactoryResources,

@@ -1,4 +1,3 @@
-// TODO: sorting hotkeys
 // TODO: persistent sorting
 import { template, insert, className, setAttribute } from '../../../../core/vendor/solid-js/web/dist/web.js';
 import { createSignal, createMemo, createEffect, on, createComponent, untrack, Show, mergeProps, createRenderEffect, For } from '../../../../core/vendor/solid-js/dist/solid.js';
@@ -31,6 +30,7 @@ import { CommerceScreenBaseTabContent } from './commerce-screen-base-tab-content
 import { useCommerceScreenContext, gamepadLog, getResourceName, ResourceContainerSelectionState, getCityName } from './commerce-screen-model.js';
 import { FactoryTypeDisplay } from './factory-type-display.js';
 import { ResourceTooltip } from '../../tooltips/resource-tooltip.js';
+import { Hotkeys } from '../../../../core/ui-next/components/hotkeys.js';
 import style from './commerce-screen.scss.js';
 
 var
@@ -1591,7 +1591,18 @@ const CommerceResourcesContainerComponent = (props) => {
       })();
     },
     get children() {
-      return createComponent(GamepadTrayItemProvider, {
+      return [createComponent(Hotkeys, {
+        get hotkeys() {
+          return [{
+            hotkeyAction: "cycle-next",
+            onActivate: model.onSortDescending
+          },
+          {
+            hotkeyAction: "cycle-prev",
+            onActivate: model.onSortAscending
+          }];
+        }
+      }), createComponent(GamepadTrayItemProvider, {
         "class": "flex-auto",
         name: "commerce-resource-gamepad-tray-context",
         items: gamepadTrayItems,
@@ -1629,7 +1640,7 @@ const CommerceResourcesContainerComponent = (props) => {
             }
           })];
         }
-      });
+      })];
     }
   });
 };
