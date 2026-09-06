@@ -1654,8 +1654,24 @@ const CommerceResourcesContainerComponent = (props) => {
 const CommerceResourcesContainer = ComponentRegistry.register({
   name: "CommerceResourcesContainer",
   createInstance: CommerceResourcesContainerComponent,
-  styles: [style]
+  styles: [style],
+  // TRIX: preload images
+  images: [
+    "blp:action_movebyrail",
+    "blp:fi_Yield_Culture_64",
+    "blp:fi_Yield_Food_64",
+    "blp:fi_Yield_Gold_64",
+    "blp:fi_Yield_Happiness_64",
+    "blp:fi_Yield_Production_64",
+    "blp:fi_Yield_Science_64",
+    "blp:fi_city_urban_64",
+    "blp:fi_yield_diplomacy_64",
+    "blp:fi_yield_warehouse_64",
+    "blp:ntf_discover_continent",
+    "blp:restype_factory_v2",
+  ],
 });
+
 
 export { CommerceResourcesContainer };
 //# sourceMappingURL=commerce-screen-resources-tab.js.map
