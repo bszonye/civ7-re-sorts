@@ -25,7 +25,7 @@ const persistSettlementSortDirection = [
   -1,  // Available Resource Slots
   -1,  // Total Resource Slots
   -1,  // Warehouse Count
-  +1,  // Home/Distant Lands
+  -1,  // Home/Distant Lands
   -1,  // Rail Connected
   -1,  // Has Factory
   -1,  // Food Yield
@@ -461,7 +461,11 @@ function createCommerceScreenModel() {
         case 2 /* OpenSlots */: {
           slottedResourceSection.cityResources.sort((a, b) => {
             const availableSlotComparison = b.availableSlots.length - a.availableSlots.length;
-            return -d * (availableSlotComparison === 0 ? compareSettlementTypes(a.cityID, b.cityID) : availableSlotComparison);
+            // TRIX: secondary sort on total slots
+            const aSlots = a.slottedResources.length + a.availableSlots.length;
+            const bSlots = b.slottedResources.length + b.availableSlots.length;
+            const totalSlotComparison = bSlots - aSlots;
+            return -d * (availableSlotComparison || totalSlotComparison || compareSettlementTypes(a.cityID, b.cityID));
           });
           break;
         }
@@ -477,23 +481,23 @@ function createCommerceScreenModel() {
         case 4 /* WarehouseCount */: {
           slottedResourceSection.cityResources.sort((a, b) => {
             const warehouseComparison = b.settlementNameData.warehouseCount - a.settlementNameData.warehouseCount;
-            return -d * (warehouseComparison === 0 ? compareSettlementTypes(a.cityID, b.cityID) : warehouseComparison);
+            return -d * (warehouseComparison || compareSettlementTypes(a.cityID, b.cityID));
           });
           break;
         }
         case 5 /* DistanceType */: {
           slottedResourceSection.cityResources.sort((a, b) => {
             if (a.isDistantLands === b.isDistantLands) {
-              return 0;
+              return -d * compareSettlementTypes(a.cityID, b.cityID);
             }
-            return d * (b.isDistantLands ? -1 : 1);
+            return -d * (b.isDistantLands ? 1 : -1);
           });
           break;
         }
         case 6 /* RailConnected */: {
           slottedResourceSection.cityResources.sort((a, b) => {
             if (a.settlementNameData.hasRail === b.settlementNameData.hasRail) {
-              return d * compareSettlementTypes(a.cityID, b.cityID);
+              return -d * compareSettlementTypes(a.cityID, b.cityID);
             }
             return -d * (b.settlementNameData.hasRail ? 1 : -1);
           });
@@ -502,7 +506,7 @@ function createCommerceScreenModel() {
         case 7 /* HasFactory */: {
           slottedResourceSection.cityResources.sort((a, b) => {
             if (a.factoryResourceData.hasFactory === b.factoryResourceData.hasFactory) {
-              return d * compareSettlementTypes(a.cityID, b.cityID);
+              return -d * compareSettlementTypes(a.cityID, b.cityID);
             }
             return -d * (b.factoryResourceData.hasFactory ? 1 : -1);
           });
