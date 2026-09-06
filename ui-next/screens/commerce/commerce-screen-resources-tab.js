@@ -764,7 +764,7 @@ const SettlementName = (props) => {
               get children() {
                 var _el$23 = _tmpl$11(), _el$24 = _el$23.firstChild;
                 insert(_el$23, createComponent(Icon, {
-                  "class": "size-6 -ml-1 mr-0\\.5",
+                  "class": "size-6 -my-0\\.5 -ml-1 mr-0\\.5",
                   name: "url(blp:action_movebyrail)",
                   isUrl: true
                 }), _el$24);

@@ -26,8 +26,8 @@ const persistSettlementSortDirection = [
   -1,  // Total Resource Slots
   -1,  // Warehouse Count
   +1,  // Home/Distant Lands
-  +1,  // Rail Connected
-  +1,  // Has Factory
+  -1,  // Rail Connected
+  -1,  // Has Factory
   -1,  // Food Yield
   -1,  // Production Yield
   -1,  // Gold Yield
@@ -406,19 +406,20 @@ function createCommerceScreenModel() {
   const resourceSettlementSortItems = {};
   resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SORT_FILTER_DEFAULT_LABEL"] = 0 /* SettlementType */;
   resourceSettlementSortItems["LOC_COMMERCE_SORT_BY_SETTLEMENT_NAME"] = 1 /* Name */;
-  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_OPEN_SLOTS"] = 2 /* OpenSlots */;
-  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_TOTAL_SLOTS"] = 3 /* TotalSlots */;
   resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_DISTANCE_TYPE"] = 5 /* DistanceType */;
   if (Game.age == Game.getHash("AGE_MODERN")) {
     resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_RAIL_CONNECTED"] = 6 /* RailConnected */;
     resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_HAS_FACTORY"] = 7 /* HasFactory */;
   }
+  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_OPEN_SLOTS"] = 2 /* OpenSlots */;
+  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_TOTAL_SLOTS"] = 3 /* TotalSlots */;
   const yieldKey = (y) => {
     const icon = `[icon:YIELD_${y == "INFLUENCE" ? "DIPLOMACY" : y}]`;
     const type = y == "WAREHOUSE" ? "COUNT" : "YIELD";
     const name = Locale.compose(`LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_${y}_${type}`);
     return [icon, name].join(" ");
   }
+  resourceSettlementSortItems[yieldKey("WAREHOUSE")] = 4 /* WarehouseCount */;
   resourceSettlementSortItems[yieldKey("FOOD")] = 8 /* Food */;
   resourceSettlementSortItems[yieldKey("PRODUCTION")] = 9 /* Production */;
   resourceSettlementSortItems[yieldKey("GOLD")] = 10 /* Gold */;
@@ -426,7 +427,6 @@ function createCommerceScreenModel() {
   resourceSettlementSortItems[yieldKey("CULTURE")] = 12 /* Culture */;
   resourceSettlementSortItems[yieldKey("HAPPINESS")] = 13 /* Happiness */;
   resourceSettlementSortItems[yieldKey("INFLUENCE")] = 14 /* Influence */;
-  resourceSettlementSortItems[yieldKey("WAREHOUSE")] = 4 /* WarehouseCount */;
   const [selectedSettlementSortType, setSelectedSettlementSortType] = createSignal(
     persistSettlementSortType /* SettlementType */
   );
@@ -495,7 +495,7 @@ function createCommerceScreenModel() {
             if (a.settlementNameData.hasRail === b.settlementNameData.hasRail) {
               return d * compareSettlementTypes(a.cityID, b.cityID);
             }
-            return d * (b.settlementNameData.hasRail ? 1 : -1);
+            return -d * (b.settlementNameData.hasRail ? 1 : -1);
           });
           break;
         }
@@ -504,7 +504,7 @@ function createCommerceScreenModel() {
             if (a.factoryResourceData.hasFactory === b.factoryResourceData.hasFactory) {
               return d * compareSettlementTypes(a.cityID, b.cityID);
             }
-            return d * (b.factoryResourceData.hasFactory ? 1 : -1);
+            return -d * (b.factoryResourceData.hasFactory ? 1 : -1);
           });
           break;
         }

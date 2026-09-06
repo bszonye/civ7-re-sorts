@@ -49,6 +49,7 @@ screen-resource-allocation .bz-factory-return-button {
 /* vanilla */
 .city-type-pill {
   border: solid 0.0555555556rem rgb(83, 86, 93);
+  min-height: 1.2222222222rem;
 }
 
 @keyframes grow {
