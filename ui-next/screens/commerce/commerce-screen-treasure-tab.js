@@ -12,7 +12,11 @@ import { CommerceScreenBaseTabContent } from './commerce-screen-base-tab-content
 import { useCommerceScreenContext } from './commerce-screen-model.js';
 import { TreasureConvoyCard } from './treasure-convoy-card.js';
 
-var _tmpl$ = /* @__PURE__ */ template(`<div class="flex flex-row flex-wrap flex-auto relative"></div>`), _tmpl$2 = /* @__PURE__ */ template(`<div class="flex flex-col flex-wrap text-wrap text-center items-center justify-center my-4"><div class="text-secondary uppercase"></div></div>`), _tmpl$3 = /* @__PURE__ */ template(`<div class="flex flex-row flex-wrap flex-auto relative mt-6"></div>`);
+var
+  _tmpl$ = template(`<div class="flex flex-row flex-wrap flex-auto relative"></div>`),
+  _tmpl$2 = template(`<div class="flex flex-col flex-wrap text-wrap text-center items-center justify-center my-4"><div class="text-secondary uppercase"></div></div>`),
+  _tmpl$3 = template(`<div class="flex flex-row flex-wrap flex-auto relative gap-6 my-6"></div>`);
+//_tmpl$3 = template(`<div class="flex flex-row flex-wrap flex-auto relative mt-6"></div>`);
 const TreasureResourceContainer = (props) => {
   const model = useCommerceScreenContext();
   const layoutComplete = createLayoutComplete();
@@ -151,3 +155,4 @@ const TreasureResourceContainer = (props) => {
 
 export { TreasureResourceContainer };
 //# sourceMappingURL=commerce-screen-treasure-tab.js.map
+// vim: sw=2 et

@@ -3,17 +3,22 @@ import { createMemo, createComponent, Index, createRenderEffect } from '../../..
 import { L10n } from '../../../../core/ui-next/components/l10n.js';
 import { ComponentRegistry } from '../../../../core/ui-next/services/component-registry.js';
 
-var _tmpl$ = /* @__PURE__ */ template(`<div class="w-full flex flex-col"><div class="w-full flex flex-row text-secondary"><div class=grow></div></div><div class="w-full h-4 flex flex-row p-1 mt-2"></div></div>`), _tmpl$2 = /* @__PURE__ */ template(`<div class="flex-auto h-full"></div>`);
+var
+  _tmpl$ = template(`<div class="w-full flex flex-col px-1 pt-1"><div class="w-full flex flex-row items-end px-1"><div class=flex-auto></div></div><div class="w-full h-4 flex flex-row p-1 mt-2"></div></div>`),
+//_tmpl$ = template(`<div class="w-full flex flex-col"><div class="w-full flex flex-row text-secondary"><div class=grow></div></div><div class="w-full h-4 flex flex-row p-1 mt-2"></div></div>`),
+  _tmpl$2 = template(`<div class="flex-auto h-full"></div>`);
 const TreasureConvoyProgressBarComponent = (props) => {
   const items = createMemo(() => Array.from({
     length: props.segmentCount
   }, (_, i) => i));
   return (() => {
     var _el$ = _tmpl$(), _el$2 = _el$.firstChild, _el$3 = _el$2.firstChild, _el$4 = _el$2.nextSibling;
-    insert(_el$3, createComponent(L10n.Compose, {
-      text: "LOC_COMMERCE_TREASURE_FLEET_LOADING"
-    }));
-    insert(_el$2, createComponent(L10n.Compose, {
+    insert(_el$3, () => props.treasureFleetText);
+    // insert(_el$3, createComponent(L10n.Compose, {
+    //   text: "LOC_COMMERCE_TREASURE_FLEET_LOADING"
+    // }));
+    insert(_el$2, createComponent(L10n.Stylize, {
+      "class": "text-secondary",
       text: "LOC_COMMERCE_TREASURE_FLEET_PROGRESS",
       get args() {
         return [props.currentValue, props.segmentCount];
@@ -49,3 +54,4 @@ const TreasureConvoyProgressBar = ComponentRegistry.register({
 
 export { TreasureConvoyProgressBar };
 //# sourceMappingURL=treasure-convoy-progress-bar.js.map
+// vim: sw=2 et

@@ -39,6 +39,9 @@ screen-resource-allocation .bz-sort-button .bz-sort-down.bz-sort-ascending {
 screen-resource-allocation .bz-sort-label {
   line-height: 1.25;
 }
+.treasure-convoy-card.w-128 {
+  width: 23.1111111111rem;
+}
 
 /* vanilla */
 .city-type-pill {

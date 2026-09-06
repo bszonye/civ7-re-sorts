@@ -13,7 +13,23 @@ import { useCommerceScreenContext } from './commerce-screen-model.js';
 import { TreasureConvoyProgressBar } from './treasure-convoy-progress-bar.js';
 import { ResourceTooltip } from '../../tooltips/resource-tooltip.js';
 
-var _tmpl$ = /* @__PURE__ */ template(`<div class="relative size-16 mr-1 flex items-center justify-center"></div>`), _tmpl$2 = /* @__PURE__ */ template(`<div class="flex flex-row mr-3 items-center justify-center size-10 bg-center bg-cover bg-no-repeat"></div>`), _tmpl$3 = /* @__PURE__ */ template(`<div class="font-title text-secondary uppercase"></div>`), _tmpl$4 = /* @__PURE__ */ template(`<div class="flex flex-row w-full flex-wrap my-3"></div>`), _tmpl$5 = /* @__PURE__ */ template(`<div class="text-wrap w-full pr-2 mr-2 flex-auto"></div>`), _tmpl$6 = /* @__PURE__ */ template(`<div class="h-1 my-1 scale-y-50"></div>`), _tmpl$7 = /* @__PURE__ */ template(`<div class="size-9 mt-2 -mb-1 tint-bg-white bg-center bg-contain bg-no-repeat"></div>`), _tmpl$8 = /* @__PURE__ */ template(`<div class="absolute top-0 right-3 w-12 h-20 bg-center bg-no-repeat bg-contain flex flex-col items-center"><p></p></div>`), _tmpl$9 = /* @__PURE__ */ template(`<div class="mt-2 p-4 flex flex-col"></div>`);
+var
+  _tmpl$ = template(`<div class="relative size-16 flex items-center justify-center"></div>`),
+//_tmpl$ = template(`<div class="relative size-16 mr-1 flex items-center justify-center"></div>`),
+  _tmpl$2 = template(`<div class="flex flex-row ml-1 mr-3 items-center justify-center size-10 bg-center bg-cover bg-no-repeat"></div>`),
+//_tmpl$2 = template(`<div class="flex flex-row mr-3 items-center justify-center size-10 bg-center bg-cover bg-no-repeat"></div>`),
+  _tmpl$3 = template(`<div class="font-title-lg text-secondary uppercase"></div>`),
+//_tmpl$3 = template(`<div class="font-title text-secondary uppercase"></div>`),
+  _tmpl$4 = template(`<div class="flex flex-row w-full flex-wrap gap-1 my-1"></div>`),
+//_tmpl$4 = template(`<div class="flex flex-row w-full flex-wrap my-3"></div>`),
+  _tmpl$5 = template(`<div class="text-wrap w-full pr-2 mr-2 flex-auto"></div>`),
+  _tmpl$6 = template(`<div class="hidden h-1 my-1 scale-y-50"></div>`),
+//_tmpl$6 = template(`<div class="h-1 my-1 scale-y-50"></div>`),
+  _tmpl$7 = template(`<div class="size-9 mt-0 -mb-2 tint-bg-white bg-center bg-contain bg-no-repeat"></div>`),
+//_tmpl$7 = template(`<div class="size-9 mt-2 -mb-1 tint-bg-white bg-center bg-contain bg-no-repeat"></div>`),
+  _tmpl$8 = template(`<div class="absolute top-0 right-3\\.5 w-12 h-14 bg-center bg-no-repeat bg-contain flex flex-col items-center"><p></p></div>`),
+//_tmpl$8 = template(`<div class="absolute top-0 right-5 w-12 h-20 bg-center bg-no-repeat bg-contain flex flex-col items-center"><p></p></div>`),
+  _tmpl$9 = template(`<div class="mt-2 p-4 flex flex-col"></div>`);
 const TreasureConvoyCardResource = (props) => {
   const model = useCommerceScreenContext();
   const shouldAutoFocus = createMemo(() => props.isInSelectedRoute && props.index === 0);
@@ -61,7 +77,8 @@ const TreasureConvoyCardComponent = (props) => {
   const model = useCommerceScreenContext();
   const isSelected = createMemo(() => ComponentID.isMatch(props.fleet.cityID, model.selectedTreasureConvoyId() ?? null));
   const content = createComponent(CardFrame, {
-    "class": `w-128 min-h-64 px-6 pt-6 pb-3 flex flex-col mr-6 mb-6 relative focusable-card`,
+    // replace margins with gap
+    "class": `treasure-convoy-card w-128 min-h-48 px-1\\.5 pt-3 pb-3 flex flex-col mr-0 mb-0 relative focusable-card`,
     get children() {
       return [createComponent(Activatable, {
         "class": "flex flex-row items-center mb-2",
@@ -92,8 +109,8 @@ const TreasureConvoyCardComponent = (props) => {
             return _el$3;
           })()];
         }
-      }), createComponent(L10n.Compose, {
-        text: "LOC_COMMERCE_TREASURE_RESOURCES_TITLE"
+      // }), createComponent(L10n.Compose, {
+      //   text: "LOC_COMMERCE_TREASURE_RESOURCES_TITLE"
       }), (() => {
         var _el$4 = _tmpl$4();
         insert(_el$4, createComponent(For, {
@@ -182,14 +199,17 @@ const TreasureConvoyCardComponent = (props) => {
         },
         get children() {
           return [(() => {
-            var _el$5 = _tmpl$5();
-            insert(_el$5, () => props.fleet.treasureFleetText);
-            return _el$5;
-          })(), (() => {
+          //   var _el$5 = _tmpl$5();
+          //   insert(_el$5, () => props.fleet.treasureFleetText);
+          //   return _el$5;
+          // })(), (() => {
             var _el$6 = _tmpl$6();
             _el$6.style.setProperty("background-image", "linear-gradient(to right, rgba(77, 83, 102, 1), rgba(77, 83, 102, 0))");
             return _el$6;
           })(), createComponent(TreasureConvoyProgressBar, {
+            get treasureFleetText() {
+              return props.fleet.treasureFleetText;
+            },
             get segmentCount() {
               return props.fleet.progressGoal;
             },
@@ -245,3 +265,4 @@ const TreasureConvoyCard = ComponentRegistry.register({
 
 export { TreasureConvoyCard };
 //# sourceMappingURL=treasure-convoy-card.js.map
+// vim: sw=2 et
