@@ -2146,6 +2146,9 @@ function createCommerceScreenModel() {
         notGeneratingFleets.push(treasureFleet);
       }
     });
+    // TRIX: sort fleets by city name
+    generatingFleets.sort((a, b) => compareSettlementNames(a.cityID, b.cityID));
+    notGeneratingFleets.sort((a, b) => compareSettlementNames(a.cityID, b.cityID));
     const generatingSection = {
       fleets: generatingFleets,
       collapsibleContainerData: {
