@@ -2062,6 +2062,7 @@ function createCommerceScreenModel() {
             tooltip = Locale.compose("LOC_COMMERCE_TREASURE_PLOT_DAMAGED");
           } else if (!isDistantLand) {
             tooltip = Locale.compose("LOC_COMMERCE_TREASURE_FLEET_DISTANT_LAND_STATUS_TOOLTIP");
+            return;  // TRIX: no point including these, they can't be fixed
           }
         } else {
           tooltip = Locale.compose("LOC_COMMERCE_TREASURE_PLOT_NEEDS_IMPROVEMENT");
