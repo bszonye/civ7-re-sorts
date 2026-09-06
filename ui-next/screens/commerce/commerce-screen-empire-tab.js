@@ -173,7 +173,7 @@ const EmpireResourceContainer = (props) => {
     "class": "flex-auto",
     get children() {
       return createComponent(CommerceScreenBaseTabContent, {
-        title: "LOC_COMMERCE_EMPIRE_RESOURCE_TITLE",
+        title: null,  // "LOC_COMMERCE_EMPIRE_RESOURCE_TITLE",
         description: "LOC_COMMERCE_EMPIRE_RESOURCES_DESCRIPTION",
         get children() {
           return createComponent(GamepadTrayItemProvider, {
@@ -249,7 +249,7 @@ const EmpireResourceContainer = (props) => {
                                 },
                                 get children() {
                                   var _el$5 = _tmpl$3();
-                                  insert(_el$5, () => `[${resourceData.amount}]`);
+                                  insert(_el$5, () => `(${resourceData.amount})`);
                                   return _el$5;
                                 }
                               }));

@@ -1809,7 +1809,12 @@ function createCommerceScreenModel() {
       empireResources.push(resourceData);
       return;
     });
-    empireResources.sort((a, b) => a.amount < b.amount ? 1 : -1);
+    // empireResources.sort((a, b) => a.amount < b.amount ? 1 : -1);
+    empireResources.sort((a, b) => {
+      const at = Locale.compose(a.title);
+      const bt = Locale.compose(b.title);
+      return Locale.compare(at, bt);
+    });
     empireResources.forEach((resource) => {
       resource.resourceOriginData.forEach((originPlayer) => {
         const player = Players.get(originPlayer.leaderId);
