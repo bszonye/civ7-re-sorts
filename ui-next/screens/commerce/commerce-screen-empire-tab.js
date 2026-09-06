@@ -249,7 +249,7 @@ const EmpireResourceContainer = (props) => {
                                 },
                                 get children() {
                                   var _el$5 = _tmpl$3();
-                                  insert(_el$5, () => `(${resourceData.amount})`);
+                                  insert(_el$5, () => `×${resourceData.amount}`);
                                   return _el$5;
                                 }
                               }));
