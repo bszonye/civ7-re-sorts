@@ -25,7 +25,7 @@ var
   _tmpl$5 = template(`<div class="text-wrap w-full pr-2 mr-2 flex-auto"></div>`),
   _tmpl$6 = template(`<div class="hidden h-1 my-1 scale-y-50"></div>`),
 //_tmpl$6 = template(`<div class="h-1 my-1 scale-y-50"></div>`),
-  _tmpl$7 = template(`<div class="size-9 mt-0 -mb-2 tint-bg-white bg-center bg-contain bg-no-repeat"></div>`),
+  _tmpl$7 = template(`<div class="size-9 -mt-0\\.5 -mb-1\\.5 tint-bg-white bg-center bg-contain bg-no-repeat"></div>`),
 //_tmpl$7 = template(`<div class="size-9 mt-2 -mb-1 tint-bg-white bg-center bg-contain bg-no-repeat"></div>`),
   _tmpl$8 = template(`<div class="absolute top-0 right-3\\.5 w-12 h-14 bg-center bg-no-repeat bg-contain flex flex-col items-center"><p></p></div>`),
 //_tmpl$8 = template(`<div class="absolute top-0 right-5 w-12 h-20 bg-center bg-no-repeat bg-contain flex flex-col items-center"><p></p></div>`),
@@ -78,7 +78,7 @@ const TreasureConvoyCardComponent = (props) => {
   const isSelected = createMemo(() => ComponentID.isMatch(props.fleet.cityID, model.selectedTreasureConvoyId() ?? null));
   const content = createComponent(CardFrame, {
     // replace margins with gap
-    "class": `treasure-convoy-card w-128 min-h-48 px-1\\.5 pt-3 pb-3 flex flex-col mr-0 mb-0 relative focusable-card`,
+    "class": `treasure-convoy-card w-128 min-h-0 px-1\\.5 pt-3 pb-3 flex flex-col mr-0 mb-0 relative focusable-card`,
     get children() {
       return [createComponent(Activatable, {
         "class": "flex flex-row items-center mb-2",
