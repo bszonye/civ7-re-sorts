@@ -17,9 +17,17 @@ import { GamepadTrayItemProvider } from '../../components/gamepad-tray-item-prov
 import { CommerceScreenBaseTabContent } from './commerce-screen-base-tab-content.js';
 import { useCommerceScreenContext } from './commerce-screen-model.js';
 
-var _tmpl$ = /* @__PURE__ */ template(`<div class="text-secondary self-center text-center text-accent-2"></div>`), _tmpl$2 = /* @__PURE__ */ template(`<div class="empire-resource-cards-row flex flex-row flex-wrap flex-auto relative"></div>`), _tmpl$3 = /* @__PURE__ */ template(`<div class="ml-1 text-white"></div>`), _tmpl$4 = /* @__PURE__ */ template(`<div class="flex flex-col w-full grow items-center mt-8"><div class="mb-2 w-full"></div><div class="w-full text-center items-center flex-col px-2"></div></div>`), _tmpl$5 = /* @__PURE__ */ template(`<div class="flex flex-col w-full justify-center items-center mt-1 mb-1"><div class="flex flex-row flex-wrap"></div></div>`), _tmpl$6 = /* @__PURE__ */ template(`<div class="mx-2 h-10 w-0\\.5 bg-accent"></div>`), _tmpl$7 = /* @__PURE__ */ template(`<div class="flex flex-row items-center mb-1 px-2"></div>`);
+var
+  _tmpl$ = template(`<div class="text-secondary self-center text-center text-accent-2"></div>`),
+  _tmpl$2 = template(`<div class="empire-resource-cards-row flex flex-row flex-wrap flex-auto relative"></div>`),
+  _tmpl$3 = template(`<div class="ml-1 text-white"></div>`),
+  _tmpl$4 = template(`<div class="flex flex-col w-full grow items-center mt-8"><div class="mb-2 w-full"></div><div class="w-full text-center items-center flex-col px-2"></div></div>`),
+  _tmpl$5 = template(`<div class="flex flex-col w-full justify-center items-center mt-1 mb-1"><div class="flex flex-row flex-wrap justify-center mt-2"></div></div>`),
+//_tmpl$5 = template(`<div class="flex flex-col w-full justify-center items-center mt-1 mb-1"><div class="flex flex-row flex-wrap"></div></div>`),
+  _tmpl$6 = template(`<div class="mx-2 h-10 w-0\\.5 bg-accent"></div>`),
+  _tmpl$7 = template(`<div class="flex flex-row items-center mb-1 px-2"></div>`);
 const EMPIRE_CARD_MARGIN_RIGHT = Layout.pixelsToScreenPixels(20);
-const DEFAULT_EMPIRE_CARD_WIDTH = Layout.pixelsToScreenPixels(384);
+const DEFAULT_EMPIRE_CARD_WIDTH = Layout.pixelsToScreenPixels(270);
 const EmpireResourceContainer = (props) => {
   const model = useCommerceScreenContext();
   let cardsRowRef;
@@ -270,7 +278,7 @@ const EmpireResourceContainer = (props) => {
                                       },
                                       get fallback() {
                                         return createComponent(L10n.Stylize, {
-                                          "class": "py-1 self-center text-center",
+                                          "class": "py-1 self-center text-center text-sm",
                                           text: description,
                                           disableTooltips: true
                                         });
@@ -348,3 +356,4 @@ const EmpireResourceContainer = (props) => {
 
 export { EmpireResourceContainer };
 //# sourceMappingURL=commerce-screen-empire-tab.js.map
+// vim: sw=2 et

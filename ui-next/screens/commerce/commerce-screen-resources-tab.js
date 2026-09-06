@@ -1546,7 +1546,7 @@ const CommerceResourcesContainerComponent = (props) => {
                   }));
                   return _el$53;
                 })(), createComponent(Dropdown, {
-                  "class": "ml-2 max-w-60 flex-auto pointer-events-auto min-h-14",
+                  "class": "ml-2 max-w-80 flex-auto pointer-events-auto min-h-14",
                   selectedItemTemplate: (json) => (() => {
                     const [key, _value] = JSON.parse(json);
                     var _el$58 = _tmpl$26();
