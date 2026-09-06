@@ -15,27 +15,44 @@ import { compareSettlementTypes, compareSettlementNames } from '../../../../core
 import CityYields from '../../../ui/utilities/utilities-city-yields.js';
 import { ConstructibleHasTagType } from '../../../ui/utilities/utilities-tags.js';
 
+const modID = "bz-re-sorts";
+function saveOption(name, value) {
+  if (!name) return value;
+  UI.setOption("user", "Mod", `${modID}.${name}`, value);
+  Configuration.getUser().saveCheckpoint();
+  return value;
+}
+function loadOption(name, defaultValue) {
+  if (!name) return void defaultValue;
+  return UI.getOption("user", "Mod", `${modID}.${name}`) ?? defaultValue;
+}
 // TRIX: persistent sort directions
-// TODO: store configuration across reloads?
-let persistSettlementSortType = -1;
-const persistSettlementSortDirection = [
+let savedSettlementSortType = loadOption("settlementSortType", -1);
+const savedSettlementSortDirection = [
   // starting sort directions
-  +1,  // Default
-  +1,  // Settlement Name
-  -1,  // Available Resource Slots
-  -1,  // Total Resource Slots
-  -1,  // Warehouse Count
-  -1,  // Home/Distant Lands
-  -1,  // Rail Connected
-  -1,  // Has Factory
-  -1,  // Food Yield
-  -1,  // Production Yield
-  -1,  // Gold Yield
-  -1,  // Science Yield
-  -1,  // Culture Yield
-  -1,  // Happiness Yield
-  -1,  // Influence Yield
+  loadOption("settlementSortDirection-0", +1),  // Default
+  loadOption("settlementSortDirection-1", +1),  // Settlement Name
+  loadOption("settlementSortDirection-2", -1),  // Available Resource Slots
+  loadOption("settlementSortDirection-3", -1),  // Total Resource Slots
+  loadOption("settlementSortDirection-4", -1),  // Warehouse Count
+  loadOption("settlementSortDirection-5", -1),  // Home/Distant Lands
+  loadOption("settlementSortDirection-6", -1),  // Rail Connected
+  loadOption("settlementSortDirection-7", -1),  // Has Factory
+  loadOption("settlementSortDirection-8", -1),  // Food Yield
+  loadOption("settlementSortDirection-9", -1),  // Production Yield
+  loadOption("settlementSortDirection-10", -1),  // Gold Yield
+  loadOption("settlementSortDirection-11", -1),  // Science Yield
+  loadOption("settlementSortDirection-12", -1),  // Culture Yield
+  loadOption("settlementSortDirection-13", -1),  // Happiness Yield
+  loadOption("settlementSortDirection-14", -1),  // Influence Yield
 ];
+function saveSettlementSortType(type) {
+  return savedSettlementSortType = saveOption("settlementSortType", type);
+}
+function saveSettlementSortDirection(type, direction) {
+  return savedSettlementSortDirection[type] =
+    saveOption(`settlementSortDirection-${type}`, direction);
+}
 
 const DEBUG_RESOURCE_SWAPPING = false;
 const DEBUG_GAMEPAD = false;
@@ -430,7 +447,7 @@ function createCommerceScreenModel() {
   resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_TOTAL_SLOTS"] = 3 /* TotalSlots */;
   resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_OPEN_SLOTS"] = 2 /* OpenSlots */;
   const [selectedSettlementSortType, setSelectedSettlementSortType] = createSignal(
-    persistSettlementSortType /* SettlementType */
+    savedSettlementSortType /* SettlementType */
   );
   const [selectedSortDirection, setSelectedSortDirection] = createSignal(1);
   createEffect(() => {
@@ -443,8 +460,8 @@ function createCommerceScreenModel() {
     }
     model.data.resourceTabData.slottedResourceSectionData.forEach((slottedResourceSection) => {
       const type = selectedSettlementSortType();
-      persistSettlementSortType = type;
-      const d = persistSettlementSortDirection[type];
+      saveSettlementSortType(type);
+      const d = savedSettlementSortDirection[type];
       if (d != selectedSortDirection()) setSelectedSortDirection(d);
       switch (selectedSettlementSortType()) {
         default:
@@ -2479,8 +2496,8 @@ function createCommerceScreenModel() {
   }
   function toggleSelectedSortDirection(direction) {  // TRIX
     const type = selectedSettlementSortType();
-    if (!direction) direction = persistSettlementSortDirection[type] * -1;
-    setSelectedSortDirection(persistSettlementSortDirection[type] = direction);
+    if (!direction) direction = savedSettlementSortDirection[type] * -1;
+    setSelectedSortDirection(saveSettlementSortDirection(type, direction));
     const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
     audioTrigger("dropSwap");
   }
