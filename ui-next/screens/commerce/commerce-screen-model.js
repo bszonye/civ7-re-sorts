@@ -2442,8 +2442,27 @@ function createCommerceScreenModel() {
     };
     return commerceScreenData;
   }
-  function defaultSettlementSortType() {  // TRIX
-    return persistSettlementSortType;
+  function selectedSettlementSortIndex() {  // TRIX
+    const type = selectedSettlementSortType();
+    const items = Object.entries(resourceSettlementSortItems);
+    const index = items.findIndex(([_, value]) => value == type);
+    return index < 0 ? 0 : index;
+  }
+  function onNextSettlementSortType() {  // TRIX
+    const index = selectedSettlementSortIndex();
+    const items = Object.values(resourceSettlementSortItems);
+    const next = (index + 1) % items.length;
+    setSelectedSettlementSortType(items.at(next));
+    const audioTrigger = useAudio();
+    audioTrigger("Dropdown", "dropdown-close");
+  }
+  function onPrevSettlementSortType() {  // TRIX
+    const index = selectedSettlementSortIndex();
+    const items = Object.values(resourceSettlementSortItems);
+    const next = index - 1;
+    setSelectedSettlementSortType(items.at(next));
+    const audioTrigger = useAudio();
+    audioTrigger("Dropdown", "dropdown-open");
   }
   function toggleSelectedSortDirection(direction) {  // TRIX
     const type = selectedSettlementSortType();
@@ -2451,12 +2470,6 @@ function createCommerceScreenModel() {
     setSelectedSortDirection(persistSettlementSortDirection[type] = direction);
     const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
     audioTrigger("dropSwap");
-  }
-  function onSortAscending() {  // TRIX
-    toggleSelectedSortDirection(+1);
-  }
-  function onSortDescending() {  // TRIX
-    toggleSelectedSortDirection(-1);
   }
   function clearFactoryResources(CityID) {
     const city = Cities.get(CityID);
@@ -2512,12 +2525,12 @@ function createCommerceScreenModel() {
     resourceSettlementSortItems,
     selectedSettlementSortType,
     setSelectedSettlementSortType,
-    defaultSettlementSortType,  // TRIX
+    selectedSettlementSortIndex,  // TRIX
+    onNextSettlementSortType,  // TRIX
+    onPrevSettlementSortType,  // TRIX
     selectedSortDirection,  // TRIX
     setSelectedSortDirection,  // TRIX
     toggleSelectedSortDirection,  // TRIX
-    onSortAscending,  // TRIX
-    onSortDescending,  // TRIX
     selectedTradeRouteSorting: selectedTradeRouteFilter,
     setSelectedTradeRouteSorting: setSelectedTradeRouteFilter,
     clearFactoryResources,

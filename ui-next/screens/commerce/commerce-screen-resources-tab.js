@@ -1556,10 +1556,9 @@ const CommerceResourcesContainerComponent = (props) => {
                     return _el$58;
                   })(),
                   get defaultValue() {
-                    const type = model.defaultSettlementSortType();
-                    const items = Object.entries(model.resourceSettlementSortItems);
+                    const index = model.selectedSettlementSortIndex();
                     const [key, value] =
-                      items.find(([_, value]) => value == type) ?? items[0];
+                      Object.entries(model.resourceSettlementSortItems)[index];
                     return JSON.stringify([ key, value ]);
                   },
                   onItemSelected: (json) => {
@@ -1599,11 +1598,15 @@ const CommerceResourcesContainerComponent = (props) => {
         get hotkeys() {
           return [{
             hotkeyAction: "cycle-next",
-            onActivate: model.onSortDescending
+            onActivate: model.onNextSettlementSortType
           },
           {
             hotkeyAction: "cycle-prev",
-            onActivate: model.onSortAscending
+            onActivate: model.onPrevSettlementSortType
+          },
+          {
+            hotkeyAction: "unit-skip-turn",
+            onActivate: model.toggleSelectedSortDirection
           }];
         }
       }), createComponent(GamepadTrayItemProvider, {
