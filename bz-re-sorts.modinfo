@@ -20,29 +20,6 @@
         </Criteria>
     </ActionCriteria>
     <ActionGroups>
-        <!--
-        <ActionGroup id="bz-re-sorts-menu" scope="shell" criteria="always">
-            <Properties>
-                <LoadOrder>1000</LoadOrder>
-            </Properties>
-            <Actions>
-                <UIScripts>
-                    <Item>ui/options/bz-re-sorts-options.js</Item>
-                    <Item>ui/options/mod-options.js</Item>
-                </UIScripts>
-                <UpdateText>
-                    <Item>text/en_us/InGameText.xml</Item>
-                    <Item locale="de_DE">text/de_DE/InGameText.xml</Item>
-                    <Item locale="fr_FR">text/fr_FR/InGameText.xml</Item>
-                    <Item locale="it_IT">text/it_IT/InGameText.xml</Item>
-                    <Item locale="ko_KR">text/ko_KR/InGameText.xml</Item>
-                    <Item locale="ru_RU">text/ru_RU/InGameText.xml</Item>
-                    <Item locale="zh_Hans_CN">text/zh_Hans_CN/InGameText.xml</Item>
-                    <Item locale="zh_Hant_HK">text/zh_Hant_HK/InGameText.xml</Item>
-                </UpdateText>
-            </Actions>
-        </ActionGroup>
-        -->
         <ActionGroup id="bz-re-sorts-ui" scope="game" criteria="always">
             <Properties>
                 <LoadOrder>1000</LoadOrder>
@@ -65,25 +42,8 @@
                     <Item>ui-next/screens/commerce/treasure-convoy-card.js</Item>
                     <Item>ui-next/screens/commerce/treasure-convoy-progress-bar.js</Item>
                 </ImportFiles>
-                <!--
-                <UIScripts>
-                    <Item>ui/options/bz-re-sorts-options.js</Item>
-                    <Item>ui/options/mod-options.js</Item>
-                    <Item>ui/resource-allocation/bz-model-resource-allocation.js</Item>
-                    <Item>ui/resource-allocation/bz-screen-resource-allocation.js</Item>
-                </UIScripts>
-                -->
                 <UpdateText>
                     <Item>text/en_us/InGameText.xml</Item>
-                    <!--
-                    <Item locale="de_DE">text/de_DE/InGameText.xml</Item>
-                    <Item locale="fr_FR">text/fr_FR/InGameText.xml</Item>
-                    <Item locale="it_IT">text/it_IT/InGameText.xml</Item>
-                    <Item locale="ko_KR">text/ko_KR/InGameText.xml</Item>
-                    <Item locale="ru_RU">text/ru_RU/InGameText.xml</Item>
-                    <Item locale="zh_Hans_CN">text/zh_Hans_CN/InGameText.xml</Item>
-                    <Item locale="zh_Hant_HK">text/zh_Hant_HK/InGameText.xml</Item>
-                    -->
                 </UpdateText>
                 -->
             </Actions>
@@ -91,12 +51,5 @@
     </ActionGroups>
     <LocalizedText>
         <File>text/en_us/ModInfoText.xml</File>
-        <File>text/de_DE/ModInfoText.xml</File>
-        <File>text/fr_FR/ModInfoText.xml</File>
-        <File>text/it_IT/ModInfoText.xml</File>
-        <File>text/ko_KR/ModInfoText.xml</File>
-        <File>text/ru_RU/ModInfoText.xml</File>
-        <File>text/zh_Hans_CN/ModInfoText.xml</File>
-        <File>text/zh_Hant_HK/ModInfoText.xml</File>
     </LocalizedText>
 </Mod>
