@@ -1,0 +1,102 @@
+/* bz-re-sorts */
+screen-resource-allocation .scroll-area_track.mx-2 {
+  margin-right: 0;
+}
+screen-resource-allocation .w-11.h-24 {
+  height: 4.4444444444rem;
+}
+screen-resource-allocation .w-11.mb-1 {
+  margin: 0.1111111111rem 0 0 0;
+}
+screen-resource-allocation .bz-tab-list .img-tab-bar,
+screen-resource-allocation .bz-tab-list .img-tab-end-cap {
+  display: none;
+}
+screen-resource-allocation .bz-sort-button:hover,
+screen-resource-allocation .bz-sort-button:focus,
+screen-resource-allocation .bz-sort-button.pressed {
+  filter: brightness(150%);
+}
+screen-resource-allocation .bz-sort-button .bz-sort-up,
+screen-resource-allocation .bz-sort-button .bz-sort-down {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  flex-shrink: 1;
+}
+screen-resource-allocation .bz-sort-button .bz-sort-up {
+  transform: rotate(-90deg);
+}
+screen-resource-allocation .bz-sort-button .bz-sort-down {
+  transform: rotate(90deg) scaleY(-1);
+}
+screen-resource-allocation .bz-sort-button .bz-sort-up.bz-sort-descending,
+screen-resource-allocation .bz-sort-button .bz-sort-down.bz-sort-ascending {
+  opacity: 0.125;
+}
+screen-resource-allocation .bz-sort-label {
+  line-height: 1.25;
+}
+screen-resource-allocation .bz-factory-return-button {
+  filter: fxs-color-tint(#00ffcc);
+}
+.treasure-convoy-card.w-128 {
+  width: 23.1111111111rem;
+}
+
+/* vanilla */
+.city-type-pill {
+  border: solid 0.0555555556rem rgb(83, 86, 93);
+  min-height: 1.2222222222rem;
+}
+
+@keyframes grow {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+@keyframes selection-pulse {
+  from {
+    transform: scale(1.25);
+  }
+  to {
+    transform: scale(1.3);
+  }
+}
+.draggable-resource {
+  transition: transform 0.07s ease-out;
+}
+
+.framed-resource {
+  transition: transform 0.07s ease-out, opacity 0.07s ease-out;
+}
+
+.focused-resource {
+  animation: selection-pulse 0.3s alternate infinite ease-in-out;
+}
+
+.pulse-highlight {
+  display: none;
+}
+
+.last-slotted .pulse-highlight {
+  display: flex;
+  animation: grow 1s forwards ease-out;
+  animation-iteration-count: 2;
+}
+
+.focusable-card-activatable:focus .focusable-card, .focusable-card-activatable:focus-within .focusable-card {
+  border-image-source: url("blp:base_ticket-select-bg");
+}
+.focusable-card-activatable:focus .ornate-card-bg, .focusable-card-activatable:focus-within .ornate-card-bg {
+  border-image-source: url("blp:hud_mini_box_highlight");
+}
+
+/* vim: set sw=2 et : */
