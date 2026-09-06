@@ -29,7 +29,7 @@ var
 //_tmpl$7 = template(`<div class="size-9 mt-2 -mb-1 tint-bg-white bg-center bg-contain bg-no-repeat"></div>`),
   _tmpl$8 = template(`<div class="absolute top-0 right-3\\.5 w-12 h-14 bg-center bg-no-repeat bg-contain flex flex-col items-center"><p></p></div>`),
 //_tmpl$8 = template(`<div class="absolute top-0 right-5 w-12 h-20 bg-center bg-no-repeat bg-contain flex flex-col items-center"><p></p></div>`),
-  _tmpl$9 = template(`<div class="mt-2 p-4 flex flex-col"></div>`);
+  _tmpl$9 = template(`<div class="mt-2 -mb-0\\.5 mx-1 p-4 flex flex-col"></div>`);
 const TreasureConvoyCardResource = (props) => {
   const model = useCommerceScreenContext();
   const shouldAutoFocus = createMemo(() => props.isInSelectedRoute && props.index === 0);
