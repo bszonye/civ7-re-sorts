@@ -11,13 +11,13 @@ import { IsControllerActive } from '../../../../core/ui-next/services/input.js';
 import { useCommerceScreenContext } from './commerce-screen-model.js';
 import { ResourceTooltip } from '../../tooltips/resource-tooltip.js';
 
-var _tmpl$ = /* @__PURE__ */ template(`<div class="self-end flex flex-row items-center h-8 mr-9"><div class="flex flex-row items-center p-1 bg-black rounded-lg"></div></div>`), _tmpl$2 = /* @__PURE__ */ template(`<div class="size-6 mr-1"></div>`);
+var _tmpl$ = /* @__PURE__ */ template(`<div class="self-end flex flex-row items-center h-8 mr-11"><div class="flex flex-row items-center p-0\\.5 bg-black rounded-lg"></div></div>`), _tmpl$2 = /* @__PURE__ */ template(`<div class="size-7 mr-0\\.5"></div>`);
 const FactoryTypeDisplayComponent = (props) => {
   const model = useCommerceScreenContext();
   const cityIsSelectedForEditing = () => ComponentID.isMatch(model.selectedSettlementId() ?? null, props.cityID);
   const hotkeyContext = useContext(HotkeyContext);
   const imageButtonData = {
-    "class": "bz-factory-return-button mr-0\\.5",
+    "class": "bz-factory-return-button mr-px",
     imageData: {
       base: "url(blp:resource_return_button_default.png)",
       focus: "url(blp:resource_return_button_hover.png)"
@@ -53,7 +53,7 @@ const FactoryTypeDisplayComponent = (props) => {
       children: (resource) => [createComponent(ResourceTooltip, mergeProps(resource, {
         get children() {
           return createComponent(Icon, {
-            "class": "size-6 mr-1",
+            "class": "size-7 mr-0\\.5",
             get name() {
               return resource().resourceIcon;
             },
