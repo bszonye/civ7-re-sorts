@@ -1521,7 +1521,7 @@ const CommerceResourcesContainerComponent = (props) => {
                       "bz-sort-descending" : "bz-sort-ascending";
                   });
                   insert(_el$53, createComponent(Activatable, {
-                    "class": "bz-sort-button relative -my-1 h-16 min-w-14 flex-col justify-center items-center",
+                    "class": "bz-sort-button relative -my-1 h-16 flex-col justify-center items-center",
                     onActivate: () => {
                       model.toggleSelectedSortDirection();
                     },

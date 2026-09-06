@@ -75,11 +75,11 @@ const CommerceScreenComponent = (_props) => {
                 body: () => createComponent(CommerceResourcesContainer, mergeProps(() => model.data.resourceTabData))
               }), createComponent(Tab.Item, {
                 name: "Trade",
-                title: () => "LOC_COMMERCE_TRADE_ROUTE_TAB",
+                title: () => "LOC_COMMERCE_TRADE_ROUTES_TITLE",
                 body: () => createComponent(TradeRoutesContainer, mergeProps(() => model.data.tradeRouteTabData))
               }), createComponent(Tab.Item, {
                 name: "Empire",
-                title: () => "LOC_RESOURCECLASS_EMPIRE_NAME",
+                title: () => "LOC_COMMERCE_EMPIRE_RESOURCE_TITLE",
                 body: () => createComponent(EmpireResourceContainer, mergeProps(() => model.data.empireTabData))
               }), createComponent(Show, {
                 get when() {
@@ -88,7 +88,7 @@ const CommerceScreenComponent = (_props) => {
                 get children() {
                   return createComponent(Tab.Item, {
                     name: "Treasure",
-                    title: () => "LOC_RESOURCECLASS_TREASURE_NAME",
+                    title: () => "LOC_COMMERCE_TREASURE_RESOURCES_TITLE",
                     body: () => createComponent(TreasureResourceContainer, mergeProps(() => model.data.treasureTabData))
                   });
                 }

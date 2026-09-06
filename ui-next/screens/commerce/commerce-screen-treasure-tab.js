@@ -76,7 +76,7 @@ const TreasureResourceContainer = (props) => {
     "class": "flex-auto",
     get children() {
       return createComponent(CommerceScreenBaseTabContent, {
-        title: "LOC_COMMERCE_TREASURE_FLEETS_TITLE",
+        title: null,  // "LOC_COMMERCE_TREASURE_FLEETS_TITLE",
         description: "LOC_COMMERCE_TREASURE_EMPTY_DESCRIPTION",
         get children() {
           return createComponent(GamepadTrayItemProvider, {

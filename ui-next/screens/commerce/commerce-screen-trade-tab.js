@@ -313,7 +313,7 @@ const TradeRoutesContainer = (props) => {
               segment: "Filters",
               get children() {
                 return createComponent(Dropdown, {
-                  "class": "ml-2 w-60 pointer-events-auto grow-0 min-h-14",
+                  "class": "ml-2 w-80 pointer-events-auto grow-0 min-h-14",
                   selectedItemTemplate: (item) => (() => {
                     var _el$4 = _tmpl$3();
                     insert(_el$4, createComponent(L10n.Compose, {
