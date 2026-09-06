@@ -87,7 +87,7 @@ const TradeRouteCardComponent = (props) => {
                 return createComponent(
                   Activatable,
                   {
-                    "class": "size-13 mb-4 pointer-events-auto mr-2 hover\\:scale-125 focus\\:scale-125",
+                    "class": "size-12 mb-4 pointer-events-auto mr-2 hover\\:scale-125 focus\\:scale-125",
                     get classList() {
                       return {
                         "focused-resource": focused()
@@ -104,7 +104,7 @@ const TradeRouteCardComponent = (props) => {
                     suppressPointerChanges: true,
                     get children() {
                       return createComponent(FramedResource, mergeProps({
-                        size: 13
+                        size: 12
                       }, resource));
                     }
                   }

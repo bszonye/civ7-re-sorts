@@ -20,7 +20,7 @@ import { useCommerceScreenContext, TradeRouteSortType } from './commerce-screen-
 import { TRADE_ROUTE_CARD_MARGIN_RIGHT, TradeRouteCard } from './trade-route-card.js';
 
 var _tmpl$ = /* @__PURE__ */ template(`<div class="flex flex-row flex-wrap flex-auto relative"></div>`), _tmpl$2 = /* @__PURE__ */ template(`<div class="top-0 right-3 flex flex-row items-center"><div class="font-title uppercase text-secondary"></div></div>`), _tmpl$3 = /* @__PURE__ */ template(`<div class=ml-2></div>`), _tmpl$4 = /* @__PURE__ */ template(`<div class="w-full flex flex-row justify-center items-center mt-2 text-accent-2 p-4"></div>`), _tmpl$5 = /* @__PURE__ */ template(`<div class="trade-route-cards-row flex-row flex flex-wrap w-full items-start"></div>`);
-const DEFAULT_CARD_WIDTH = Layout.pixelsToScreenPixels(512);
+const DEFAULT_CARD_WIDTH = Layout.pixelsToScreenPixels(384);
 const TradeRoutesContainer = (props) => {
   const model = useCommerceScreenContext();
   const layoutComplete = createLayoutComplete();
