@@ -403,21 +403,21 @@ function createCommerceScreenModel() {
   });
   const [selectedResourceFilter, setSelectedResourceFilter] = createSignal("DEFAULT");
   const [selectedTradeRouteFilter, setSelectedTradeRouteFilter] = createSignal();
+  const sortKey = (icon, type) => {
+    const name = Locale.compose(`LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_${type}`);
+    return [`[icon:${icon}]`, name].join(" ");
+  }
+  const yieldKey = (y) => sortKey(
+    `YIELD_${y == "INFLUENCE" ? "DIPLOMACY" : y}`,
+    `${y}_${y == "WAREHOUSE" ? "COUNT" : "YIELD"}`
+  );
   const resourceSettlementSortItems = {};
   resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SORT_FILTER_DEFAULT_LABEL"] = 0 /* SettlementType */;
-  resourceSettlementSortItems["LOC_COMMERCE_SORT_BY_SETTLEMENT_NAME"] = 1 /* Name */;
-  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_DISTANCE_TYPE"] = 5 /* DistanceType */;
+  resourceSettlementSortItems[`[icon:CITY_URBAN] ${Locale.compose("LOC_COMMERCE_SORT_BY_SETTLEMENT_NAME")}`] = 1 /* Name */;
+  resourceSettlementSortItems[sortKey("NOTIFICATION_DISCOVER_CONTINENT", "DISTANCE_TYPE")] = 5 /* DistanceType */;
   if (Game.age == Game.getHash("AGE_MODERN")) {
-    resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_RAIL_CONNECTED"] = 6 /* RailConnected */;
-    resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_HAS_FACTORY"] = 7 /* HasFactory */;
-  }
-  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_OPEN_SLOTS"] = 2 /* OpenSlots */;
-  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_TOTAL_SLOTS"] = 3 /* TotalSlots */;
-  const yieldKey = (y) => {
-    const icon = `[icon:YIELD_${y == "INFLUENCE" ? "DIPLOMACY" : y}]`;
-    const type = y == "WAREHOUSE" ? "COUNT" : "YIELD";
-    const name = Locale.compose(`LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_${y}_${type}`);
-    return [icon, name].join(" ");
+    resourceSettlementSortItems[sortKey("ROUTE_RAILROAD", "RAIL_CONNECTED")] = 6 /* RailConnected */;
+    resourceSettlementSortItems[sortKey("RESOURCECLASS_FACTORY", "HAS_FACTORY")] = 7 /* HasFactory */;
   }
   resourceSettlementSortItems[yieldKey("WAREHOUSE")] = 4 /* WarehouseCount */;
   resourceSettlementSortItems[yieldKey("FOOD")] = 8 /* Food */;
@@ -427,6 +427,8 @@ function createCommerceScreenModel() {
   resourceSettlementSortItems[yieldKey("CULTURE")] = 12 /* Culture */;
   resourceSettlementSortItems[yieldKey("HAPPINESS")] = 13 /* Happiness */;
   resourceSettlementSortItems[yieldKey("INFLUENCE")] = 14 /* Influence */;
+  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_TOTAL_SLOTS"] = 3 /* TotalSlots */;
+  resourceSettlementSortItems["LOC_COMMERCE_RESOURCE_SETTLEMENT_SORT_OPEN_SLOTS"] = 2 /* OpenSlots */;
   const [selectedSettlementSortType, setSelectedSettlementSortType] = createSignal(
     persistSettlementSortType /* SettlementType */
   );
