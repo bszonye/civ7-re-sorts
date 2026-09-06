@@ -5,7 +5,7 @@ import { ComponentRegistry } from '../../../../core/ui-next/services/component-r
 import { TradeRouteCriteriaTooltip } from '../../tooltips/trade-route-criteria-tooltip.js';
 import style from '../../components/styles/line-through.scss.js';
 
-var _tmpl$ = /* @__PURE__ */ template(`<div class="w-full flex items-center"><div></div></div>`);
+var _tmpl$ = /* @__PURE__ */ template(`<div class="w-full flex items-center"><div class=flex-auto></div></div>`);
 const CommerceCriteriaDisplayComponent = (props) => {
   const [criteriaMetIcon, setCriteriaMetIcon] = createSignal("");
   const isNegativeOrDoesNotApply = createMemo(() => props.status.isNegative || !props.status.appliesToCurrentCiv);
