@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <EnglishText>
+        <Replace Tag="LOC_BZ_RE_SORT_RESOURCES">
+            <Text>Re-sort Resources</Text>
+        </Replace>
         <Replace Tag="LOC_COMMERCE_TREASURE_FLEET_SUMMARY">
             <Text>{1_Amount: number +#.##;-#.##} [icon:YIELD_GOLD] {2_GoldName} and {3_Amount} GDP</Text>
         </Replace>

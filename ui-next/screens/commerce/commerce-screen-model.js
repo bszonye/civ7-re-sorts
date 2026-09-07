@@ -2501,6 +2501,13 @@ function createCommerceScreenModel() {
     const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
     audioTrigger("dropSwap");
   }
+  function onSortResources() {  // TRIX
+    setLastSlottedResourceValues([]);
+    sortSlottedResources(model.data.resourceTabData.slottedResourceSectionData);
+    sortAvailableResources(model.data.resourceTabData.availableResourceSectionData);
+    const audioTrigger = useAudio("CommerceScreenPopup");
+    audioTrigger("popup-open");
+  }
   function clearFactoryResources(CityID) {
     const city = Cities.get(CityID);
     if (!city) {
@@ -2561,6 +2568,7 @@ function createCommerceScreenModel() {
     selectedSortDirection,  // TRIX
     setSelectedSortDirection,  // TRIX
     toggleSelectedSortDirection,  // TRIX
+    onSortResources,  // TRIX
     selectedTradeRouteSorting: selectedTradeRouteFilter,
     setSelectedTradeRouteSorting: setSelectedTradeRouteFilter,
     clearFactoryResources,

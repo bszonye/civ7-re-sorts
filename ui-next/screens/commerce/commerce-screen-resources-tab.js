@@ -1585,6 +1585,21 @@ const CommerceResourcesContainerComponent = (props) => {
                       })
                     });
                   }
+                }), createComponent(Tooltip.Text, {
+                  get text() {
+                    return Locale.compose("LOC_BZ_RE_SORT_RESOURCES");
+                  },
+                  get children() {
+                    return createComponent(ImageButton, {
+                      "class": "bz-re-sort-button ml-3\\.5 mr-1\\.5",
+                      imageData: {
+                        base: "url(blp:shell_arrow-button)",
+                        focus: "url(blp:shell_arrow-button-focus)"
+                      },
+                      size: "11",
+                      onActivate: model.onSortResources
+                    });
+                  }
                 })];
               }
             })];
@@ -1669,6 +1684,8 @@ const CommerceResourcesContainer = ComponentRegistry.register({
     "blp:fi_yield_warehouse_64",
     "blp:ntf_discover_continent",
     "blp:restype_factory_v2",
+    "blp:shell_arrow-button",
+    "blp:shell_arrow-button-focus",
   ],
 });
 
