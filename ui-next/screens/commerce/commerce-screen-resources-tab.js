@@ -29,7 +29,8 @@ import { CommerceScreenBaseTabContent } from './commerce-screen-base-tab-content
 import { useCommerceScreenContext, gamepadLog, getResourceName, ResourceContainerSelectionState, getCityName } from './commerce-screen-model.js';
 import { FactoryTypeDisplay } from './factory-type-display.js';
 import { ResourceTooltip } from '../../tooltips/resource-tooltip.js';
-import { Hotkeys } from '../../../../core/ui-next/components/hotkeys.js';
+// TRIX
+import { Hotkeys } from '/core/ui-next/components/hotkeys.js';
 import style from './commerce-screen.scss.js';
 
 var
@@ -70,6 +71,48 @@ const [DragAndDrop, Draggable, Dropzone] = createTypedDragAndDrop();
 const DraggableResource = (props) => {
   const model = useCommerceScreenContext();
   const [shouldAutoFocus, setShouldAutoFocus] = createSignal(false);
+  const audioTrigger = useAudio();
+  const audioComponentName = createMemo(() => {
+    return props.audioComponentAlias ?? props.name ?? "Activatable";
+  });
+  function onEngineInput(inputEvent) {  // TRIX
+    const isStart = inputEvent.detail.status == InputActionStatuses.START;
+    const isFinish = inputEvent.detail.status == InputActionStatuses.FINISH;
+    if (!isStart && !isFinish) {
+      return;
+    }
+    if (inputEvent.detail.name == "mousebutton-middle") {
+      if (props.disabled) {
+        if (isStart) audioTrigger(audioComponentName(), "pressError");
+      } else {
+        if (isStart) {
+          audioTrigger(audioComponentName(), "press");
+        } else {
+          onActivateMiddle();
+        }
+      }
+      inputEvent.stopPropagation();
+      inputEvent.preventDefault();
+    } else {
+      props["on:engine-input"]?.(inputEvent);
+    }
+  }
+  function onActivateMiddle() {
+    if (!model.isSlottingAvailable) return;  // resources locked
+    if (props.resourceData.cityID) {
+      // slotted resource: remove
+      model.mclickSlottedResource({
+        resourceValue: props.resourceData.resourceValue,
+        cityID: props.resourceData.cityID
+      });
+    } else {
+      // available resource: add to first available slot
+      model.mclickAvailableResource({
+        resourceValue: props.resourceData.resourceValue,
+        cityID: props.resourceData.cityID
+      });
+    }
+  }
   function onActivate() {
     if (!model.isSlottingAvailable) {
       return;
@@ -223,6 +266,7 @@ const DraggableResource = (props) => {
                           "focused-resource": IsControllerActive() && model.focusedResource().resourceValue === props.resourceData.resourceValue
                         };
                       },
+                      "on:engine-input": onEngineInput,  // TRIX
                       onActivate,
                       onFocus: () => {
                         model.setFocusedResource({

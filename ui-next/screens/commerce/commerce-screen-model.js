@@ -1218,6 +1218,27 @@ function createCommerceScreenModel() {
     }
     Camera.lookAtPlot(city.location);
   }
+  function handleMClickAvailableResource(resourceData) {  // TRIX
+    console.warn(`TRIX AUTO-SLOT ${resourceData.resourceValue}`);
+    const selectedResource2 = model.selectedResource();
+    if (resourceData.cityID == null && selectedResource2.cityID == null || resourceData.cityID && selectedResource2.cityID && ComponentID.isMatch(resourceData.cityID, selectedResource2.cityID)) {
+      handleDeselectSelectedResource();
+      return;
+    }
+    setSelectedResource(resourceData);
+    model.isResourceSelected = true;
+    // TODO
+    console.warn(`TRIX SELECTED ${resourceData.resourceValue}`);
+    const cities =
+      model.data.resourceTabData.slottedResourceSectionData[0].cityResources;
+    for (const city of cities) {
+      for (const p in city) {
+        console.warn(`TRIX CITY p = ${JSON.stringify(city[p])}`);
+      }
+      // TODO
+      break;
+    }
+  }
   function handleClickAvailableResource(resourceData) {
     if (model.selectedResource().resourceValue !== -1 && model.selectedResource().cityID !== void 0) {
       const targetCity = model.selectedResource().cityID;
@@ -1243,6 +1264,17 @@ function createCommerceScreenModel() {
         model.isResourceSelected = true;
       });
     }
+  }
+  function handleMClickSlottedResource(resourceData) {  // TRIX
+    const selectedResource2 = model.selectedResource();
+    if (resourceData.cityID == null && selectedResource2.cityID == null || resourceData.cityID && selectedResource2.cityID && ComponentID.isMatch(resourceData.cityID, selectedResource2.cityID)) {
+      // TODO: fix conditional
+      handleDeselectSelectedResource();
+      return;
+    }
+    setSelectedResource(resourceData);
+    model.isResourceSelected = true;
+    handleUnslotSelectedResource();
   }
   function handleClickSlottedResource(resourceData) {
     const selectedResource2 = model.selectedResource();
@@ -2529,8 +2561,10 @@ function createCommerceScreenModel() {
     data: populateData(),
     isResourceSelected: false,
     isSlottingAvailable: canSlot,
+    mclickAvailableResource: handleMClickAvailableResource,
     clickAvailableResource: handleClickAvailableResource,
     slotSelectedResource: handleSlotSelectedResource,
+    mclickSlottedResource: handleMClickSlottedResource,
     clickSlottedResource: handleClickSlottedResource,
     unslotSelectedResource: handleUnslotSelectedResource,
     deselectSelectedResource: handleDeselectSelectedResource,
