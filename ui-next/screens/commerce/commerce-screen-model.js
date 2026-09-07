@@ -2505,8 +2505,8 @@ function createCommerceScreenModel() {
     setLastSlottedResourceValues([]);
     sortSlottedResources(model.data.resourceTabData.slottedResourceSectionData);
     sortAvailableResources(model.data.resourceTabData.availableResourceSectionData);
-    const audioTrigger = useAudio("CommerceScreenPopup");
-    audioTrigger("popup-open");
+    const audioTrigger = useAudio();
+    audioTrigger("CommerceScreenPopup", "popup-open");
   }
   function clearFactoryResources(CityID) {
     const city = Cities.get(CityID);

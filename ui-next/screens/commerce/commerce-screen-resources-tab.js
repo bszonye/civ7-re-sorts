@@ -1590,14 +1590,21 @@ const CommerceResourcesContainerComponent = (props) => {
                     return Locale.compose("LOC_BZ_RE_SORT_RESOURCES");
                   },
                   get children() {
-                    return createComponent(ImageButton, {
-                      "class": "bz-re-sort-button ml-3\\.5 mr-1\\.5",
-                      imageData: {
-                        base: "url(blp:shell_arrow-button)",
-                        focus: "url(blp:shell_arrow-button-focus)"
-                      },
-                      size: "11",
-                      onActivate: model.onSortResources
+                    return createComponent(AudioContextProvider, {
+                      segment: "Activatable",
+                      get children() {
+                        return createComponent(ImageButton, {
+                          "class": "bz-re-sort-button ml-3\\.5 mr-1\\.5",
+                          imageData: {
+                            base: "url(blp:shell_arrow-button)",
+                            focus: "url(blp:shell_arrow-button-focus)"
+                          },
+                          size: "11",
+                          onActivate: () => {
+                            model.onSortResources();
+                          }
+                        });
+                      }
                     });
                   }
                 })];
