@@ -2,7 +2,7 @@
 <Database>
     <EnglishText>
         <Replace Tag="LOC_BZ_RE_SORT_RESOURCES">
-            <Text>Re-sort Resources</Text>
+            <Text>Re-sort Resource Slots</Text>
         </Replace>
         <Replace Tag="LOC_COMMERCE_TREASURE_FLEET_SUMMARY">
             <Text>{1_Amount: number +#.##;-#.##} [icon:YIELD_GOLD] {2_GoldName} and {3_Amount} GDP</Text>

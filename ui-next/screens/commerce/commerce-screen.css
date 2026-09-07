@@ -37,7 +37,7 @@ screen-resource-allocation .bz-sort-button .bz-sort-down.bz-sort-ascending {
   opacity: 0.125;
 }
 screen-resource-allocation .bz-sort-label {
-  line-height: 1.25;
+  line-height: 1.125;
 }
 screen-resource-allocation .bz-factory-return-button {
   filter: fxs-color-tint(#00ffcc);

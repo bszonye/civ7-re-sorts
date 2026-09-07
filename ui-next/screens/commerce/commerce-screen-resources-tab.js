@@ -1466,7 +1466,7 @@ const CommerceResourcesContainerComponent = (props) => {
               segment: "Filters",
               get children() {
                 return [createComponent(Dropdown, {
-                  "class": "ml-2 mr-4 max-w-60 flex-auto pointer-events-auto min-h-14",
+                  "class": "ml-2 mr-4 max-w-60 flex-auto pointer-events-auto min-h-11",
                   selectedItemTemplate: (item) => (() => {
                     var _el$56 = _tmpl$26();
                     insert(_el$56, createComponent(L10n.Stylize, {
@@ -1521,7 +1521,7 @@ const CommerceResourcesContainerComponent = (props) => {
                       "bz-sort-descending" : "bz-sort-ascending";
                   });
                   insert(_el$53, createComponent(Activatable, {
-                    "class": "bz-sort-button relative -my-1 h-16 flex-col justify-center items-center",
+                    "class": "bz-sort-button relative -my-1\\.5 h-14 flex-col justify-center items-center",
                     onActivate: () => {
                       model.toggleSelectedSortDirection();
                     },
@@ -1546,7 +1546,7 @@ const CommerceResourcesContainerComponent = (props) => {
                   }));
                   return _el$53;
                 })(), createComponent(Dropdown, {
-                  "class": "ml-2 max-w-80 flex-auto pointer-events-auto min-h-14",
+                  "class": "ml-2 max-w-80 flex-auto pointer-events-auto min-h-11",
                   selectedItemTemplate: (json) => (() => {
                     const [key, _value] = JSON.parse(json);
                     var _el$58 = _tmpl$26();
@@ -1594,7 +1594,7 @@ const CommerceResourcesContainerComponent = (props) => {
                       segment: "Activatable",
                       get children() {
                         return createComponent(ImageButton, {
-                          "class": "bz-re-sort-button ml-3\\.5 mr-1\\.5",
+                          "class": "bz-re-sort-button ml-2",
                           imageData: {
                             base: "url(blp:shell_arrow-button)",
                             focus: "url(blp:shell_arrow-button-focus)"
