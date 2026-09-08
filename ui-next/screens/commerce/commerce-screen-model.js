@@ -1220,13 +1220,14 @@ function createCommerceScreenModel() {
   }
   function handleMClickAvailableResource(resourceData) {  // TRIX
     console.warn(`TRIX AUTO-SLOT ${resourceData.resourceValue}`);
-    const selectedResource2 = model.selectedResource();
-    if (resourceData.cityID == null && selectedResource2.cityID == null || resourceData.cityID && selectedResource2.cityID && ComponentID.isMatch(resourceData.cityID, selectedResource2.cityID)) {
+    const selected = model.selectedResource();
+    if (selected.resourceValue == -1) {
+      setSelectedResource(resourceData);
+      model.isResourceSelected = true;
+    } else if (selected.resourceValue != resourceData.resourceValue) {
       handleDeselectSelectedResource();
       return;
     }
-    setSelectedResource(resourceData);
-    model.isResourceSelected = true;
     // TODO
     console.warn(`TRIX SELECTED ${resourceData.resourceValue}`);
     const cities =
@@ -1266,14 +1267,15 @@ function createCommerceScreenModel() {
     }
   }
   function handleMClickSlottedResource(resourceData) {  // TRIX
-    const selectedResource2 = model.selectedResource();
-    if (resourceData.cityID == null && selectedResource2.cityID == null || resourceData.cityID && selectedResource2.cityID && ComponentID.isMatch(resourceData.cityID, selectedResource2.cityID)) {
-      // TODO: fix conditional
+    console.warn(`TRIX UNSLOT`);
+    const selected = model.selectedResource();
+    if (selected.resourceValue == -1) {
+      setSelectedResource(resourceData);
+      model.isResourceSelected = true;
+    } else if (selected.resourceValue != resourceData.resourceValue) {
       handleDeselectSelectedResource();
       return;
     }
-    setSelectedResource(resourceData);
-    model.isResourceSelected = true;
     handleUnslotSelectedResource();
   }
   function handleClickSlottedResource(resourceData) {
