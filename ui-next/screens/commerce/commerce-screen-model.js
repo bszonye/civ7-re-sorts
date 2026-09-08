@@ -1224,27 +1224,30 @@ function createCommerceScreenModel() {
       handleDeselectSelectedResource();
       return;
     }
-    // get eligible cities (connected or disconnected)
-    const loc = GameplayMap.getLocationFromIndex(resourceData.resourceValue);
-    const cityID = GameplayMap.getOwningCityFromXY(loc.x, loc.y);
-    const index = +(!Cities.get(cityID)?.Trade?.isInTradeNetwork());  // 0 or 1
+    // get matching resources and section (connected/disconnected)
+    const { plots, index } = getMatchingResources(resourceData.resourceValue);
     const section = model.data.resourceTabData.slottedResourceSectionData[index];
     // slot the resource in the first available space
-    const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
+    const moved = [];
     for (const city of section.cityResources) {
-      addItemSlotIndex(city.cityID, resourceData.resourceValue);
-      const assignResult = assignResource(city.cityID, resourceData.resourceValue);
-      if (assignResult) {
-        setLastSlottedResourceValues([resourceData.resourceValue]);
-        const resourceType = resourceNameShort(
-          getResourceTypeFromValue(resourceData.resourceValue)
-        );
-        audioTrigger("dropAccept", { resourceType });
-        return;
+      for (const plot of plots) {
+        addItemSlotIndex(city.cityID, plot);
+        const assignResult = assignResource(city.cityID, plot);
+        if (!assignResult) break;
+        moved.push(plot);
       }
+      if (moved.length) break;  // only fill one settlement
     }
-    // no available slots
-    audioTrigger("dropReject");
+    const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
+    if (moved.length) {  // at least some resources moved
+      setLastSlottedResourceValues(plots);
+      const resourceType = resourceNameShort(
+        getResourceTypeFromValue(resourceData.resourceValue)
+      );
+      audioTrigger("dropAccept", { resourceType });
+    } else {
+      audioTrigger("dropReject");
+    }
   }
   function handleClickAvailableResource(resourceData) {
     if (model.selectedResource().resourceValue !== -1 && model.selectedResource().cityID !== void 0) {
@@ -1328,34 +1331,10 @@ function createCommerceScreenModel() {
       );
       if (targetResourceValue === true) {
         // move all resources of the same type
-        const resource = Game.Resources.getResourceOnPlot(selection.resourceValue);
-        const type = resource.resource;
-        const info = GameInfo.Resources.lookup(resource.resource);
-        // get the pool of resources
-        const pool = ((plot, cityID) => {
-          const data = model.data.resourceTabData;
-          if (cityID) {
-            // get slotted resources for city
-            const index = +(!Cities.get(cityID)?.Trade?.isInTradeNetwork());
-            const section = data.slottedResourceSectionData[index];
-            const city = section.cityResources
-              .find(city => ComponentID.isMatch(city.cityID, cityID));
-            return city.slottedResources;
-          } else {
-            // get available resources for resource class
-            const loc = GameplayMap.getLocationFromIndex(plot);
-            const cityID = GameplayMap.getOwningCityFromXY(loc.x, loc.y);
-            const index = +(!Cities.get(cityID)?.Trade?.isInTradeNetwork());
-            const section = data.availableResourceSectionData[index];
-            const rctype = section.subSections
-              .find(sub => sub.type == info.ResourceClassType);
-            return rctype.resourceSlotData;
-          }
-        })(selection.resourceValue, selection.cityID);
-        // get the plots for all the matching resources
-        const plots = pool.map(r => r.resourceValue)
-          .filter(plot => Game.Resources.getResourceOnPlot(plot)?.resource == type);
-        // move the resources
+        const { plots } = getMatchingResources(
+          selection.resourceValue,
+          selection.cityID
+        );
         const moved = [];
         for (const plot of plots) {
           addItemSlotIndex(targetCityID, plot);
@@ -1398,6 +1377,39 @@ function createCommerceScreenModel() {
         audioTrigger("dropReject");
       }
     }
+  }
+  function getMatchingResources(plot, cityID) {  // TRIX
+    // get all resources of the same type from the same place
+    // (same settlement or unassigned section)
+    const result = { plots: [plot], index: 0 };
+    const resource = Game.Resources.getResourceOnPlot(plot);
+    const type = resource.resource;
+    const info = GameInfo.Resources.lookup(type);
+    // match additional plots with the same resource type
+    const typeMatch = (pool) => pool.map(r => r.resourceValue)
+      .filter(p => p != plot && Game.Resources.getResourceOnPlot(p)?.resource == type);
+    // get the pool of resources
+    const data = model.data.resourceTabData;
+    if (cityID) {
+      // get slotted resources for city
+      result.index = +(!Cities.get(cityID)?.Trade?.isInTradeNetwork());
+      const section = data.slottedResourceSectionData[result.index];
+      const city = section.cityResources
+        .find(city => ComponentID.isMatch(city.cityID, cityID));
+      // get matching resources
+      result.plots.push(...typeMatch(city.slottedResources));
+    } else {
+      // get available resources for resource class
+      const loc = GameplayMap.getLocationFromIndex(plot);
+      const cityID = GameplayMap.getOwningCityFromXY(loc.x, loc.y);
+      result.index = +(!Cities.get(cityID)?.Trade?.isInTradeNetwork());
+      const section = data.availableResourceSectionData[result.index];
+      const rctype = section.subSections
+        .find(sub => sub.type == info.ResourceClassType);
+      // get matching resources
+      result.plots.push(...typeMatch(rctype.resourceSlotData));
+    }
+    return result;
   }
   function swapResources(location1, location2) {
     const args = { Location: location1, Location2: location2 };
