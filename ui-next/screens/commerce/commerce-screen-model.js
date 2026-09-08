@@ -1219,26 +1219,32 @@ function createCommerceScreenModel() {
     Camera.lookAtPlot(city.location);
   }
   function handleMClickAvailableResource(resourceData) {  // TRIX
-    console.warn(`TRIX AUTO-SLOT ${resourceData.resourceValue}`);
-    const selected = model.selectedResource();
-    if (selected.resourceValue == -1) {
-      setSelectedResource(resourceData);
-      model.isResourceSelected = true;
-    } else if (selected.resourceValue != resourceData.resourceValue) {
+    // clear previous selection, if any
+    if (model.selectedResource().resourceValue != -1) {
       handleDeselectSelectedResource();
       return;
     }
-    // TODO
-    console.warn(`TRIX SELECTED ${resourceData.resourceValue}`);
-    const cities =
-      model.data.resourceTabData.slottedResourceSectionData[0].cityResources;
-    for (const city of cities) {
-      for (const p in city) {
-        console.warn(`TRIX CITY p = ${JSON.stringify(city[p])}`);
+    // get eligible cities (connected or disconnected)
+    const loc = GameplayMap.getLocationFromIndex(resourceData.resourceValue);
+    const cityID = GameplayMap.getOwningCityFromXY(loc.x, loc.y);
+    const index = +(!Cities.get(cityID)?.Trade?.isInTradeNetwork());  // 0 or 1
+    const section = model.data.resourceTabData.slottedResourceSectionData[index];
+    // slot the resource in the first available space
+    const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
+    for (const city of section.cityResources) {
+      addItemSlotIndex(city.cityID, resourceData.resourceValue);
+      const assignResult = assignResource(city.cityID, resourceData.resourceValue);
+      if (assignResult) {
+        setLastSlottedResourceValues([resourceData.resourceValue]);
+        const resourceType = resourceNameShort(
+          getResourceTypeFromValue(resourceData.resourceValue)
+        );
+        audioTrigger("dropAccept", { resourceType });
+        return;
       }
-      // TODO
-      break;
     }
+    // no available slots
+    audioTrigger("dropReject");
   }
   function handleClickAvailableResource(resourceData) {
     if (model.selectedResource().resourceValue !== -1 && model.selectedResource().cityID !== void 0) {
@@ -1267,16 +1273,13 @@ function createCommerceScreenModel() {
     }
   }
   function handleMClickSlottedResource(resourceData) {  // TRIX
-    console.warn(`TRIX UNSLOT`);
-    const selected = model.selectedResource();
-    if (selected.resourceValue == -1) {
-      setSelectedResource(resourceData);
-      model.isResourceSelected = true;
-    } else if (selected.resourceValue != resourceData.resourceValue) {
+    // clear previous selection, if any
+    if (model.selectedResource().resourceValue != -1) {
       handleDeselectSelectedResource();
       return;
     }
-    handleUnslotSelectedResource();
+    // unslot the resource
+    handleUnslotResource(resourceData);
   }
   function handleClickSlottedResource(resourceData) {
     const selectedResource2 = model.selectedResource();
