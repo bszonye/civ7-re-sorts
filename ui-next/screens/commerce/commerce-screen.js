@@ -17,7 +17,7 @@ const CommerceScreenComponent = (_props) => {
   const model = createCommerceScreenModel();
   const audioTrigger = useAudio("CommerceScreenPopup");
   const localPlayerId = useLocalPlayerId();
-  const civName = createMemo(() => {
+  const _civName = createMemo(() => {
     const player = Players.get(localPlayerId());
     if (!player) {
       return "";
@@ -35,8 +35,7 @@ const CommerceScreenComponent = (_props) => {
     audioTrigger("popup-close");
   };
   const title = createMemo(() => {
-    const _ = Locale.compose("LOC_COMMERCE_SCREEN_TITLE", civName());
-    return null;
+    return null;  // Locale.compose("LOC_COMMERCE_SCREEN_TITLE", civName());
   });
   function onContextChanged(activatedElement, _deactivatedElement) {
     if (activatedElement.nodeName.toLocaleLowerCase() === "screen-resource-allocation") {
