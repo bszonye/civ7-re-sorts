@@ -1498,22 +1498,11 @@ function createCommerceScreenModel() {
     return slottedResourceData;
   }
   function sortResourceSlotData(a, b) {
+    // TRIX: sort imported resources first for quick slotting
     const resourceAName = Locale.compose(a.resourceType);
     const resourceBName = Locale.compose(b.resourceType);
-    if (resourceAName === resourceBName) {
-      const aIsImport = a.resourceProps.importFlag !== void 0;
-      const bIsImport = b.resourceProps.importFlag !== void 0;
-      if (!aIsImport && bIsImport) {
-        return -1;
-      }
-      if (aIsImport === bIsImport) {
-        return 0;
-      }
-      if (!bIsImport && aIsImport) {
-        return 1;
-      }
-    }
-    return resourceAName < resourceBName ? -1 : 1;
+    return Locale.compare(resourceAName, resourceBName) ||
+      (b.resourceProps.importFlag != null) - (a.resourceProps.importFlag != null);
   }
   function sortAvailableResources(availableResources) {
     availableResources.forEach(
