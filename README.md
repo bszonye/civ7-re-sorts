@@ -7,5 +7,5 @@ better Resources & Trade screen
 - quick remove: middle-click slotted resources to remove them
 - reversible sorting: sort settlements in either direction
 - hotkeys: change sort and direction with Cycle Next/Prev and Space
-- persistence: Resources tab remembers your settings
+- persistence: Resources tab remembers your sort settings
 - re-sort: organize jumbled resources with this new button
