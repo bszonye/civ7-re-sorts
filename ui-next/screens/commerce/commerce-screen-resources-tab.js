@@ -75,34 +75,32 @@ const DraggableResource = (props) => {
   const audioComponentName = createMemo(() => {
     return props.audioComponentAlias ?? props.name ?? "Activatable";
   });
+  const debounceStatus = {
+    "mousebutton-middle": [0, 0],
+  }
   function onEngineInput(inputEvent) {  // TRIX
-    const isStart = inputEvent.detail.status == InputActionStatuses.START;
-    const isFinish = inputEvent.detail.status == InputActionStatuses.FINISH;
-    if (!isStart && !isFinish) {
+    const { name, status } = inputEvent.detail;
+    if (debounceStatus[name]?.[status] == null) {
+      props["on:engine-input"]?.(inputEvent);
       return;
     }
-    if (inputEvent.detail.name == "mousebutton-middle") {
-      if (props.disabled) {
-        if (isStart) audioTrigger(audioComponentName(), "pressError");
-      } else {
-        if (isStart) {
-          audioTrigger(audioComponentName(), "press");
-        } else {
-          onActivateMiddle();
-        }
+    // prevent duplicate events
+    if (debounceStatus[name][status]++) return;
+    delayByFrame(() => debounceStatus[name][status] = 0, 6);
+    // handle input
+    if (name == "mousebutton-middle") {
+      if (status == InputActionStatuses.START) {
+        const press = props.disabled ? "pressError" : "press";
+        audioTrigger(audioComponentName(), press);
+      } else if (!props.disabled) {
+        onActivateMiddle();
       }
       inputEvent.stopPropagation();
       inputEvent.preventDefault();
-    } else {
-      props["on:engine-input"]?.(inputEvent);
     }
   }
-  let debounceMiddle = 0;
   function onActivateMiddle() {
     if (!model.isSlottingAvailable) return;  // resources locked
-    // prevent extra clicks
-    if (debounceMiddle++) return;
-    delayByFrame(() => { debounceMiddle = 0; }, 6);
     if (props.resourceData.cityID) {
       // slotted resource: remove
       model.mclickSlottedResource({

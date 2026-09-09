@@ -225,10 +225,16 @@ function createCommerceScreenModel() {
           if (!cityIsConnectedToTradeNetwork(city)) {
             sectionIndex = 1;
           }
-          const subSectionIndex = model.data.resourceTabData.availableResourceSectionData[sectionIndex].subSections.findIndex((subSection) => {
+          // TRIX: prevent duplicate entries
+          const subSection = model.data.resourceTabData.availableResourceSectionData[sectionIndex].subSections.find((subSection) => {
             return subSection.type == resourceDef.ResourceClassType;
           });
-          model.data.resourceTabData.availableResourceSectionData[sectionIndex].subSections[subSectionIndex].resourceSlotData.push(resourceSlotData);
+          if (subSection) {
+            const data = subSection.resourceSlotData;
+            if (!data.find(r => r.resourceValue == resourceSlotData.resourceValue)) {
+              data.push(resourceSlotData);
+            }
+          }
         });
         pendingUnassignments = [];
         model.isResourceSelected = false;
