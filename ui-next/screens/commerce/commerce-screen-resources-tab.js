@@ -97,8 +97,12 @@ const DraggableResource = (props) => {
       props["on:engine-input"]?.(inputEvent);
     }
   }
+  let debounceMiddle = 0;
   function onActivateMiddle() {
     if (!model.isSlottingAvailable) return;  // resources locked
+    // prevent extra clicks
+    if (debounceMiddle++) return;
+    delayByFrame(() => { debounceMiddle = 0; }, 6);
     if (props.resourceData.cityID) {
       // slotted resource: remove
       model.mclickSlottedResource({
