@@ -75,29 +75,35 @@ const DraggableResource = (props) => {
   const audioComponentName = createMemo(() => {
     return props.audioComponentAlias ?? props.name ?? "Activatable";
   });
-  const debounceStatus = {
-    "mousebutton-middle": [0, 0],
+  const inputState = {
+    "mousebutton-middle": false,
   }
   function onEngineInput(inputEvent) {  // TRIX
     const { name, status } = inputEvent.detail;
-    if (debounceStatus[name]?.[status] == null) {
+    let state = inputState[name];
+    if (state == null) {
       props["on:engine-input"]?.(inputEvent);
       return;
     }
-    // prevent duplicate events
-    if (debounceStatus[name][status]++) return;
-    delayByFrame(() => debounceStatus[name][status] = 0, 6);
     // handle input
-    if (name == "mousebutton-middle") {
-      if (status == InputActionStatuses.START) {
-        const press = props.disabled ? "pressError" : "press";
-        audioTrigger(audioComponentName(), press);
-      } else if (!props.disabled) {
+    const isStart = status == InputActionStatuses.START;
+    const isFinish = status == InputActionStatuses.FINISH;
+    if (isStart && !state) {
+      inputState[name] = true;
+      const press = props.disabled ? "pressError" : "press";
+      audioTrigger(audioComponentName(), press);
+    } else if (isFinish && state) {
+      inputState[name] = false;
+      if (props.disabled) {
+        // disable
+      } else if (name == "mousebutton-middle") {
         onActivateMiddle();
       }
-      inputEvent.stopPropagation();
-      inputEvent.preventDefault();
+    } else {
+      // ignore doubled mouse events
     }
+    inputEvent.stopPropagation();
+    inputEvent.preventDefault();
   }
   function onActivateMiddle() {
     if (!model.isSlottingAvailable) return;  // resources locked
