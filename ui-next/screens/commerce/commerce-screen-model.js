@@ -2529,6 +2529,7 @@ function createCommerceScreenModel() {
     setSelectedSettlementSortType(items.at(next));
     const audioTrigger = useAudio();
     audioTrigger("Dropdown", "dropdown-close");
+    handleSortResources();
   }
   function handlePrevSettlementSortType() {  // TRIX
     const index = selectedSettlementSortIndex();
@@ -2537,6 +2538,7 @@ function createCommerceScreenModel() {
     setSelectedSettlementSortType(items.at(next));
     const audioTrigger = useAudio();
     audioTrigger("Dropdown", "dropdown-open");
+    handleSortResources();
   }
   function toggleSelectedSortDirection(direction) {  // TRIX
     const type = selectedSettlementSortType();
@@ -2544,6 +2546,7 @@ function createCommerceScreenModel() {
     setSelectedSortDirection(saveSettlementSortDirection(type, direction));
     const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
     audioTrigger("dropSwap");
+    handleSortResources();
   }
   function handleSortResources() {  // TRIX
     setLastSlottedResourceValues([]);

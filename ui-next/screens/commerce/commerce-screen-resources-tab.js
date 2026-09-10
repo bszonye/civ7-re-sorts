@@ -1616,6 +1616,7 @@ const CommerceResourcesContainerComponent = (props) => {
                   onItemSelected: (json) => {
                     const [_key, value] = JSON.parse(json);
                     model.setSelectedSettlementSortType(value)
+                    delayByFrame(() => model.onSortResources(), 1);
                   },
                   get disableFocus() {
                     return disableFilters();
@@ -1652,9 +1653,7 @@ const CommerceResourcesContainerComponent = (props) => {
                             focus: "url(blp:shell_arrow-button-focus)"
                           },
                           size: "11",
-                          onActivate: () => {
-                            model.onSortResources();
-                          }
+                          onActivate: model.onSortResources
                         });
                       }
                     });
