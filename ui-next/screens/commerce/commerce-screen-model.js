@@ -2522,7 +2522,7 @@ function createCommerceScreenModel() {
     const index = items.findIndex(([_, value]) => value == type);
     return index < 0 ? 0 : index;
   }
-  function onNextSettlementSortType() {  // TRIX
+  function handleNextSettlementSortType() {  // TRIX
     const index = selectedSettlementSortIndex();
     const items = Object.values(resourceSettlementSortItems);
     const next = (index + 1) % items.length;
@@ -2530,7 +2530,7 @@ function createCommerceScreenModel() {
     const audioTrigger = useAudio();
     audioTrigger("Dropdown", "dropdown-close");
   }
-  function onPrevSettlementSortType() {  // TRIX
+  function handlePrevSettlementSortType() {  // TRIX
     const index = selectedSettlementSortIndex();
     const items = Object.values(resourceSettlementSortItems);
     const next = index - 1;
@@ -2545,7 +2545,7 @@ function createCommerceScreenModel() {
     const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
     audioTrigger("dropSwap");
   }
-  function onSortResources() {  // TRIX
+  function handleSortResources() {  // TRIX
     setLastSlottedResourceValues([]);
     sortSlottedResources(model.data.resourceTabData.slottedResourceSectionData);
     sortAvailableResources(model.data.resourceTabData.availableResourceSectionData);
@@ -2609,12 +2609,12 @@ function createCommerceScreenModel() {
     selectedSettlementSortType,
     setSelectedSettlementSortType,
     selectedSettlementSortIndex,  // TRIX
-    onNextSettlementSortType,  // TRIX
-    onPrevSettlementSortType,  // TRIX
+    onNextSettlementSortType: handleNextSettlementSortType,  // TRIX
+    onPrevSettlementSortType: handlePrevSettlementSortType,  // TRIX
     selectedSortDirection,  // TRIX
     setSelectedSortDirection,  // TRIX
     toggleSelectedSortDirection,  // TRIX
-    onSortResources,  // TRIX
+    onSortResources: handleSortResources,  // TRIX
     selectedTradeRouteSorting: selectedTradeRouteFilter,
     setSelectedTradeRouteSorting: setSelectedTradeRouteFilter,
     clearFactoryResources,
