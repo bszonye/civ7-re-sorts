@@ -225,10 +225,16 @@ function createCommerceScreenModel() {
           if (!cityIsConnectedToTradeNetwork(city)) {
             sectionIndex = 1;
           }
-          const subSectionIndex = model.data.resourceTabData.availableResourceSectionData[sectionIndex].subSections.findIndex((subSection) => {
+          // TRIX: prevent duplicate entries
+          const subSection = model.data.resourceTabData.availableResourceSectionData[sectionIndex].subSections.find((subSection) => {
             return subSection.type == resourceDef.ResourceClassType;
           });
-          model.data.resourceTabData.availableResourceSectionData[sectionIndex].subSections[subSectionIndex].resourceSlotData.push(resourceSlotData);
+          if (subSection) {
+            const data = subSection.resourceSlotData;
+            if (!data.find(r => r.resourceValue == resourceSlotData.resourceValue)) {
+              data.push(resourceSlotData);
+            }
+          }
         });
         pendingUnassignments = [];
         model.isResourceSelected = false;
@@ -2516,21 +2522,23 @@ function createCommerceScreenModel() {
     const index = items.findIndex(([_, value]) => value == type);
     return index < 0 ? 0 : index;
   }
-  function onNextSettlementSortType() {  // TRIX
+  function handleNextSettlementSortType() {  // TRIX
     const index = selectedSettlementSortIndex();
     const items = Object.values(resourceSettlementSortItems);
     const next = (index + 1) % items.length;
     setSelectedSettlementSortType(items.at(next));
     const audioTrigger = useAudio();
     audioTrigger("Dropdown", "dropdown-close");
+    handleSortResources();
   }
-  function onPrevSettlementSortType() {  // TRIX
+  function handlePrevSettlementSortType() {  // TRIX
     const index = selectedSettlementSortIndex();
     const items = Object.values(resourceSettlementSortItems);
     const next = index - 1;
     setSelectedSettlementSortType(items.at(next));
     const audioTrigger = useAudio();
     audioTrigger("Dropdown", "dropdown-open");
+    handleSortResources();
   }
   function toggleSelectedSortDirection(direction) {  // TRIX
     const type = selectedSettlementSortType();
@@ -2538,8 +2546,9 @@ function createCommerceScreenModel() {
     setSelectedSortDirection(saveSettlementSortDirection(type, direction));
     const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
     audioTrigger("dropSwap");
+    handleSortResources();
   }
-  function onSortResources() {  // TRIX
+  function handleSortResources() {  // TRIX
     setLastSlottedResourceValues([]);
     sortSlottedResources(model.data.resourceTabData.slottedResourceSectionData);
     sortAvailableResources(model.data.resourceTabData.availableResourceSectionData);
@@ -2603,12 +2612,12 @@ function createCommerceScreenModel() {
     selectedSettlementSortType,
     setSelectedSettlementSortType,
     selectedSettlementSortIndex,  // TRIX
-    onNextSettlementSortType,  // TRIX
-    onPrevSettlementSortType,  // TRIX
+    onNextSettlementSortType: handleNextSettlementSortType,  // TRIX
+    onPrevSettlementSortType: handlePrevSettlementSortType,  // TRIX
     selectedSortDirection,  // TRIX
     setSelectedSortDirection,  // TRIX
     toggleSelectedSortDirection,  // TRIX
-    onSortResources,  // TRIX
+    onSortResources: handleSortResources,  // TRIX
     selectedTradeRouteSorting: selectedTradeRouteFilter,
     setSelectedTradeRouteSorting: setSelectedTradeRouteFilter,
     clearFactoryResources,

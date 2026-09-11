@@ -75,27 +75,35 @@ const DraggableResource = (props) => {
   const audioComponentName = createMemo(() => {
     return props.audioComponentAlias ?? props.name ?? "Activatable";
   });
+  const inputState = {
+    "mousebutton-middle": false,
+  }
   function onEngineInput(inputEvent) {  // TRIX
-    const isStart = inputEvent.detail.status == InputActionStatuses.START;
-    const isFinish = inputEvent.detail.status == InputActionStatuses.FINISH;
-    if (!isStart && !isFinish) {
+    const { name, status } = inputEvent.detail;
+    let state = inputState[name];
+    if (state == null) {
+      props["on:engine-input"]?.(inputEvent);
       return;
     }
-    if (inputEvent.detail.name == "mousebutton-middle") {
+    // handle input
+    const isStart = status == InputActionStatuses.START;
+    const isFinish = status == InputActionStatuses.FINISH;
+    if (isStart && !state) {
+      inputState[name] = true;
+      const press = props.disabled ? "pressError" : "press";
+      audioTrigger(audioComponentName(), press);
+    } else if (isFinish && state) {
+      inputState[name] = false;
       if (props.disabled) {
-        if (isStart) audioTrigger(audioComponentName(), "pressError");
-      } else {
-        if (isStart) {
-          audioTrigger(audioComponentName(), "press");
-        } else {
-          onActivateMiddle();
-        }
+        // disable
+      } else if (name == "mousebutton-middle") {
+        onActivateMiddle();
       }
-      inputEvent.stopPropagation();
-      inputEvent.preventDefault();
     } else {
-      props["on:engine-input"]?.(inputEvent);
+      // ignore doubled mouse events
     }
+    inputEvent.stopPropagation();
+    inputEvent.preventDefault();
   }
   function onActivateMiddle() {
     if (!model.isSlottingAvailable) return;  // resources locked
@@ -1608,6 +1616,7 @@ const CommerceResourcesContainerComponent = (props) => {
                   onItemSelected: (json) => {
                     const [_key, value] = JSON.parse(json);
                     model.setSelectedSettlementSortType(value)
+                    delayByFrame(() => model.onSortResources(), 1);
                   },
                   get disableFocus() {
                     return disableFilters();
@@ -1644,9 +1653,7 @@ const CommerceResourcesContainerComponent = (props) => {
                             focus: "url(blp:shell_arrow-button-focus)"
                           },
                           size: "11",
-                          onActivate: () => {
-                            model.onSortResources();
-                          }
+                          onActivate: model.onSortResources
                         });
                       }
                     });
