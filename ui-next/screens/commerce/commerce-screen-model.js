@@ -703,7 +703,7 @@ function createCommerceScreenModel() {
   }
   let canSlot = true;
   const localPlayerResources = Players.get(GameContext.localPlayerID)?.Resources;
-  canSlot = localPlayerResources ? !localPlayerResources.isRessourceAssignmentLocked() : false;
+  canSlot = localPlayerResources ? !localPlayerResources.isResourceAssignmentLocked() : false;
   let hasSlottedConnectedResources = false;
   let hasSlottedDisconnectedResources = false;
   function getCityYieldDeltas(cityID, sectionIndex, subSectionIndex) {
