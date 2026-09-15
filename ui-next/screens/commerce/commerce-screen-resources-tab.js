@@ -1,5 +1,5 @@
 import { template, insert, className, setAttribute } from '../../../../core/vendor/solid-js/web/dist/web.js';
-import { createSignal, createMemo, createEffect, on, createComponent, untrack, Show, mergeProps, createRenderEffect, For } from '../../../../core/vendor/solid-js/dist/solid.js';
+import { createSignal, useContext, createMemo, createEffect, on, createComponent, untrack, Show, mergeProps, createRenderEffect, For } from '../../../../core/vendor/solid-js/dist/solid.js';
 import { ComponentID } from '../../../../core/ui/utilities/utilities-component-id.js';
 import { Icon as Icon$1 } from '../../../../core/ui/utilities/utilities-image.js';
 import { Layout } from '../../../../core/ui/utilities/utilities-layout.js';
@@ -15,7 +15,7 @@ import { Icon } from '../../../../core/ui-next/components/icon.js';
 import { ImageButton } from '../../../../core/ui-next/components/image-button.js';
 import { useImageCache } from '../../../../core/ui-next/components/image-cache.js';
 import { L10n } from '../../../../core/ui-next/components/l10n.js';
-import { ScrollArea } from '../../../../core/ui-next/components/scroll-area.js';
+import { ScrollAreaContext, ScrollArea } from '../../../../core/ui-next/components/scroll-area.js';
 import { SpatialSlot, HSlot } from '../../../../core/ui-next/components/slot.js';
 import { Tooltip } from '../../../../core/ui-next/components/tooltip.js';
 import { useAudio } from '../../../../core/ui-next/services/audio-support.js';
@@ -588,7 +588,23 @@ const SlottedResourcesContainer = (props) => {
         return model.focusedSettlementId() !== void 0 || model.selectedSettlementId() !== void 0;
       },
       get children() {
-        return [createComponent(For, {
+        const scrollAreaContext = useContext(ScrollAreaContext);
+        return [createComponent(Hotkeys, {
+          get hotkeys() {
+            return [{
+              hotkeyAction: "cycle-next",
+              onActivate: model.onNextSettlementSortType
+            },
+              {
+                hotkeyAction: "cycle-prev",
+                onActivate: model.onPrevSettlementSortType
+              },
+              {
+                hotkeyAction: "unit-skip-turn",
+                onActivate: model.toggleSelectedSortDirection
+              }];
+          }
+        }), createComponent(For, {
           get each() {
             return props.slottedResourceSectionData;
           },
@@ -1667,22 +1683,7 @@ const CommerceResourcesContainerComponent = (props) => {
       })();
     },
     get children() {
-      return [createComponent(Hotkeys, {
-        get hotkeys() {
-          return [{
-            hotkeyAction: "cycle-next",
-            onActivate: model.onNextSettlementSortType
-          },
-          {
-            hotkeyAction: "cycle-prev",
-            onActivate: model.onPrevSettlementSortType
-          },
-          {
-            hotkeyAction: "unit-skip-turn",
-            onActivate: model.toggleSelectedSortDirection
-          }];
-        }
-      }), createComponent(GamepadTrayItemProvider, {
+      return createComponent(GamepadTrayItemProvider, {
         "class": "flex-auto",
         name: "commerce-resource-gamepad-tray-context",
         items: gamepadTrayItems,
@@ -1720,7 +1721,7 @@ const CommerceResourcesContainerComponent = (props) => {
             }
           })];
         }
-      })];
+      });
     }
   });
 };
