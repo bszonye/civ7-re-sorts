@@ -726,7 +726,7 @@ function createCommerceScreenModel() {
   }
   function updateIsSlottingAvailable() {
     const localPlayerResources2 = Players.get(GameContext.localPlayerID)?.Resources;
-    if (localPlayerResources2 && !localPlayerResources2.isRessourceAssignmentLocked()) {
+    if (localPlayerResources2 && !localPlayerResources2.isResourceAssignmentLocked()) {
       model.isSlottingAvailable = true;
     } else {
       model.isSlottingAvailable = false;
