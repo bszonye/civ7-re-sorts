@@ -1,5 +1,5 @@
-import { template, use, insert } from '../../../../core/vendor/solid-js/web/dist/web.js';
-import { createSignal, onMount, onCleanup, createMemo, createEffect, createComponent, For, mergeProps, Show } from '../../../../core/vendor/solid-js/dist/solid.js';
+import { template, use, insert, className } from '../../../../core/vendor/solid-js/web/dist/web.js';
+import { createSignal, createMemo, onMount, onCleanup, createEffect, createComponent, For, mergeProps, Show, createRenderEffect } from '../../../../core/vendor/solid-js/dist/solid.js';
 import { getRelationship } from '../../../../core/ui/utilities/diplomacy-utilities.js';
 import { ComponentID } from '../../../../core/ui/utilities/utilities-component-id.js';
 import { Layout } from '../../../../core/ui/utilities/utilities-layout.js';
@@ -11,7 +11,8 @@ import { ScrollArea } from '../../../../core/ui-next/components/scroll-area.js';
 import { SearchBar } from '../../../../core/ui-next/components/search-bar.js';
 import { SpatialSlot } from '../../../../core/ui-next/components/slot.js';
 import { IsControllerActive } from '../../../../core/ui-next/services/input.js';
-import { ViewExperience } from '../../../../core/ui-next/services/view-experience.js';
+import { isMobile, ViewExperience } from '../../../../core/ui-next/services/view-experience.js';
+import { useIsSmallScreen } from '../../../../core/ui-next/utilities/layout-utilities.js';
 import { compareSettlementNames, compareSettlementTypes } from '../../../../core/ui-next/utilities/settlement-utilities.js';
 import { createLayoutComplete } from '../../../../core/ui-next/utilities/solid-utilities.js';
 import { GamepadTrayItemProvider } from '../../components/gamepad-tray-item-provider.js';
@@ -19,10 +20,10 @@ import { CommerceScreenBaseTabContent } from './commerce-screen-base-tab-content
 import { useCommerceScreenContext, TradeRouteSortType } from './commerce-screen-model.js';
 import { TRADE_ROUTE_CARD_MARGIN_RIGHT, TradeRouteCard } from './trade-route-card.js';
 
-var _tmpl$ = /* @__PURE__ */ template(`<div class="flex flex-row flex-wrap flex-auto relative"></div>`), _tmpl$2 = /* @__PURE__ */ template(`<div class="top-0 right-3 flex flex-row items-center"><div class="font-title uppercase text-secondary"></div></div>`), _tmpl$3 = /* @__PURE__ */ template(`<div class=ml-2></div>`), _tmpl$4 = /* @__PURE__ */ template(`<div class="w-full flex flex-row justify-center items-center mt-2 text-accent-2 p-4"></div>`), _tmpl$5 = /* @__PURE__ */ template(`<div class="trade-route-cards-row flex-row flex flex-wrap w-full items-start"></div>`);
-const DEFAULT_CARD_WIDTH = Layout.pixelsToScreenPixels(384);
+var _tmpl$ = /* @__PURE__ */ template(`<div class="flex flex-row flex-wrap flex-auto relative"></div>`), _tmpl$2 = /* @__PURE__ */ template(`<div class="top-0 right-3 flex flex-row items-center"><div class="font-title uppercase text-secondary"></div></div>`), _tmpl$3 = /* @__PURE__ */ template(`<div class="ml-2"></div>`), _tmpl$4 = /* @__PURE__ */ template(`<div class="w-full flex flex-row justify-center items-center mt-2 text-accent-2 p-4"></div>`), _tmpl$5 = /* @__PURE__ */ template(`<div></div>`);
 const TradeRoutesContainer = (props) => {
   const model = useCommerceScreenContext();
+  const isSmallScreen = useIsSmallScreen();
   const layoutComplete = createLayoutComplete();
   let cardsContainerRef;
   let cardsContainerResizeObserver;
@@ -31,6 +32,9 @@ const TradeRoutesContainer = (props) => {
   const [tradeRouteCardWidth, setTradeRouteCardWidth] = createSignal(void 0);
   const [hasCheckedForWrap, setHasCheckedForWrap] = createSignal(false);
   const [numCardsInFirstRow, setNumCardsInFirstRow] = createSignal(0);
+  const defaultCardWidth = createMemo(() => {
+    return isMobile() ? Layout.pixelsToScreenPixels(isSmallScreen() ? 612 : 680) : Layout.pixelsToScreenPixels(384);
+  });
   const applyMeasuredWidths = (applyFunction) => {
     isApplyingMeasuredWidths = true;
     applyFunction();
@@ -71,7 +75,7 @@ const TradeRoutesContainer = (props) => {
     if (availableWidth <= 0) {
       return;
     }
-    const rowCardCount = Math.max(1, Math.floor((availableWidth + TRADE_ROUTE_CARD_MARGIN_RIGHT) / (DEFAULT_CARD_WIDTH + TRADE_ROUTE_CARD_MARGIN_RIGHT)));
+    const rowCardCount = Math.max(1, Math.floor((availableWidth + TRADE_ROUTE_CARD_MARGIN_RIGHT) / (defaultCardWidth() + TRADE_ROUTE_CARD_MARGIN_RIGHT)));
     const cardRows = Array.from(cardsContainerRef.querySelectorAll(".trade-route-cards-row"));
     const hasWrappedRows = cardRows.some((row) => {
       const cards = row.querySelectorAll(".trade-route-card");
@@ -417,7 +421,7 @@ const TradeRoutesContainer = (props) => {
                                 },
                                 get style() {
                                   return {
-                                    width: tradeRouteCardWidth() !== void 0 ? tradeRouteCardWidth() : DEFAULT_CARD_WIDTH + "px",
+                                    width: tradeRouteCardWidth() !== void 0 ? tradeRouteCardWidth() : defaultCardWidth() + "px",
                                     "margin-right": numCardsInFirstRow() > 0 && (subIndex() + 1) % numCardsInFirstRow() !== 0 || numCardsInFirstRow() === 0 && hasCheckedForWrap() ? TRADE_ROUTE_CARD_MARGIN_RIGHT + "px" : "0px"
                                   };
                                 }
@@ -425,6 +429,7 @@ const TradeRoutesContainer = (props) => {
                             }
                           })
                         }), null);
+                        createRenderEffect(() => className(_el$5, `trade-route-cards-row flex-row flex flex-wrap w-full items-start ${isMobile() ? "pl-6" : ""}`));
                         return _el$5;
                       }
                     }))
