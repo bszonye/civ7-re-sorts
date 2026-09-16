@@ -10,15 +10,16 @@ import { useImageCache } from '../../../../core/ui-next/components/image-cache.j
 import { L10n } from '../../../../core/ui-next/components/l10n.js';
 import { ComponentRegistry } from '../../../../core/ui-next/services/component-registry.js';
 import { IsControllerActive } from '../../../../core/ui-next/services/input.js';
+import { isMobile } from '../../../../core/ui-next/services/view-experience.js';
 import { FramedResource } from '../../components/framed-resource.js';
 import { LeaderWithRibbon } from '../../components/leader-with-ribbon.js';
 import { CommerceCriteriaDisplay } from './commerce-criteria-display.js';
 import { useCommerceScreenContext, TradeRouteAvailabiltyType } from './commerce-screen-model.js';
 import { ResourceTooltip } from '../../tooltips/resource-tooltip.js';
 
-var _tmpl$ = /* @__PURE__ */ template(`<div class="flex flex-row text-secondary uppercase text-lg mb-1 items-center"><div class="flex flex-row mr-3 items-center justify-center size-9 bg-center bg-cover bg-no-repeat"></div><div class=font-title></div></div>`), _tmpl$2 = /* @__PURE__ */ template(`<p class="mt-1 mr-13 font-fit-shrink"></p>`), _tmpl$3 = /* @__PURE__ */ template(`<div class="flex flex-row flex-wrap mt-4 mr-13"></div>`), _tmpl$4 = /* @__PURE__ */ template(`<div class=mt-2></div>`), _tmpl$5 = /* @__PURE__ */ template(`<div class="size-12 mt-2 flex flex-row text-sm items-center justify-center bg-center bg-contain bg-no-repeat text-white -mt-3"></div>`), _tmpl$6 = /* @__PURE__ */ template(`<div class="absolute top-1 right-1 flex flex-col items-center"></div>`), _tmpl$7 = /* @__PURE__ */ template(`<div class="mt-2 p-2 flex flex-col justify-between"></div>`);
+var _tmpl$ = /* @__PURE__ */ template(`<div class="flex flex-row text-secondary uppercase text-lg mb-1 items-center"><div class="flex flex-row mr-3 items-center justify-center size-9 bg-center bg-cover bg-no-repeat"></div><div class="font-title"></div></div>`), _tmpl$2 = /* @__PURE__ */ template(`<p class="mt-1 mr-13 font-fit-shrink"></p>`), _tmpl$3 = /* @__PURE__ */ template(`<div class="flex flex-row flex-wrap mt-4 mr-13"></div>`), _tmpl$4 = /* @__PURE__ */ template(`<div class="mt-2"></div>`), _tmpl$5 = /* @__PURE__ */ template(`<div class="size-12 mt-2 flex flex-row text-sm items-center justify-center bg-center bg-contain bg-no-repeat text-white -mt-3"></div>`), _tmpl$6 = /* @__PURE__ */ template(`<div class="absolute top-1 right-1 flex flex-col items-center"></div>`), _tmpl$7 = /* @__PURE__ */ template(`<div class="mt-2 p-2 flex flex-col justify-between"></div>`);
 const TradeCardSymbol = Symbol();
-const TRADE_ROUTE_CARD_MARGIN_RIGHT = Layout.pixelsToScreenPixels(12);
+const TRADE_ROUTE_CARD_MARGIN_RIGHT = isMobile() ? Layout.pixelsToScreenPixels(28) : Layout.pixelsToScreenPixels(12);
 const TradeRouteCardComponent = (props) => {
   const [local, cardFrameProps] = splitProps(props, ["tradeRoute", "autoFocus", "class", "onFocus"]);
   const model = useCommerceScreenContext();
