@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Mod id="bz-re-sorts" version="3.0.0"
+<Mod id="bz-re-sorts" version="3.0.1"
     xmlns="ModInfo">
     <Properties>
         <Name>LOC_MOD_BZ_RE_SORTS_NAME</Name>
-        <Version>3.0.0</Version>
+        <Version>3.0.1</Version>
         <Description>LOC_MOD_BZ_RE_SORTS_DESCRIPTION</Description>
         <Authors>beezany</Authors>
         <Package>Mod</Package>

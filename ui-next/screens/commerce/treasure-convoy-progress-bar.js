@@ -4,8 +4,8 @@ import { L10n } from '../../../../core/ui-next/components/l10n.js';
 import { ComponentRegistry } from '../../../../core/ui-next/services/component-registry.js';
 
 var
-  _tmpl$ = template(`<div class="w-full flex flex-col px-1 pt-1"><div class="w-full flex flex-row items-end px-1"><div class=flex-auto></div></div><div class="w-full h-4 flex flex-row p-1 mt-2"></div></div>`),
-//_tmpl$ = template(`<div class="w-full flex flex-col"><div class="w-full flex flex-row text-secondary"><div class=grow></div></div><div class="w-full h-4 flex flex-row p-1 mt-2"></div></div>`),
+  _tmpl$ = template(`<div class="w-full flex flex-col px-1 pt-1"><div class="w-full flex flex-row items-end px-1"><div class="flex-auto"></div></div><div class="w-full h-4 flex flex-row p-1 mt-2"></div></div>`),
+//_tmpl$ = template(`<div class="w-full flex flex-col"><div class="w-full flex flex-row text-secondary"><div class="grow"></div></div><div class="w-full h-4 flex flex-row p-1 mt-2"></div></div>`),
   _tmpl$2 = template(`<div class="flex-auto h-full"></div>`);
 const TreasureConvoyProgressBarComponent = (props) => {
   const items = createMemo(() => Array.from({

@@ -1,5 +1,7 @@
 import { template, insert, className, setAttribute } from '../../../../core/vendor/solid-js/web/dist/web.js';
 import { createSignal, createMemo, createEffect, on, createComponent, untrack, Show, mergeProps, createRenderEffect, For } from '../../../../core/vendor/solid-js/dist/solid.js';
+import { displayRequestUniqueId } from '../../../../core/ui/context-manager/display-handler.js';
+import { DialogBoxManager } from '../../../../core/ui/dialog-box/manager-dialog-box.js';
 import { ComponentID } from '../../../../core/ui/utilities/utilities-component-id.js';
 import { Icon as Icon$1 } from '../../../../core/ui/utilities/utilities-image.js';
 import { Layout } from '../../../../core/ui/utilities/utilities-layout.js';
@@ -20,7 +22,9 @@ import { SpatialSlot, HSlot } from '../../../../core/ui-next/components/slot.js'
 import { Tooltip } from '../../../../core/ui-next/components/tooltip.js';
 import { useAudio } from '../../../../core/ui-next/services/audio-support.js';
 import { ComponentRegistry } from '../../../../core/ui-next/services/component-registry.js';
+import { FocusManager } from '../../../../core/ui-next/services/focus-manager.js';
 import { IsControllerActive, ActiveInputDevice } from '../../../../core/ui-next/services/input.js';
+import { isMobile } from '../../../../core/ui-next/services/view-experience.js';
 import { LayoutModel } from '../../../../core/ui-next/utilities/layout-utilities.js';
 import { FramedResource } from '../../components/framed-resource.js';
 import { GamepadTrayItemProvider } from '../../components/gamepad-tray-item-provider.js';
@@ -35,37 +39,36 @@ import style from './commerce-screen.scss.js';
 
 var
   _tmpl$ = template(`<div></div>`),
-//_tmpl$2 = template(`<div><div tabindex=1 data-name=available-resources-container class="flex flex-col h-full w-full relative pb-4"></div></div>`),
-  _tmpl$2 = template(`<div><div tabindex=1 data-name=available-resources-container class="flex flex-col h-full w-full relative pb-0"></div></div>`),
-//_tmpl$3 = template(`<div data-name=commerce-unassigned-resources class=flex-auto></div>`),
-  _tmpl$3 = template(`<div data-name=commerce-unassigned-resources class=flex-auto></div>`),
+//_tmpl$2 = template(`<div><div tabindex="1"data-name="available-resources-container"class="flex flex-col h-full w-full relative pb-4"></div></div>`),
+  _tmpl$2 = template(`<div><div tabindex="1"data-name="available-resources-container"class="flex flex-col h-full w-full relative pb-0"></div></div>`),
+//_tmpl$3 = template(`<div data-name="commerce-unassigned-resources"class="flex-auto"></div>`),
+  _tmpl$3 = template(`<div data-name="commerce-unassigned-resources"class="flex-auto"></div>`),
   _tmpl$4 = template(`<div class="text-accent-2 m-2"></div>`),
-  _tmpl$5 = template(`<div class="flex flex-row mb-1 relative"><div class=text-secondary></div></div>`),
+  _tmpl$5 = template(`<div class="flex flex-row mb-1 relative"><div class="text-secondary"></div></div>`),
   _tmpl$6 = template(`<div class="w-full h-0\\.5 mt-1 mb-2 opacity-50"></div>`),
 //_tmpl$7 = template(`<div class="flex flex-row flex-wrap relative"></div>`),
   _tmpl$7 = template(`<div class="flex flex-row flex-wrap -mr-3 relative"></div>`),
   _tmpl$8 = template(`<div class="flex flex-row items-center justify-center self-end pr-4"></div>`),
-//_tmpl$9 = template(`<div tabindex=2 data-name=slotted-resource-container class="flex flex-col flex-auto pb-4 relative"></div>`),
-  _tmpl$9 = template(`<div tabindex=2 data-name=slotted-resource-container class="flex flex-col flex-auto pb-0 relative"></div>`),
+//_tmpl$9 = template(`<div tabindex="2"data-name="slotted-resource-container"class="flex flex-col flex-auto pb-4 relative"></div>`),
+  _tmpl$9 = template(`<div tabindex="2"data-name="slotted-resource-container"class="flex flex-col flex-auto pb-0 relative"></div>`),
   _tmpl$10 = template(`<div class="w-full flex flex-col"></div>`),
   _tmpl$11 = template(`<div class="city-type-pill rounded-full min-w-7 flex flex-row justify-center items-center px-2 ml-2"><span></span></div>`),
   _tmpl$12 = template(`<div class="city-type-pill rounded-full min-w-7 flex flex-row justify-center items-center px-2 ml-2"></div>`),
   _tmpl$13 = template(`<div class="flex flex-row items-center text-xs text-accent-1"></div>`),
-//_tmpl$14 = template(`<div class="flex flex-row items-center"><div class="mr-2 size-9 bg-center bg-cover bg-no-repeat relative"></div><div class="text-secondary font-title uppercase text-lg"></div></div>`),
-  _tmpl$14 = template(`<div class="flex flex-row items-center"><div class="mr-2 -my-0\\.5 size-9 bg-center bg-cover bg-no-repeat relative"></div><div class="text-secondary font-title uppercase text-lg"></div></div>`),
+  _tmpl$14 = template(`<div class="flex flex-row items-center"><div></div><div class="text-secondary font-title uppercase text-lg"></div></div>`),
   _tmpl$15 = template(`<div class="flex flex-row flex-wrap relative w-full justify-between"></div>`),
-//_tmpl$16 = template(`<div class="flex flex-row items-center"><div class="flex flex-row max-h-full items-end"></div><div class="flex-auto flex flex-row"><div class=flex-auto><div class="flex flex-row flex-wrap mt-4 flex-auto"></div></div></div></div>`),
-  _tmpl$16 = template(`<div class="flex flex-row items-start"><div class="flex flex-row max-h-full items-start"></div><div class="relative flex-auto flex flex-row"><div class=flex-auto><div class="flex flex-row flex-wrap mt-1 -mr-3 flex-auto"></div></div></div></div>`),
+//_tmpl$16 = template(`<div class="flex flex-row items-center"><div class="flex flex-row max-h-full items-end"></div><div class="flex-auto flex flex-row"><div class="flex-auto"><div class="flex flex-row flex-wrap mt-4 flex-auto"></div></div></div></div>`),
+  _tmpl$16 = template(`<div class="flex flex-row items-start"><div class="flex flex-row max-h-full items-start"></div><div class="relative flex-auto flex flex-row"><div class="flex-auto"><div class="flex flex-row flex-wrap mt-1 -mr-3 flex-auto"></div></div></div></div>`),
   _tmpl$17 = template(`<div class="flex items-center flex-col relative"></div>`),
-  _tmpl$18 = template(`<div class=hidden></div>`),
+  _tmpl$18 = template(`<div class="hidden"></div>`),
   _tmpl$19 = template(`<div class="size-16 mr-3 relative flex flex-row justify-center"></div>`),
-  _tmpl$20 = template(`<div class="w-full p-2 mb-2 relative"><div class="bg-center bg-no-repeat absolute inset-0 bg-cover opacity-20"></div><div class="absolute top-1 left-1 rotate-180 size-4 bg-contain opacity-30"></div><div class="absolute top-1 right-1 -rotate-90 size-4 bg-contain opacity-30"></div><div class="absolute bottom-1 left-1 rotate-90 size-4 bg-contain opacity-30"></div><div class="absolute bottom-1 right-1 size-4 bg-contain opacity-30"></div><div class="flex flex-row"><div class="flex flex-col relative items-start justify-center ml-3"><div class="uppercase mr-2 text-secondary font-title"></div><div class=text-accent-2></div></div></div></div>`),
+  _tmpl$20 = template(`<div class="w-full p-2 mb-2 relative"><div class="bg-center bg-no-repeat absolute inset-0 bg-cover opacity-20"></div><div class="absolute top-1 left-1 rotate-180 size-4 bg-contain opacity-30"></div><div class="absolute top-1 right-1 -rotate-90 size-4 bg-contain opacity-30"></div><div class="absolute bottom-1 left-1 rotate-90 size-4 bg-contain opacity-30"></div><div class="absolute bottom-1 right-1 size-4 bg-contain opacity-30"></div><div class="flex flex-row"><div class="flex flex-col relative items-start justify-center ml-3"><div class="uppercase mr-2 text-secondary font-title"></div><div class="text-accent-2"></div></div></div></div>`),
   _tmpl$21 = template(`<div class="text-secondary w-full text-center -top-9 left-0"></div>`),
   _tmpl$22 = template(`<div class="flex flex-row flex-auto relative"></div>`),
   _tmpl$23 = template(`<div class="font-title uppercase text-secondary"></div>`),
   _tmpl$24 = template(`<div class="flex flex-row w-full items-center"><div class="flex flex-row items-center"><div class="text-secondary uppercase font-title flex-auto"></div><div class="flex flex-row mr-6"></div></div><div class="text-secondary uppercase font-title ml-2 pointer-events-none"></div></div>`),
-  _tmpl$25 = template(`<div class="ml-2 flex flex-row"><div class="size-6 mr-1 bg-cover bg-center"></div></div>`),
-  _tmpl$26 = template(`<div class=ml-2></div>`);
+  _tmpl$25 = template(`<div><div></div></div>`),
+  _tmpl$26 = template(`<div class="ml-2"></div>`);
 const DEBUG_DRAG_AND_DROP = false;
 const [DragAndDrop, Draggable, Dropzone] = createTypedDragAndDrop();
 const DraggableResource = (props) => {
@@ -75,27 +78,35 @@ const DraggableResource = (props) => {
   const audioComponentName = createMemo(() => {
     return props.audioComponentAlias ?? props.name ?? "Activatable";
   });
+  const inputState = {
+    "mousebutton-middle": false,
+  }
   function onEngineInput(inputEvent) {  // TRIX
-    const isStart = inputEvent.detail.status == InputActionStatuses.START;
-    const isFinish = inputEvent.detail.status == InputActionStatuses.FINISH;
-    if (!isStart && !isFinish) {
+    const { name, status } = inputEvent.detail;
+    let state = inputState[name];
+    if (state == null) {
+      props["on:engine-input"]?.(inputEvent);
       return;
     }
-    if (inputEvent.detail.name == "mousebutton-middle") {
+    // handle input
+    const isStart = status == InputActionStatuses.START;
+    const isFinish = status == InputActionStatuses.FINISH;
+    if (isStart && !state) {
+      inputState[name] = true;
+      const press = props.disabled ? "pressError" : "press";
+      audioTrigger(audioComponentName(), press);
+    } else if (isFinish && state) {
+      inputState[name] = false;
       if (props.disabled) {
-        if (isStart) audioTrigger(audioComponentName(), "pressError");
-      } else {
-        if (isStart) {
-          audioTrigger(audioComponentName(), "press");
-        } else {
-          onActivateMiddle();
-        }
+        // disable
+      } else if (name == "mousebutton-middle") {
+        onActivateMiddle();
       }
-      inputEvent.stopPropagation();
-      inputEvent.preventDefault();
     } else {
-      props["on:engine-input"]?.(inputEvent);
+      // ignore doubled mouse events
     }
+    inputEvent.stopPropagation();
+    inputEvent.preventDefault();
   }
   function onActivateMiddle() {
     if (!model.isSlottingAvailable) return;  // resources locked
@@ -580,7 +591,22 @@ const SlottedResourcesContainer = (props) => {
         return model.focusedSettlementId() !== void 0 || model.selectedSettlementId() !== void 0;
       },
       get children() {
-        return [createComponent(For, {
+        return [createComponent(Hotkeys, {
+          get hotkeys() {
+            return [{
+              hotkeyAction: "cycle-next",
+              onActivate: model.onNextSettlementSortType
+            },
+              {
+                hotkeyAction: "cycle-prev",
+                onActivate: model.onPrevSettlementSortType
+              },
+              {
+                hotkeyAction: "unit-skip-turn",
+                onActivate: model.toggleSelectedSortDirection
+              }];
+          }
+        }), createComponent(For, {
           get each() {
             return props.slottedResourceSectionData;
           },
@@ -715,7 +741,9 @@ const SettlementInfoCount = (props) => {
     get children() {
       var _el$13 = _tmpl$11(), _el$14 = _el$13.firstChild;
       insert(_el$13, createComponent(Icon, {
-        "class": "size-5 mr-1",
+        get ["class"]() {
+          return `${isMobile() ? "size-7" : "size-5"} mr-1`;
+        },
         get name() {
           return imageUrl();
         },
@@ -748,7 +776,9 @@ const SettlementName = (props) => {
     var _el$15 = _tmpl$14(), _el$16 = _el$15.firstChild, _el$17 = _el$16.nextSibling;
     _el$16.style.setProperty("background-image", 'url("blp:banner_hex")');
     insert(_el$16, createComponent(Icon, {
-      "class": "size-8 absolute top-1\\/2 left-1\\/2 -translate-1\\/2",
+      get ["class"]() {
+        return `${isMobile() ? "size-10" : "size-8"} absolute top-1\\/2 left-1\\/2 -translate-1\\/2`;
+      },
       get name() {
         return props.settlementIcon;
       }
@@ -845,6 +875,7 @@ const SettlementName = (props) => {
         return _el$18;
       }
     }), null);
+    createRenderEffect(() => className(_el$16, `mr-2 -my-0\\.5 ${isMobile() ? "size-11" : "size-9"} bg-center bg-cover bg-no-repeat relative`));
     return _el$15;
   })();
 };
@@ -1139,7 +1170,9 @@ const CityResourceContainerInternal = (props) => {
                       },
                       get children() {
                         return createComponent(Icon, {
-                          "class": "absolute size-8 top-0",
+                          get ["class"]() {
+                            return `absolute ${isMobile() ? "size-10" : "size-8"} top-0`;
+                          },
                           get name() {
                             return createMemo(() => !!settlementIsSelected())() ? bottomButtonIconCSS() : leftButtonIconCSS();
                           },
@@ -1207,7 +1240,9 @@ const CityResourceContainerInternal = (props) => {
           },
           get children() {
             return createComponent(Icon, {
-              "class": "size-8 absolute top-3",
+              get ["class"]() {
+                return `${isMobile() ? "size-10" : "size-8"} absolute top-3`;
+              },
               get name() {
                 return images.failIconCSS;
               },
@@ -1218,7 +1253,9 @@ const CityResourceContainerInternal = (props) => {
       },
       get children() {
         return createComponent(Icon, {
-          "class": "size-8 absolute top-3",
+          get ["class"]() {
+            return `${isMobile() ? "size-10" : "size-8"} absolute top-3`;
+          },
           get name() {
             return images.successIconCSS;
           },
@@ -1403,9 +1440,20 @@ const CommerceResourcesContainerComponent = (props) => {
       audioTrigger("dropReject");
     }
   };
-  const onDragDrop = (draggable, dropzone) => {
+  const onDragDrop = (draggable, dropzone, _position, dropFailed) => {
     const resource = draggable.data;
     const cityID = dropzone.data.cityID;
+    if (dropFailed) {
+      const resource2 = draggable.data;
+      const cityID2 = dropzone.data.cityID;
+      showSwapFailDialog(resource2?.resourceType, resource2?.cityID, cityID2, resource2?.resourceProps, () => {
+        model.setSwapFail({
+          swapFail: false
+        });
+        model.deselectSelectedResource();
+      });
+      return;
+    }
     const targetResourceValue = dropzone.data.resourceValue;
     if (targetResourceValue) {
       if (cityID) {
@@ -1473,6 +1521,57 @@ const CommerceResourcesContainerComponent = (props) => {
     setDisableFilters(!model.isInSortAndFilterMode());
     setAutoFocusFilters(model.isInSortAndFilterMode());
   });
+  createEffect(() => {
+    if (model.swapFail()?.swapFail === true) {
+      const resource = model.swapFail()?.selectedResourceData;
+      const cityID = model.swapFail()?.dropzoneID;
+      if (resource && resource.cityID && cityID) {
+        const resourceType = resource ? model.getResourceTypeFromValue(resource.resourceValue) : void 0;
+        const resourceProps = resource ? model.getSelectedResourceProps() : void 0;
+        showSwapFailDialog(resourceType, resource?.cityID, cityID, resourceProps, () => {
+          model.setSwapFail({
+            swapFail: false
+          });
+          model.deselectSelectedResource();
+        });
+      }
+      return;
+    }
+  });
+  function showSwapFailDialog(resourceType, resourceCityID, cityID, resourceProps, onAccept) {
+    let body;
+    if (!resourceType) {
+      body = Locale.compose("LOC_COMMERCE_CANNOT_REPLACE_RESOURCE_LABEL");
+    } else {
+      switch (resourceType) {
+        case "RESOURCE_CAMELS":
+          body = Locale.compose("LOC_COMMERCE_RESOURCE_CAMELS_REPLACE_FAIL");
+          break;
+        default:
+          if (cityID && resourceCityID?.id != cityID.id && resourceProps) {
+            const draggableIsCity = resourceProps.resourceType == "LOC_RESOURCECLASS_CITY_NAME";
+            const dropzoneIsTown = Cities.get(cityID)?.isTown;
+            const isCityToTownDrag = draggableIsCity && dropzoneIsTown;
+            body = isCityToTownDrag ? Locale.compose("LOC_COMMERCE_CITY_RESOURCES_CANNOT_BE_ASSIGNED_TO_A_TOWN") : Locale.compose("LOC_COMMERCE_CANNOT_REPLACE_RESOURCE_LABEL");
+          } else {
+            body = Locale.compose("LOC_COMMERCE_CANNOT_REPLACE_RESOURCE_LABEL");
+          }
+          break;
+      }
+    }
+    DialogBoxManager.createDialog_MultiOption({
+      dialogId: displayRequestUniqueId(),
+      body,
+      title: "LOC_COMMERCE_RESOURCE_REPLACEMENT_FAILED_LABEL",
+      canClose: false,
+      options: [{
+        actions: ["accept", "cancel", "keyboard-escape"],
+        label: "LOC_GENERIC_ACCEPT",
+        callback: onAccept
+      }]
+    });
+    FocusManager.get().setFocus(document.body);
+  }
   return createComponent(CommerceScreenBaseTabContent, {
     description: "LOC_COMMERCE_RESOURCE_ALLOCATION_DESCRIPTION",
     get headerBar() {
@@ -1489,7 +1588,17 @@ const CommerceResourcesContainerComponent = (props) => {
           children: (unslottedBonus) => (() => {
             var _el$54 = _tmpl$25(), _el$55 = _el$54.firstChild;
             insert(_el$54, () => `+${unslottedBonus.bonusAmount}`, null);
-            createRenderEffect((_$p) => (_$p = unslottedBonus.iconSrc) != null ? _el$55.style.setProperty("background-image", _$p) : _el$55.style.removeProperty("background-image"));
+            createRenderEffect((_p$) => {
+              var _v$9 = `ml-2 flex flex-row ${isMobile() ? "items-center" : ""}`, _v$10 = `${isMobile() ? "size-10" : "size-6"} mr-1 bg-cover bg-center`, _v$11 = unslottedBonus.iconSrc;
+              _v$9 !== _p$.e && className(_el$54, _p$.e = _v$9);
+              _v$10 !== _p$.t && className(_el$55, _p$.t = _v$10);
+              _v$11 !== _p$.a && ((_p$.a = _v$11) != null ? _el$55.style.setProperty("background-image", _v$11) : _el$55.style.removeProperty("background-image"));
+              return _p$;
+            }, {
+              e: void 0,
+              t: void 0,
+              a: void 0
+            });
             return _el$54;
           })()
         }));
@@ -1608,6 +1717,7 @@ const CommerceResourcesContainerComponent = (props) => {
                   onItemSelected: (json) => {
                     const [_key, value] = JSON.parse(json);
                     model.setSelectedSettlementSortType(value)
+                    delayByFrame(() => model.onSortResources(), 1);
                   },
                   get disableFocus() {
                     return disableFilters();
@@ -1644,9 +1754,7 @@ const CommerceResourcesContainerComponent = (props) => {
                             focus: "url(blp:shell_arrow-button-focus)"
                           },
                           size: "11",
-                          onActivate: () => {
-                            model.onSortResources();
-                          }
+                          onActivate: model.onSortResources
                         });
                       }
                     });
@@ -1660,22 +1768,7 @@ const CommerceResourcesContainerComponent = (props) => {
       })();
     },
     get children() {
-      return [createComponent(Hotkeys, {
-        get hotkeys() {
-          return [{
-            hotkeyAction: "cycle-next",
-            onActivate: model.onNextSettlementSortType
-          },
-          {
-            hotkeyAction: "cycle-prev",
-            onActivate: model.onPrevSettlementSortType
-          },
-          {
-            hotkeyAction: "unit-skip-turn",
-            onActivate: model.toggleSelectedSortDirection
-          }];
-        }
-      }), createComponent(GamepadTrayItemProvider, {
+      return createComponent(GamepadTrayItemProvider, {
         "class": "flex-auto",
         name: "commerce-resource-gamepad-tray-context",
         items: gamepadTrayItems,
@@ -1713,7 +1806,7 @@ const CommerceResourcesContainerComponent = (props) => {
             }
           })];
         }
-      })];
+      });
     }
   });
 };

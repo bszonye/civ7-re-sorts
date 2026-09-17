@@ -4,6 +4,7 @@ import { defineLegacyComponent } from '../../../../core/ui-next/components/fxs-s
 import { Tab } from '../../../../core/ui-next/components/tab.js';
 import { useAudio } from '../../../../core/ui-next/services/audio-support.js';
 import { ComponentRegistry } from '../../../../core/ui-next/services/component-registry.js';
+import { isMobile } from '../../../../core/ui-next/services/view-experience.js';
 import { useLocalPlayerId } from '../../../../core/ui-next/utilities/game-core-utilities.js';
 import { ScreenFrame } from '../../components/screen-frame.js';
 import { EmpireResourceContainer } from './commerce-screen-empire-tab.js';
@@ -56,6 +57,9 @@ const CommerceScreenComponent = (_props) => {
           return title();
         },
         onClosing: handleOnClosing,
+        get isFullscreen() {
+          return isMobile();
+        },
         onContextChanged,
         get children() {
           return createComponent(Tab, {
@@ -65,7 +69,10 @@ const CommerceScreenComponent = (_props) => {
             },
             get children() {
               return [createComponent(Tab.TabList, {
-                "class": "bz-tab-list w-full self-center text-base font-base",
+                get ["class"]() {
+                  return `bz-tab-list w-full self-center text-base font-base`;
+                  // return `${isMobile() ? Game.age == Database.makeHash("AGE_EXPLORATION") ? "w-3\\/4" : "w-2\\/3" : "w-187"} self-center text-base font-base`;
+                },
                 nextHotkey: "nav-next",
                 previousHotkey: "nav-previous"
               }), createComponent(Tab.Output, {}), createComponent(Tab.Item, {

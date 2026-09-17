@@ -1,4 +1,4 @@
-## Resource Re-sorts 3.0.0
+## Resource Re-sorts 3.0.1
 better Resources & Trade screen
 
 - improved layout: see more information in less space

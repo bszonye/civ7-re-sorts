@@ -1,22 +1,19 @@
-import { template, insert } from '../../../../core/vendor/solid-js/web/dist/web.js';
-import { createSignal, createMemo, createComponent, For, mergeProps, Show } from '../../../../core/vendor/solid-js/dist/solid.js';
+import { template, insert, className } from '../../../../core/vendor/solid-js/web/dist/web.js';
+import { createSignal, createMemo, createComponent, For, mergeProps, Show, createRenderEffect } from '../../../../core/vendor/solid-js/dist/solid.js';
 import { ComponentID } from '../../../../core/ui/utilities/utilities-component-id.js';
 import { CollapsibleContainer } from '../../../../core/ui-next/components/collapsible-container.js';
 import { Icon } from '../../../../core/ui-next/components/icon.js';
 import { L10n } from '../../../../core/ui-next/components/l10n.js';
 import { ScrollArea } from '../../../../core/ui-next/components/scroll-area.js';
 import { SpatialSlot } from '../../../../core/ui-next/components/slot.js';
+import { isMobile } from '../../../../core/ui-next/services/view-experience.js';
 import { createLayoutComplete } from '../../../../core/ui-next/utilities/solid-utilities.js';
 import { GamepadTrayItemProvider } from '../../components/gamepad-tray-item-provider.js';
 import { CommerceScreenBaseTabContent } from './commerce-screen-base-tab-content.js';
 import { useCommerceScreenContext } from './commerce-screen-model.js';
 import { TreasureConvoyCard } from './treasure-convoy-card.js';
 
-var
-  _tmpl$ = template(`<div class="flex flex-row flex-wrap flex-auto relative"></div>`),
-  _tmpl$2 = template(`<div class="flex flex-col flex-wrap text-wrap text-center items-center justify-center my-4"><div class="text-secondary uppercase"></div></div>`),
-  _tmpl$3 = template(`<div class="flex flex-row flex-wrap flex-auto relative gap-6 my-6"></div>`);
-//_tmpl$3 = template(`<div class="flex flex-row flex-wrap flex-auto relative mt-6"></div>`);
+var _tmpl$ = /* @__PURE__ */ template(`<div class="flex flex-row flex-wrap flex-auto relative"></div>`), _tmpl$2 = /* @__PURE__ */ template(`<div><div class="text-secondary uppercase"></div></div>`), _tmpl$3 = /* @__PURE__ */ template(`<div></div>`);
 const TreasureResourceContainer = (props) => {
   const model = useCommerceScreenContext();
   const layoutComplete = createLayoutComplete();
@@ -121,6 +118,7 @@ const TreasureResourceContainer = (props) => {
                                   }
                                 })
                               }));
+                              createRenderEffect(() => className(_el$4, `flex flex-row flex-wrap flex-auto relative gap-6 my-6 ${isMobile() ? "pl-6" : ""}`));
                               return _el$4;
                             })();
                           },
@@ -136,6 +134,7 @@ const TreasureResourceContainer = (props) => {
                             insert(_el$2, createComponent(L10n.Compose, {
                               text: "LOC_COMMERCE_TREASURE_FLEETS_EMPTY_DESCRIPTION"
                             }), null);
+                            createRenderEffect(() => className(_el$2, `flex flex-col flex-wrap text-wrap text-center items-center justify-center ${isMobile() ? "my-2" : "my-4"}`));
                             return _el$2;
                           }
                         });
