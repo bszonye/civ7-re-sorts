@@ -283,7 +283,7 @@ function createCommerceScreenModel() {
         const locIndex = GameplayMap.getIndexFromLocation(resourceAssignedEventData.location);
         const isOffMap = resourceAssignedEventData.offMapId !== INVALID_OFF_MAP_ID;
         const offMapId = isOffMap ? resourceAssignedEventData.offMapId ?? INVALID_OFF_MAP_ID : INVALID_OFF_MAP_ID;
-        const sectionIndex = Cities.get(cityID)?.Trade?.isInTradeNetwork() ? 0 : 1;
+        const sectionIndex = cityIsConnectedToTradeNetwork(Cities.get(cityID)) ? 0 : 1;
         const cityResources = model.data.resourceTabData.slottedResourceSectionData[sectionIndex].cityResources;
         const subSectionIndex = cityResources.findIndex((city) => {
           return ComponentID.isMatch(city.cityID, cityID);
@@ -371,7 +371,7 @@ function createCommerceScreenModel() {
             console.error("commerce-screen-model: Unable to get origin city for newly assigned resource");
             return;
           }
-          unassignedSectionIndex = Cities.get(originCityID)?.Trade?.isInTradeNetwork() ? 0 : 1;
+          unassignedSectionIndex = cityIsConnectedToTradeNetwork(Cities.get(originCityID)) ? 0 : 1;
         }
         const unassignedSubSectionIndex = model.data.resourceTabData.availableResourceSectionData[unassignedSectionIndex].subSections.findIndex((subSection) => {
           return subSection.type == resourceDef.ResourceClassType;
@@ -1495,7 +1495,7 @@ function createCommerceScreenModel() {
     const data = model.data.resourceTabData;
     if (cityID) {
       // get slotted resources for city
-      result.index = +(!Cities.get(cityID)?.Trade?.isInTradeNetwork());
+      result.index = cityIsConnectedToTradeNetwork(Cities.get(cityID)) ? 0 : 1;
       const section = data.slottedResourceSectionData[result.index];
       const city = section.cityResources
         .find(city => ComponentID.isMatch(city.cityID, cityID));
@@ -1505,7 +1505,7 @@ function createCommerceScreenModel() {
       // get available resources for resource class
       const loc = GameplayMap.getLocationFromIndex(plot);
       const cityID = GameplayMap.getOwningCityFromXY(loc.x, loc.y);
-      result.index = +(!Cities.get(cityID)?.Trade?.isInTradeNetwork());
+      result.index = cityIsConnectedToTradeNetwork(Cities.get(cityID)) ? 0 : 1;
       const section = data.availableResourceSectionData[result.index];
       const rctype = section.subSections
         .find(sub => sub.type == info.ResourceClassType);
@@ -2188,7 +2188,7 @@ function createCommerceScreenModel() {
           canAssignSelectedResourceToSettlement: canAssignResource,
           slottedResources
         };
-        if (city.Trade?.isInTradeNetwork()) {
+        if (cityIsConnectedToTradeNetwork(city)) {
           connectedCities.cityResources.push(cityResourceData);
         } else {
           disconnectedCities.cityResources.push(cityResourceData);
