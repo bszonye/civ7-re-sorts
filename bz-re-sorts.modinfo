@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Mod id="bz-re-sorts" version="3.0.3"
+<Mod id="bz-re-sorts" version="30003"
     xmlns="ModInfo">
     <Properties>
         <Name>LOC_MOD_BZ_RE_SORTS_NAME</Name>
