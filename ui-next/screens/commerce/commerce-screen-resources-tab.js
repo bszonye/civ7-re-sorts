@@ -596,15 +596,16 @@ const SlottedResourcesContainer = (props) => {
             return [{
               hotkeyAction: "cycle-next",
               onActivate: model.onNextSettlementSortType
-            },
-              {
-                hotkeyAction: "cycle-prev",
-                onActivate: model.onPrevSettlementSortType
-              },
-              {
-                hotkeyAction: "unit-skip-turn",
-                onActivate: model.toggleSelectedSortDirection
-              }];
+            }, {
+              hotkeyAction: "cycle-prev",
+              onActivate: model.onPrevSettlementSortType
+            }, {
+              hotkeyAction: "toggle-details",
+              onActivate: model.toggleSelectedSortDirection
+            }, {
+              hotkeyAction: "unit-skip-turn",
+              onActivate: model.toggleSelectedSortDirection
+            }];
           }
         }), createComponent(For, {
           get each() {
