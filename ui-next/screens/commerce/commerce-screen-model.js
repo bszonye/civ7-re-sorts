@@ -153,6 +153,18 @@ function createCommerceScreenModel() {
     }
     return yieldTypes;
   }
+  function DoesMatchResource(resourceValueA, isOffMapA, resourceValueB, isOffMapB) {
+    if (resourceValueA === void 0 || resourceValueB === void 0) {
+      console.error("commerce-screen-model: invalid resource for DoesMatchResource()");
+      return false;
+    }
+    if (resourceValueA === resourceValueB) {
+      if (isOffMapA === void 0 || isOffMapB === void 0 || isOffMapA === isOffMapB) {
+        return true;
+      }
+    }
+    return false;
+  }
   const slottedResourceIndices = {};
   const [lastSlottedResourceValues, setLastSlottedResourceValues] = createSignal([]);
   const wasSlottedLast = createSelector(lastSlottedResourceValues, (resourceValue, list) => {
@@ -164,20 +176,28 @@ function createCommerceScreenModel() {
   onMount(() => {
     const resourceCapChanged = createEngineEvent("ResourceCapChanged");
     const resourceAssigned = createEngineEvent("ResourceAssigned");
+    const resourceCreated = createEngineEvent("ResourceCreated");
+    const resourceDestroyed = createEngineEvent("ResourceDestroyed");
     const resourceUnassigned = createEngineEvent("ResourceUnassigned");
     let pendingUnassignments = [];
     const updateGate = new UpdateGate(() => {
       if (updateGate.callTriggers.includes("resource_unassigned")) {
         pendingUnassignments.forEach((data) => {
-          const resourceValue = data.offMapId === INVALID_OFF_MAP_ID ? GameplayMap.getIndexFromLocation(data.location) : data.offMapId;
+          const isOffMap = data.offMapId !== INVALID_OFF_MAP_ID;
+          const resourceValue = isOffMap ? data.offMapId : GameplayMap.getIndexFromLocation(data.location);
           const playerCities = Players.get(GameContext.localPlayerID)?.Cities?.getCities();
           if (!playerCities) {
             console.error("commerce-screen-model: Unable to get list of player cities for local player");
             return;
           }
           for (const city of playerCities) {
-            if (city.Resources && city.Resources?.getAssignedResources().find((resource) => {
-              return resource.value == resourceValue;
+            if (city.Resources && city.Resources?.getAssignedResources().find((uniqueResourceValue) => {
+              return DoesMatchResource(
+                uniqueResourceValue.value,
+                uniqueResourceValue.isOffMap,
+                resourceValue,
+                isOffMap
+              );
             })) {
               return;
             }
@@ -213,7 +233,12 @@ function createCommerceScreenModel() {
           }
           const yieldTypes = getYieldTypes(resourceDef.ResourceType);
           const uniqueResource = localPlayerResources2?.getResources().find((uniqueResourceValue) => {
-            return uniqueResourceValue.value == resourceValue;
+            return DoesMatchResource(
+              uniqueResourceValue.value,
+              uniqueResourceValue.isOffMap,
+              resourceValue,
+              isOffMap
+            );
           });
           if (!uniqueResource) {
             console.error(
@@ -238,10 +263,16 @@ function createCommerceScreenModel() {
             isOffMap: data.offMapId !== INVALID_OFF_MAP_ID,
             canSwapWithSelectedResource
           };
+          const subSections = model.data.resourceTabData.availableResourceSectionData[sectionIndex].subSections;
+          let subSection = subSections.find(
+            (subSection) => subSection.type === resourceDef.ResourceClassType
+          );
+          if (!subSection) {
+            subSection = subSections.find(
+              (subSection) => subSection.type === "RESOURCECLASS_BONUS"
+            );
+          }
           // TRIX: prevent duplicate entries
-          const subSection = model.data.resourceTabData.availableResourceSectionData[sectionIndex].subSections.find((subSection) => {
-            return subSection.type == resourceDef.ResourceClassType;
-          });
           if (subSection) {
             const data = subSection.resourceSlotData;
             if (!data.find(r => r.resourceValue == resourceSlotData.resourceValue)) {
@@ -283,7 +314,7 @@ function createCommerceScreenModel() {
         const locIndex = GameplayMap.getIndexFromLocation(resourceAssignedEventData.location);
         const isOffMap = resourceAssignedEventData.offMapId !== INVALID_OFF_MAP_ID;
         const offMapId = isOffMap ? resourceAssignedEventData.offMapId ?? INVALID_OFF_MAP_ID : INVALID_OFF_MAP_ID;
-        const sectionIndex = cityIsConnectedToTradeNetwork(Cities.get(cityID)) ? 0 : 1;
+        const sectionIndex = cityIsConnectedToTradeNetwork(Cities.get(cityID)) ? 0 : 1;  // TRIX
         const cityResources = model.data.resourceTabData.slottedResourceSectionData[sectionIndex].cityResources;
         const subSectionIndex = cityResources.findIndex((city) => {
           return ComponentID.isMatch(city.cityID, cityID);
@@ -301,8 +332,8 @@ function createCommerceScreenModel() {
           );
           return;
         }
-        if (cityResources[subSectionIndex].slottedResources.findIndex(
-          (r) => r.resourceValue == resourceValue
+        if (subSectionIndex != -1 && cityResources[subSectionIndex].slottedResources.findIndex(
+          (r) => DoesMatchResource(r.resourceValue, r.isOffMap ?? false, resourceValue, isOffMap)
         ) == -1) {
           const yieldTypes = getYieldTypes(resourceDef.ResourceType);
           let uniqueResource;
@@ -316,7 +347,12 @@ function createCommerceScreenModel() {
             }
             cityResources[subSectionIndex].availableSlots = availableSlots;
             for (const assignedResource of assignedResources) {
-              if (assignedResource.value === resourceValue) {
+              if (DoesMatchResource(
+                assignedResource.value,
+                assignedResource.isOffMap,
+                resourceValue,
+                isOffMap
+              )) {
                 uniqueResource = assignedResource;
                 break;
               }
@@ -361,27 +397,7 @@ function createCommerceScreenModel() {
           };
           cityResources[subSectionIndex].slottedResources.push(resourceSlotData);
         }
-        let unassignedSectionIndex = 0;
-        if (!isOffMap) {
-          const originCityID = GameplayMap.getOwningCityFromXY(
-            resourceAssignedEventData.location.x,
-            resourceAssignedEventData.location.y
-          );
-          if (!originCityID) {
-            console.error("commerce-screen-model: Unable to get origin city for newly assigned resource");
-            return;
-          }
-          unassignedSectionIndex = cityIsConnectedToTradeNetwork(Cities.get(originCityID)) ? 0 : 1;
-        }
-        const unassignedSubSectionIndex = model.data.resourceTabData.availableResourceSectionData[unassignedSectionIndex].subSections.findIndex((subSection) => {
-          return subSection.type == resourceDef.ResourceClassType;
-        });
-        const resourceIndex = model.data.resourceTabData.availableResourceSectionData[unassignedSectionIndex].subSections[unassignedSubSectionIndex].resourceSlotData.findIndex((availableResource) => {
-          return availableResource.resourceValue == resourceValue;
-        });
-        if (resourceIndex != -1) {
-          model.data.resourceTabData.availableResourceSectionData[unassignedSectionIndex].subSections[unassignedSubSectionIndex].resourceSlotData.splice(resourceIndex, 1);
-        }
+        removeFromUnassigned(isOffMap, resourceAssignedEventData.location, resourceValue);
         model.isResourceSelected = false;
         sortSlottedResourcesBySlotIndex(model.data.resourceTabData.slottedResourceSectionData);
         handleDeselectSelectedResource();
@@ -419,8 +435,13 @@ function createCommerceScreenModel() {
           return;
         }
         const slottedResources = model.data.resourceTabData.slottedResourceSectionData[sectionIndex].cityResources[cityIndex].slottedResources;
-        const resourceIndex = slottedResources.findIndex((resource) => {
-          return resource.resourceValue == resourceValue;
+        const resourceIndex = slottedResources.findIndex((uniqueResourceValue) => {
+          return DoesMatchResource(
+            uniqueResourceValue.resourceValue,
+            uniqueResourceValue.isOffMap ?? false,
+            resourceValue,
+            isOffMap
+          );
         });
         if (resourceIndex != -1) {
           slottedResources.splice(resourceIndex, 1);
@@ -456,6 +477,47 @@ function createCommerceScreenModel() {
           offMapId: isOffMap ? offMapId : INVALID_OFF_MAP_ID
         });
         updateGate.call("resource_unassigned");
+      });
+    });
+    createEffect(() => {
+      const resourceCreatedEventData = resourceCreated();
+      if (!resourceCreatedEventData) {
+        return;
+      }
+      if (resourceCreatedEventData.player != GameContext.localPlayerID) {
+        return;
+      }
+      untrack(() => {
+        pendingUnassignments.push({
+          location: { x: -9999, y: -9999 },
+          //never create/destroy resources with locations
+          offMapId: resourceCreatedEventData.offMapId
+        });
+        updateGate.call("resource_unassigned");
+      });
+    });
+    createEffect(() => {
+      const resourceDestroyedEventData = resourceDestroyed();
+      if (!resourceDestroyedEventData) {
+        return;
+      }
+      if (resourceDestroyedEventData.player != GameContext.localPlayerID) {
+        return;
+      }
+      untrack(() => {
+        const resourceValue = resourceDestroyedEventData.offMapId;
+        if (removeSlottedResources(resourceValue, resourceDestroyedEventData.ownerCity)) {
+          sortSlottedResourcesBySlotIndex(model.data.resourceTabData.slottedResourceSectionData);
+          model.isResourceSelected = false;
+        } else {
+          const location = { x: -9999, y: -9999 };
+          removeFromUnassigned(true, location, resourceValue);
+          model.isResourceSelected = false;
+          handleDeselectSelectedResource();
+          updateUnslottedBonuses();
+          updateIsSlottingAvailable();
+          updateGate.call("resource_unassigned");
+        }
       });
     });
   });
@@ -742,6 +804,27 @@ function createCommerceScreenModel() {
     }
     setSelectedSettlementId(newID);
   }
+  function removeFromUnassigned(isOffMap, resourceLocation, resourceValue) {
+    let unassignedSectionIndex = 0;
+    if (!isOffMap) {
+      const originCityID = GameplayMap.getOwningCityFromXY(resourceLocation.x, resourceLocation.y);
+      if (!originCityID) {
+        console.error("commerce-screen-model: Unable to get origin city for newly assigned resource");
+        return;
+      }
+      unassignedSectionIndex = cityIsConnectedToTradeNetwork(Cities.get(originCityID)) ? 0 : 1;  // TRIX
+    }
+    model.data.resourceTabData.availableResourceSectionData[unassignedSectionIndex].subSections.forEach(
+      (subSection) => {
+        for (let i = subSection.resourceSlotData.length - 1; i >= 0; i--) {
+          const slotData = subSection.resourceSlotData[i];
+          if (slotData.resourceValue === resourceValue && (slotData.isOffMap ?? false) === isOffMap) {
+            subSection.resourceSlotData.splice(i, 1);
+          }
+        }
+      }
+    );
+  }
   let canSlot = true;
   const localPlayerResources = Players.get(GameContext.localPlayerID)?.Resources;
   canSlot = localPlayerResources ? !localPlayerResources.isResourceAssignmentLocked() : false;
@@ -895,8 +978,11 @@ function createCommerceScreenModel() {
   function isOffMapResourceValue(resourceValue) {
     return Players.get(GameContext.localPlayerID)?.Resources?.getResources().find((resource) => resource.value === resourceValue)?.isOffMap ?? false;
   }
-  function getResourcePropsFromDefinition(resourceDefinition, originCityId, resourcePlotIsDamaged) {
-    const originCity = originCityId ? Cities.get(originCityId) : null;
+  function getResourcePropsFromDefinition(resourceDefinition, originOptions = {
+    showOriginCity: true,
+    originCityId: void 0
+  }, resourcePlotIsDamaged) {
+    const originCity = originOptions.originCityId ? Cities.get(originOptions.originCityId) : null;
     const resourceTypeName = `LOC_${resourceDefinition.ResourceClassType}_NAME`;
     let originImportFlagProps = void 0;
     let classType = resourceDefinition.ResourceClassType;
@@ -925,11 +1011,21 @@ function createCommerceScreenModel() {
       resourceIcon: `url(blp:${UI.getIconBLP(resourceDefinition?.ResourceType ?? "")})`,
       resourceType: resourceTypeName,
       resourceTypeIcon: `url(blp:${UI.getIconBLP(classType)})`,
-      resourceOrigin: originCity?.name,
+      resourceOrigin: originOptions.showOriginCity ? originCity?.name ?? "LOC_UI_ORIGIN_OFF_MAP" : void 0,
       tooltipText: resourceDefinition.Tooltip,
       importFlag: originImportFlagProps,
       isDamaged: resourcePlotIsDamaged
     };
+  }
+  function getOriginCity(uniqueResourceValue) {
+    const lookupKey = uniqueResourceValue.value;
+    if (uniqueResourceValue.isOffMap) {
+      const localPlayer = Players.get(GameContext.localPlayerID);
+      if (localPlayer) {
+        return localPlayer.Resources?.getOffMapResourceOriginCity(lookupKey);
+      }
+    }
+    return Game.Resources.getOriginCity(lookupKey);
   }
   function getResourceProps(uniqueResourceValue, originCityOverride) {
     const resourceDefinition = GameInfo.Resources.lookup(uniqueResourceValue.uniqueResource.resource);
@@ -946,9 +1042,13 @@ function createCommerceScreenModel() {
         resourcePlotIsDamaged = true;
       }
     });
+    const displayedCity = originCityOverride ?? getOriginCity(uniqueResourceValue);
     return getResourcePropsFromDefinition(
       resourceDefinition,
-      originCityOverride ?? Game.Resources.getOriginCity(uniqueResourceValue.value),
+      {
+        showOriginCity: true,
+        originCityId: displayedCity
+      },
       resourcePlotIsDamaged
     );
   }
@@ -1260,6 +1360,56 @@ function createCommerceScreenModel() {
       model.data.resourceTabData.slottedResourceSectionData[sectionIndex].cityResources[cityIndex].yieldDeltas = newYieldDeltas;
     });
   }
+  function removeSlottedResources(offMapId, ownerCity) {
+    if (!ownerCity) {
+      return false;
+    }
+    const ownerCityId = ownerCity.id;
+    const localPlayer = Players.get(GameContext.localPlayerID);
+    const localPlayerCities = localPlayer?.Cities?.getCities();
+    hasSlottedConnectedResources = hasSlottedDisconnectedResources = false;
+    if (!localPlayerCities) {
+      return false;
+    }
+    let wasRemoved = false;
+    localPlayerCities.forEach((playerCity) => {
+      const sectionIndex = model.data.resourceTabData.slottedResourceSectionData.findIndex((section) => {
+        return section.cityResources.find((city) => {
+          return city.cityID.id == ownerCityId;
+        });
+      });
+      if (sectionIndex == -1) {
+        return;
+      }
+      const cityIndex = model.data.resourceTabData.slottedResourceSectionData[sectionIndex].cityResources.findIndex((city) => {
+        return city.cityID.id == ownerCityId;
+      });
+      if (cityIndex == -1) {
+        return;
+      }
+      const playerCityResources = playerCity.Resources;
+      if (!playerCityResources) {
+        return;
+      }
+      const cityResources = model.data.resourceTabData.slottedResourceSectionData[sectionIndex].cityResources[cityIndex];
+      const slotIndex = cityResources.slottedResources.findIndex((slottedResource) => {
+        return slottedResource.isOffMap && slottedResource.resourceValue === offMapId;
+      });
+      if (slotIndex === -1) {
+        return;
+      }
+      removeItemSlotIndex(ownerCity, offMapId);
+      cityResources.slottedResources.splice(slotIndex, 1);
+      wasRemoved = true;
+      const availableSlots = [];
+      const numAvailableSlots = playerCityResources.getAssignedResourcesCap() - playerCityResources.getAssignedResources().length;
+      for (let i = 0; i < numAvailableSlots; i++) {
+        availableSlots.push(i);
+      }
+      model.data.resourceTabData.slottedResourceSectionData[sectionIndex].cityResources[cityIndex].availableSlots = availableSlots;
+    });
+    return wasRemoved;
+  }
   function sendConsideredAssigningResources() {
     const args = {};
     tryRequestPlayerOperation(PlayerOperationTypes.CONSIDER_ASSIGN_RESOURCE, args);
@@ -1320,6 +1470,8 @@ function createCommerceScreenModel() {
       audioTrigger("dropReject");
     }
   }
+  let selectTime = 0;
+  const DOUBLE_CLICK_TIME = 500;
   function handleClickAvailableResource(resourceData) {
     if (model.selectedResource().resourceValue !== INVALID_RESOURCE_VALUE && model.selectedResource().cityID !== void 0) {
       const targetCity = model.selectedResource().cityID;
@@ -1343,6 +1495,7 @@ function createCommerceScreenModel() {
       handleUnslotSelectedResource();
     } else {
       batch(() => {
+        selectTime = Date.now();
         setSelectedResource(resourceData);
         model.isResourceSelected = true;
       });
@@ -1364,40 +1517,40 @@ function createCommerceScreenModel() {
       handleDeselectSelectedResource();
       return;
     }
-    if (model.selectedResource().resourceValue !== INVALID_RESOURCE_VALUE) {
-      if (model.selectedResource().cityID) {
+    if (selectedResource2.resourceValue !== INVALID_RESOURCE_VALUE) {
+      if (selectedResource2.cityID) {
         handleSlotSelectedResource(resourceData.cityID, resourceData.resourceValue);
       } else if (resourceData.cityID) {
-        const selected = model.selectedResource();
         const location = GameplayMap.getLocationFromIndex(resourceData.resourceValue);
-        const location2 = GameplayMap.getLocationFromIndex(selected.resourceValue);
+        const location2 = GameplayMap.getLocationFromIndex(selectedResource2.resourceValue);
         const swapResult = swapResources(
           location,
           location2,
           resourceData.resourceValue,
-          selected.resourceValue,
+          selectedResource2.resourceValue,
           resourceData.isOffMap ?? false,
-          selected.isOffMap ?? false
+          selectedResource2.isOffMap ?? false
         );
         if (swapResult) {
           swapItemSlotIndices(
-            selected.cityID,
-            selected.resourceValue,
+            selectedResource2.cityID,
+            selectedResource2.resourceValue,
             resourceData.cityID,
             resourceData.resourceValue,
-            selected.isOffMap ?? false,
+            selectedResource2.isOffMap ?? false,
             resourceData.isOffMap ?? false
           );
-          setLastSlottedResourceValues([selected.resourceValue, resourceData.resourceValue]);
+          setLastSlottedResourceValues([selectedResource2.resourceValue, resourceData.resourceValue]);
           const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
           audioTrigger("dropSwap");
-          const resourceType = resourceNameShort(getResourceTypeFromValue(selected.resourceValue));
+          const resourceType = resourceNameShort(getResourceTypeFromValue(selectedResource2.resourceValue));
           audioTrigger("dropAccept", { resourceType });
         } else {
           setSwapFail({ swapFail: true, selectedResourceData: resourceData });
         }
       }
     } else {
+      selectTime = Date.now();
       setSelectedResource(resourceData);
       model.isResourceSelected = true;
     }
@@ -1515,6 +1668,7 @@ function createCommerceScreenModel() {
     return result;
   }
   function swapResources(location1, location2, resourceValue1, resourceValue2, resource1OffMap = false, resource2OffMap = false) {
+    selectTime = 0;
     const args = {
       Location: location1,
       Location2: location2,
@@ -1524,6 +1678,7 @@ function createCommerceScreenModel() {
     return tryRequestPlayerOperation(PlayerOperationTypes.SWAP_RESOURCES, args);
   }
   function assignResource(targetCityID, resourceValue, isOffMap = false) {
+    selectTime = 0;
     const location = GameplayMap.getLocationFromIndex(resourceValue);
     const args = {
       Location: location,
@@ -1534,6 +1689,7 @@ function createCommerceScreenModel() {
     return tryRequestPlayerOperation(PlayerOperationTypes.ASSIGN_RESOURCE, args);
   }
   function unassignResource(targetCityID, resourceValue, isOffMap = false) {
+    selectTime = 0;
     const location = GameplayMap.getLocationFromIndex(resourceValue);
     const args = {
       Location: location,
@@ -1573,10 +1729,41 @@ function createCommerceScreenModel() {
     handleDeselectSelectedResource();
   }
   function handleDeselectSelectedResource() {
+    if (selectedResource().resourceValue == INVALID_RESOURCE_VALUE) {
+      return;
+    }
+    const now = Date.now();
+    const startTime = selectTime;
+    selectTime = 0;
+    if (now - startTime < DOUBLE_CLICK_TIME) {
+      if (selectedResource().cityID) {
+        handleUnslotResource(model.selectedResource());
+      } else {
+        tryAutoAssignSelectedResource();
+      }
+    }
     setSelectedResource((prev) => {
       setPrevSelectedResource(prev);
       return { resourceValue: INVALID_RESOURCE_VALUE, cityID: void 0, isConnected: false };
     });
+  }
+  function tryAutoAssignSelectedResource() {
+    const resource = selectedResource();
+    for (const resourceSection of model.data.resourceTabData.slottedResourceSectionData) {
+      const cityData = resourceSection.cityResources;
+      for (const cityResources of cityData) {
+        const location = GameplayMap.getLocationFromIndex(resource.resourceValue);
+        const args = {
+          Location: location,
+          City: cityResources.cityID.id,
+          ID: resource.isOffMap ? resource.resourceValue : INVALID_OFF_MAP_ID
+        };
+        if (tryRequestPlayerOperation(PlayerOperationTypes.ASSIGN_RESOURCE, args)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
   function populateCityResourceData(city) {
     const slottedResourceData = [];
@@ -1798,6 +1985,13 @@ function createCommerceScreenModel() {
     });
   }
   function populateAvailableResources(slottedResources) {
+    const SUBSECTION_RESOURCE_CLASSES = Game.Resources.getAssignableResourceClasses();
+    function createSubSection(resourceClass) {
+      return {
+        connected: { title: `LOC_${resourceClass}_NAME`, resourceSlotData: [], type: resourceClass },
+        disconnected: { title: `LOC_${resourceClass}_NAME`, resourceSlotData: [], type: resourceClass }
+      };
+    }
     const allAvailableResources = [];
     const availableConnectedResources = {
       collapsibleContainerData: {
@@ -1817,36 +2011,10 @@ function createCommerceScreenModel() {
       isConnectedToTradeNetwork: false,
       emptySubsectionsDescription: hasSlottedDisconnectedResources ? "LOC_COMMERCE_NO_UNASSIGNED_DISCONNECTED_RESOURCES" : "LOC_COMMERCE_NO_UNASSIGNED_DISCONNECTED_RESOURCES_NO_RESOURCES"
     };
-    const connectedCityResources = {
-      title: "LOC_RESOURCECLASS_CITY_NAME",
-      resourceSlotData: [],
-      type: "RESOURCECLASS_CITY"
-    };
-    const connectedFactoryResources = {
-      title: "LOC_RESOURCECLASS_FACTORY_NAME",
-      resourceSlotData: [],
-      type: "RESOURCECLASS_FACTORY"
-    };
-    const connectedBonusResources = {
-      title: "LOC_RESOURCECLASS_BONUS_NAME",
-      resourceSlotData: [],
-      type: "RESOURCECLASS_BONUS"
-    };
-    const disconnectedCityResources = {
-      title: "LOC_RESOURCECLASS_CITY_NAME",
-      resourceSlotData: [],
-      type: "RESOURCECLASS_CITY"
-    };
-    const disconnectedFactoryResources = {
-      title: "LOC_RESOURCECLASS_FACTORY_NAME",
-      resourceSlotData: [],
-      type: "RESOURCECLASS_FACTORY"
-    };
-    const disconnectedBonusResources = {
-      title: "LOC_RESOURCECLASS_BONUS_NAME",
-      resourceSlotData: [],
-      type: "RESOURCECLASS_BONUS"
-    };
+    const resourceSubSectionMap = {};
+    for (const resourceClass of SUBSECTION_RESOURCE_CLASSES) {
+      resourceSubSectionMap[resourceClass] = createSubSection(resourceClass);
+    }
     localPlayerResources?.getResources().forEach((resource) => {
       if (slottedResources.find((section) => {
         return section.cityResources.find((cityResources) => {
@@ -1861,8 +2029,6 @@ function createCommerceScreenModel() {
       if (!playerResource) {
         return;
       }
-      const isFactoryResource = playerResource.ResourceClassType == "RESOURCECLASS_FACTORY";
-      const isBonusResource = playerResource.ResourceClassType == "RESOURCECLASS_BONUS";
       const originCityID = Game.Resources.getOriginCity(resource.value);
       const originCity = Cities.get(originCityID);
       if (playerResource.ResourceClassType == "RESOURCECLASS_EMPIRE" || playerResource.ResourceClassType == "RESOURCECLASS_TREASURE") {
@@ -1891,29 +2057,19 @@ function createCommerceScreenModel() {
         canSwapWithSelectedResource
       };
       if (cityIsConnectedToTradeNetwork(originCity) || resource.isOffMap) {
-        if (isFactoryResource) {
-          connectedFactoryResources.resourceSlotData.push(resourceSlotData);
-        } else if (isBonusResource) {
-          connectedBonusResources.resourceSlotData.push(resourceSlotData);
-        } else {
-          connectedCityResources.resourceSlotData.push(resourceSlotData);
-        }
+        resourceSubSectionMap[playerResource.ResourceClassType]?.connected.resourceSlotData.push(
+          resourceSlotData
+        );
       } else {
-        if (isFactoryResource) {
-          disconnectedFactoryResources.resourceSlotData.push(resourceSlotData);
-        } else if (isBonusResource) {
-          disconnectedBonusResources.resourceSlotData.push(resourceSlotData);
-        } else {
-          disconnectedCityResources.resourceSlotData.push(resourceSlotData);
-        }
+        resourceSubSectionMap[playerResource.ResourceClassType]?.disconnected.resourceSlotData.push(
+          resourceSlotData
+        );
       }
     });
-    availableConnectedResources.subSections.push(connectedCityResources);
-    availableConnectedResources.subSections.push(connectedBonusResources);
-    availableConnectedResources.subSections.push(connectedFactoryResources);
-    availableDisconnectedResources.subSections.push(disconnectedCityResources);
-    availableDisconnectedResources.subSections.push(disconnectedBonusResources);
-    availableDisconnectedResources.subSections.push(disconnectedFactoryResources);
+    for (const resourceClass of SUBSECTION_RESOURCE_CLASSES) {
+      availableConnectedResources.subSections.push(resourceSubSectionMap[resourceClass].connected);
+      availableDisconnectedResources.subSections.push(resourceSubSectionMap[resourceClass].disconnected);
+    }
     allAvailableResources.push(availableConnectedResources);
     allAvailableResources.push(availableDisconnectedResources);
     return allAvailableResources;
@@ -1930,39 +2086,33 @@ function createCommerceScreenModel() {
       });
       const originCityID = Game.Resources.getOriginCity(resource.value);
       const originCity = Cities.get(originCityID);
-      if (!originCity) {
-        return;
-      }
-      const originPlayer = Players.get(originCity.owner);
-      if (!originPlayer) {
-        return;
-      }
-      if (resourceIndex != -1) {
+      if (resourceIndex !== -1) {
+        const ownerId = originCity?.owner ?? PlayerIds.NO_PLAYER;
         const originDataIndex = empireResources[resourceIndex].resourceOriginData.findIndex((o) => {
-          return o.leaderId == originPlayer.id;
+          return o.leaderId === ownerId;
         });
-        if (originDataIndex == -1) {
+        if (originDataIndex === -1) {
           empireResources[resourceIndex].resourceOriginData.push({
-            leaderId: originPlayer.id,
+            leaderId: ownerId,
             resourceOriginCities: {
-              [originCity.id.id]: {
+              [originCity?.id.id ?? -1]: {
                 contributionCount: 1,
-                localisedName: Locale.compose(originCity.name)
+                localisedName: Locale.compose(originCity?.name ?? "LOC_UI_ORIGIN_OFF_MAP")
               }
             }
           });
         } else {
-          if (!empireResources[resourceIndex].originLeaderIds.includes(originCity.owner)) {
-            empireResources[resourceIndex].originLeaderIds.push(originCity.owner);
+          if (!empireResources[resourceIndex].originLeaderIds.includes(ownerId)) {
+            empireResources[resourceIndex].originLeaderIds.push(ownerId);
           }
           const originData = empireResources[resourceIndex].resourceOriginData[originDataIndex];
           const originCityIndex = Object.keys(originData.resourceOriginCities).findIndex((c) => {
-            return Number(c) == originCityID.id;
+            return Number(c) === originCityID.id;
           });
           if (originCityIndex === -1) {
             originData.resourceOriginCities[originCityID.id] = {
               contributionCount: 1,
-              localisedName: Locale.compose(originCity.name)
+              localisedName: Locale.compose(originCity?.name ?? "LOC_UI_ORIGIN_OFF_MAP")
             };
           } else {
             originData.resourceOriginCities[originCityID.id].contributionCount++;
@@ -1971,24 +2121,30 @@ function createCommerceScreenModel() {
         empireResources[resourceIndex].amount++;
         return;
       }
-      const originCiv = GameInfo.Civilizations.lookup(originPlayer.civilizationType);
-      if (!originCiv) {
-        return;
-      }
       const resourceData = {
         iconSrc: `url(${UI.getIcon(playerResource.ResourceType, "RESOURCE")})`,
         resourceValue: resource.value,
         title: playerResource.Name,
         description: [playerResource.Tooltip],
-        originLeaderIds: [originCity.owner],
+        originLeaderIds: [originCity?.owner ?? PlayerIds.NO_PLAYER],
         tooltips: {},
-        resourceOriginData: [
+        resourceOriginData: originCity ? [
           {
-            leaderId: originPlayer.id,
+            leaderId: originCity.owner,
             resourceOriginCities: {
               [originCityID.id]: {
                 contributionCount: 1,
                 localisedName: Locale.compose(originCity.name)
+              }
+            }
+          }
+        ] : [
+          {
+            leaderId: PlayerIds.NO_PLAYER,
+            resourceOriginCities: {
+              [-1]: {
+                contributionCount: 1,
+                localisedName: Locale.compose("LOC_UI_ORIGIN_OFF_MAP")
               }
             }
           }
@@ -2188,7 +2344,7 @@ function createCommerceScreenModel() {
           canAssignSelectedResourceToSettlement: canAssignResource,
           slottedResources
         };
-        if (cityIsConnectedToTradeNetwork(city)) {
+        if (cityIsConnectedToTradeNetwork(city)) {  // TRIX
           connectedCities.cityResources.push(cityResourceData);
         } else {
           disconnectedCities.cityResources.push(cityResourceData);
@@ -2206,7 +2362,7 @@ function createCommerceScreenModel() {
   function populateFactoryResourceDataForCity(cityId, cityResources) {
     const factoryResourceType = cityResources.getFactoryResource();
     const factoryResourceDefinition = GameInfo.Resources.lookup(factoryResourceType);
-    const resource = factoryResourceDefinition ? getResourcePropsFromDefinition(factoryResourceDefinition) : null;
+    const resource = factoryResourceDefinition ? getResourcePropsFromDefinition(factoryResourceDefinition, { showOriginCity: false }) : null;
     let unassignTooltipText;
     const city = Cities.get(cityId);
     if (resource && city) {
@@ -2276,7 +2432,10 @@ function createCommerceScreenModel() {
         if (improved) {
           numImproved++;
         }
-        const resourceProps = getResourcePropsFromDefinition(resourceDef, city.id);
+        const resourceProps = getResourcePropsFromDefinition(resourceDef, {
+          showOriginCity: true,
+          originCityId: city.id
+        });
         treasureResources.push({
           resourceProps,
           tooltip,
@@ -2723,6 +2882,7 @@ function createCommerceScreenModel() {
     selectedResource,
     prevSelectedResource,
     getSelectedResourceProps,
+    getResourcePropsFromDefinition,
     focusedResource,
     setFocusedResource,
     selectedSettlementId,
@@ -2819,6 +2979,6 @@ function useCommerceScreenContext() {
   return context;
 }
 
-export { CommerceScreenContext, CommerceScreenModel, ResourceContainerSelectionState, TradeRouteAvailabiltyType, TradeRouteSortType, createCommerceScreenModel, gamepadLog, getCityName, getResourceName, useCommerceScreenContext };
+export { CommerceScreenContext, CommerceScreenModel, INVALID_RESOURCE_VALUE, ResourceContainerSelectionState, TradeRouteAvailabiltyType, TradeRouteSortType, createCommerceScreenModel, gamepadLog, getCityName, getResourceName, useCommerceScreenContext };
 //# sourceMappingURL=commerce-screen-model.js.map
 // vim: sw=2 et
