@@ -3,6 +3,7 @@ import { createSignal, createMemo, onMount, onCleanup, createComponent, Show, Fo
 import { Layout } from '../../../../core/ui/utilities/utilities-layout.js';
 import { Activatable } from '../../../../core/ui-next/components/activatable.js';
 import { CardFrame } from '../../../../core/ui-next/components/card-frame.js';
+import { ExtensionSlot } from '../../../../core/ui-next/components/extension-slot.js';
 import { FiligreeTitle } from '../../../../core/ui-next/components/filigree-title.js';
 import { Icon } from '../../../../core/ui-next/components/icon.js';
 import { L10n } from '../../../../core/ui-next/components/l10n.js';
@@ -11,6 +12,7 @@ import { PortraitIcon } from '../../../../core/ui-next/components/portrait-icon.
 import { ScrollArea } from '../../../../core/ui-next/components/scroll-area.js';
 import { SpatialSlot } from '../../../../core/ui-next/components/slot.js';
 import { Tooltip } from '../../../../core/ui-next/components/tooltip.js';
+import { ComponentRegistry } from '../../../../core/ui-next/services/component-registry.js';
 import { IsControllerActive } from '../../../../core/ui-next/services/input.js';
 import { isMobile } from '../../../../core/ui-next/services/view-experience.js';
 import { useIsSmallScreen } from '../../../../core/ui-next/utilities/layout-utilities.js';
@@ -28,7 +30,7 @@ var
 //_tmpl$5 = template(`<div class="flex flex-col w-full justify-center items-center mt-1 mb-1"><div class="flex flex-row flex-wrap"></div></div>`),
   _tmpl$6 = template(`<div class="mx-2 h-10 w-0\\.5 bg-accent"></div>`),
   _tmpl$7 = template(`<div class="flex flex-row items-center mb-1 px-2"></div>`);
-const EmpireResourceContainer = (props) => {
+const EmpireResourceContainerComponent = (props) => {
   const model = useCommerceScreenContext();
   const isSmallScreen = useIsSmallScreen();
   let cardsRowRef;
@@ -42,7 +44,9 @@ const EmpireResourceContainer = (props) => {
     return isMobile() ? Layout.pixelsToScreenPixels(28) : Layout.pixelsToScreenPixels(20);
   });
   const defaultEmpireCardWidth = createMemo(() => {
-    return isMobile() ? Layout.pixelsToScreenPixels(isSmallScreen() ? 612 : 680) : Layout.pixelsToScreenPixels(270);
+    return isMobile() ? Layout.pixelsToScreenPixels(isSmallScreen() ? 572 : 630) : Layout.pixelsToScreenPixels(270);
+    // TRIX: add column
+    // return isMobile() ? Layout.pixelsToScreenPixels(isSmallScreen() ? 572 : 630) : Layout.pixelsToScreenPixels(384);
   });
   const applyMeasuredWidths = (applyFunction) => {
     isApplyingMeasuredWidths = true;
@@ -110,6 +114,8 @@ const EmpireResourceContainer = (props) => {
       return;
     }
     const fittedWidth = (availableWidth - empireCardMarginRight() * (rowCardCount - 1)) / rowCardCount;
+    // TRIX: fix off-by-one error
+    // const fittedWidth = (availableWidth - empireCardMarginRight() * rowCardCount) / rowCardCount;
     const nextWidth = Math.max(1, Math.floor(fittedWidth * 100) / 100) + "px";
     const needsRowCountUpdate = numCardsInFirstRow() !== rowCardCount;
     const needsWidthUpdate = empireResourceCardWidth() !== nextWidth;
@@ -231,7 +237,7 @@ const EmpireResourceContainer = (props) => {
                             return resourceData.iconSrc;
                           },
                           get ["class"]() {
-                            return `flex flex-col items-center justify-between relative pb-1 empire-resource-card ${hasCheckedForWrap() ? "opacity-100" : "opacity-0"}`;
+                            return `flex flex-col flex-auto items-center justify-between relative pb-1 empire-resource-card ${hasCheckedForWrap() ? "opacity-100" : "opacity-0"}`;
                           },
                           get style() {
                             return {
@@ -302,46 +308,71 @@ const EmpireResourceContainer = (props) => {
                                 })
                               }));
                               return _el$3;
-                            })(), (() => {
-                              var _el$7 = _tmpl$5(), _el$8 = _el$7.firstChild;
-                              insert(_el$7, createComponent(FiligreeTitle.Plain, {
-                                text: "LOC_COMMERCE_EMPIRE_RESOURCES_ORIGIN_TITLE"
-                              }), _el$8);
-                              insert(_el$8, createComponent(For, {
-                                get each() {
-                                  return resourceData.resourceOriginData;
-                                },
-                                children: (originData, index2) => createComponent(Tooltip.Text, {
-                                  header: "LOC_COMMERCE_EMPIRE_ORIGIN_CITIES",
-                                  get text() {
-                                    return resourceData.tooltips[originData.leaderId];
+                            })(), createComponent(Show, {
+                              get when() {
+                                return resourceData.resourceOriginData.length > 0;
+                              },
+                              get children() {
+                                var _el$7 = _tmpl$5(), _el$8 = _el$7.firstChild;
+                                insert(_el$7, createComponent(FiligreeTitle.Plain, {
+                                  text: "LOC_COMMERCE_EMPIRE_RESOURCES_ORIGIN_TITLE"
+                                }), _el$8);
+                                insert(_el$8, createComponent(For, {
+                                  get each() {
+                                    return resourceData.resourceOriginData;
                                   },
-                                  showFiligrees: false,
-                                  get children() {
-                                    return createComponent(Activatable, {
-                                      name: "empire-resource-origin-portrait",
-                                      "class": "hover\\:scale-125 focus\\:scale-125",
-                                      get autoFocus() {
-                                        return createMemo(() => index2() === 0)() && model.selectedEmpireResource() === resourceData.resourceValue;
+                                  children: (originData, index2) => {
+                                    const shouldShowNoPlayerExtension = createMemo(() => {
+                                      return EmpireResourceContainer.hasExtensions("portrait-no-player") && originData.leaderId === PlayerIds.NO_PLAYER;
+                                    });
+                                    return createComponent(Tooltip.Text, {
+                                      header: "LOC_COMMERCE_EMPIRE_ORIGIN_CITIES",
+                                      get text() {
+                                        return resourceData.tooltips[originData.leaderId];
                                       },
-                                      get disabled() {
-                                        return createMemo(() => !!IsControllerActive())() && model.selectedEmpireResource() !== resourceData.resourceValue;
-                                      },
-                                      suppressPointerChanges: true,
+                                      showFiligrees: false,
                                       get children() {
-                                        return createComponent(PortraitIcon, mergeProps({
-                                          "class": "-mx-2 -my-1"
-                                        }, () => ({
-                                          playerId: originData.leaderId,
-                                          size: 14
-                                        })));
+                                        return createComponent(Activatable, {
+                                          name: "empire-resource-origin-portrait",
+                                          "class": "hover\\:scale-125 focus\\:scale-125",
+                                          get autoFocus() {
+                                            return createMemo(() => index2() === 0)() && model.selectedEmpireResource() === resourceData.resourceValue;
+                                          },
+                                          get disabled() {
+                                            return createMemo(() => !!IsControllerActive())() && model.selectedEmpireResource() !== resourceData.resourceValue;
+                                          },
+                                          suppressPointerChanges: true,
+                                          get children() {
+                                            return createComponent(Show, {
+                                              get when() {
+                                                return shouldShowNoPlayerExtension();
+                                              },
+                                              get fallback() {
+                                                return createComponent(PortraitIcon, mergeProps({
+                                                  "class": "-mx-2 -my-1"
+                                                }, () => ({
+                                                  playerId: originData.leaderId,
+                                                  size: 14
+                                                })));
+                                              },
+                                              get children() {
+                                                var _el$11 = _tmpl$2();
+                                                insert(_el$11, createComponent(ExtensionSlot, {
+                                                  "extends": EmpireResourceContainer,
+                                                  name: "portrait-no-player"
+                                                }));
+                                                return _el$11;
+                                              }
+                                            });
+                                          }
+                                        });
                                       }
                                     });
                                   }
-                                })
-                              }));
-                              return _el$7;
-                            })()];
+                                }));
+                                return _el$7;
+                              }
+                            })];
                           }
                         });
                       }
@@ -368,6 +399,7 @@ const EmpireResourceContainer = (props) => {
     }
   });
 };
+const EmpireResourceContainer = ComponentRegistry.register("EmpireResourceContainer", EmpireResourceContainerComponent);
 
 export { EmpireResourceContainer };
 //# sourceMappingURL=commerce-screen-empire-tab.js.map

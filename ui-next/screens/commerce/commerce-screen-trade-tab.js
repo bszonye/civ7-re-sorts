@@ -33,7 +33,9 @@ const TradeRoutesContainer = (props) => {
   const [hasCheckedForWrap, setHasCheckedForWrap] = createSignal(false);
   const [numCardsInFirstRow, setNumCardsInFirstRow] = createSignal(0);
   const defaultCardWidth = createMemo(() => {
-    return isMobile() ? Layout.pixelsToScreenPixels(isSmallScreen() ? 612 : 680) : Layout.pixelsToScreenPixels(384);
+    return isMobile() ? Layout.pixelsToScreenPixels(isSmallScreen() ? 572 : 630) : Layout.pixelsToScreenPixels(384);
+    // TRIX: add column
+    // return isMobile() ? Layout.pixelsToScreenPixels(isSmallScreen() ? 572 : 630) : Layout.pixelsToScreenPixels(512);
   });
   const applyMeasuredWidths = (applyFunction) => {
     isApplyingMeasuredWidths = true;
@@ -100,6 +102,8 @@ const TradeRoutesContainer = (props) => {
       return;
     }
     const fittedWidth = (availableWidth - TRADE_ROUTE_CARD_MARGIN_RIGHT * (rowCardCount - 1)) / rowCardCount;
+    // TRIX: fix off-by-one error
+    // const fittedWidth = (availableWidth - TRADE_ROUTE_CARD_MARGIN_RIGHT * rowCardCount) / rowCardCount;
     const nextWidth = Math.max(1, Math.floor(fittedWidth * 100) / 100) + "px";
     const needsRowCountUpdate = numCardsInFirstRow() !== rowCardCount;
     const needsWidthUpdate = tradeRouteCardWidth() !== nextWidth;
@@ -318,6 +322,8 @@ const TradeRoutesContainer = (props) => {
               get children() {
                 return createComponent(Dropdown, {
                   "class": "ml-2 w-60 pointer-events-auto grow-0 min-h-11",
+                  // TRIX: reduce minimum height
+                  // "class": "ml-2 w-60 pointer-events-auto grow-0 min-h-14",
                   selectedItemTemplate: (item) => (() => {
                     var _el$4 = _tmpl$3();
                     insert(_el$4, createComponent(L10n.Compose, {
@@ -447,3 +453,4 @@ const TradeRoutesContainer = (props) => {
 
 export { TradeRoutesContainer };
 //# sourceMappingURL=commerce-screen-trade-tab.js.map
+// vim: sw=2 et

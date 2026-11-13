@@ -24,72 +24,55 @@ const FactoryTypeDisplayComponent = (props) => {
     },
     size: "7"
   };
-  return (() => {
-    var _el$ = _tmpl$(), _el$2 = _el$.firstChild;
-    insert(_el$, createComponent(Tooltip.Text, {
-      get text() {
-        return props.isProducingFactoryResource ? "LOC_COMMERCE_FACTORY_RESOURCES_LABEL" : "LOC_COMMERCE_FACTORY_RESOURCES_LABEL_NO_PRODUCTION";
-      },
-      get args() {
-        return [props.resource?.resourceName || ""];
-      },
-      get children() {
-        return createComponent(Icon, {
-          "class": "size-8",
-          name: "url(blp:restype_factory_v2.png)",
-          isUrl: true
-        });
-      }
-    }), _el$2);
-    insert(_el$2, createComponent(Show, {
-      get when() {
-        return props.isProducingFactoryResource && props.resource;
-      },
-      get fallback() {
-        return [_tmpl$2(), createComponent(ImageButton, mergeProps(imageButtonData, {
-          disabled: true
-        }))];
-      },
-      children: (resource) => [createComponent(ResourceTooltip, mergeProps(resource, {
+  return createComponent(Show, {
+    get when() {
+      return props.hasFactory;
+    },
+    get children() {
+      var _el$ = _tmpl$(), _el$2 = _el$.firstChild;
+      insert(_el$, createComponent(Tooltip.Text, {
+        get text() {
+          return props.isProducingFactoryResource ? "LOC_COMMERCE_FACTORY_RESOURCES_LABEL" : "LOC_COMMERCE_FACTORY_RESOURCES_LABEL_NO_PRODUCTION";
+        },
+        get args() {
+          return [props.resource?.resourceName || ""];
+        },
         get children() {
           return createComponent(Icon, {
-            "class": "size-7 mr-0\\.5",
-            get name() {
-              return resource().resourceIcon;
-            },
+            "class": "size-7 mr-0\\.5",  // TRIX
+            // "class": "size-8",
+            name: "url(blp:restype_factory_v2.png)",
             isUrl: true
           });
         }
-      })), createComponent(AudioContextProvider, {
-        segment: "ReturnResources",
-        get children() {
-          return createComponent(Show, {
-            get when() {
-              return props.unassignResourceTooltip;
-            },
-            get fallback() {
-              return createComponent(ImageButton, mergeProps(imageButtonData, {
-                get disableFocus() {
-                  return createMemo(() => !!IsControllerActive())() && !cityIsSelectedForEditing();
-                },
-                get disabled() {
-                  return !model.isSlottingAvailable || model.selectedResource().resourceValue !== -1;
-                },
-                onFocus: () => model.setFocusedResource({
-                  resourceValue: -1,
-                  cityID: void 0
-                }),
-                onActivate: () => {
-                  model.clearFactoryResources(props.cityID);
-                  model.setSelectedSettlementId(void 0);
-                }
-              }));
-            },
-            children: (tooltipText) => createComponent(Tooltip.Text, {
-              get text() {
-                return tooltipText();
+      }), _el$2);
+      insert(_el$2, createComponent(Show, {
+        get when() {
+          return props.isProducingFactoryResource && props.resource;
+        },
+        get fallback() {
+          return [_tmpl$2(), createComponent(ImageButton, mergeProps(imageButtonData, {
+            disabled: true
+          }))];
+        },
+        children: (resource) => [createComponent(ResourceTooltip, mergeProps(resource, {
+          get children() {
+            return createComponent(Icon, {
+              "class": "size-8 mr-1",
+              get name() {
+                return resource().resourceIcon;
               },
-              get children() {
+              isUrl: true
+            });
+          }
+        })), createComponent(AudioContextProvider, {
+          segment: "ReturnResources",
+          get children() {
+            return createComponent(Show, {
+              get when() {
+                return props.unassignResourceTooltip;
+              },
+              get fallback() {
                 return createComponent(ImageButton, mergeProps(imageButtonData, {
                   get disableFocus() {
                     return createMemo(() => !!IsControllerActive())() && !cityIsSelectedForEditing();
@@ -97,31 +80,54 @@ const FactoryTypeDisplayComponent = (props) => {
                   get disabled() {
                     return !model.isSlottingAvailable || model.selectedResource().resourceValue !== -1;
                   },
-                  onFocus: () => {
-                    model.setFocusedResource({
-                      resourceValue: -1,
-                      cityID: void 0
-                    });
-                    delayByFrame(() => {
-                      hotkeyContext.registerNavtray("accept", tooltipText());
-                    });
-                  },
-                  onBlur: () => {
-                    hotkeyContext.unregisterNavtray("accept");
-                  },
+                  onFocus: () => model.setFocusedResource({
+                    resourceValue: -1,
+                    cityID: void 0
+                  }),
                   onActivate: () => {
                     model.clearFactoryResources(props.cityID);
                     model.setSelectedSettlementId(void 0);
                   }
                 }));
-              }
-            })
-          });
-        }
-      })]
-    }));
-    return _el$;
-  })();
+              },
+              children: (tooltipText) => createComponent(Tooltip.Text, {
+                get text() {
+                  return tooltipText();
+                },
+                get children() {
+                  return createComponent(ImageButton, mergeProps(imageButtonData, {
+                    get disableFocus() {
+                      return createMemo(() => !!IsControllerActive())() && !cityIsSelectedForEditing();
+                    },
+                    get disabled() {
+                      return !model.isSlottingAvailable || model.selectedResource().resourceValue !== -1;
+                    },
+                    onFocus: () => {
+                      model.setFocusedResource({
+                        resourceValue: -1,
+                        cityID: void 0
+                      });
+                      delayByFrame(() => {
+                        hotkeyContext.registerNavtray("accept", tooltipText());
+                      });
+                    },
+                    onBlur: () => {
+                      hotkeyContext.unregisterNavtray("accept");
+                    },
+                    onActivate: () => {
+                      model.clearFactoryResources(props.cityID);
+                      model.setSelectedSettlementId(void 0);
+                    }
+                  }));
+                }
+              })
+            });
+          }
+        })]
+      }));
+      return _el$;
+    }
+  });
 };
 const FactoryTypeDisplay = ComponentRegistry.register({
   name: "FactoryTypeDisplay",
