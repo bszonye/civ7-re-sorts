@@ -1751,6 +1751,8 @@ function createCommerceScreenModel() {
     });
   }
   function tryAutoAssignSelectedResource() {
+    // TRIX: connect auto-assign to audio triggers
+    const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");  // TRIX
     const resource = selectedResource();
     for (const resourceSection of model.data.resourceTabData.slottedResourceSectionData) {
       const cityData = resourceSection.cityResources;
@@ -1762,16 +1764,14 @@ function createCommerceScreenModel() {
           ID: resource.isOffMap ? resource.resourceValue : INVALID_OFF_MAP_ID
         };
         if (tryRequestPlayerOperation(PlayerOperationTypes.ASSIGN_RESOURCE, args)) {
-          // TRIX: trigger resource audio
-          const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
-          audioTrigger("dropSwap");
           const resourceType =
             resourceNameShort(getResourceTypeFromValue(resource.resourceValue));
-          audioTrigger("dropAccept", { resourceType });
+          audioTrigger("dropAccept", { resourceType });  // TRIX
           return true;
         }
       }
     }
+    audioTrigger("dropReject");  // TRIX
     return false;
   }
   function populateCityResourceData(city) {
