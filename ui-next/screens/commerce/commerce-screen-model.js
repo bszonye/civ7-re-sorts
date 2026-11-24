@@ -1762,6 +1762,12 @@ function createCommerceScreenModel() {
           ID: resource.isOffMap ? resource.resourceValue : INVALID_OFF_MAP_ID
         };
         if (tryRequestPlayerOperation(PlayerOperationTypes.ASSIGN_RESOURCE, args)) {
+          // TRIX: trigger resource audio
+          const audioTrigger = useAudio("CommerceScreen/ResourceSlotting");
+          audioTrigger("dropSwap");
+          const resourceType =
+            resourceNameShort(getResourceTypeFromValue(resource.resourceValue));
+          audioTrigger("dropAccept", { resourceType });
           return true;
         }
       }
