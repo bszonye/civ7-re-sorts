@@ -1507,8 +1507,11 @@ function createCommerceScreenModel() {
       handleDeselectSelectedResource();
       return;
     }
-    // unslot the resource
-    handleUnslotResource(resourceData);
+    // unslot matching resources
+    const resource = Game.Resources.getResourceOnPlot(resourceData.resourceValue);
+    clearAllResources(resourceData.cityID, resource.resource);
+    const audioTrigger = useAudio("CommerceScreen/ReturnResources");
+    audioTrigger("activate");
   }
   const [swapFail, setSwapFail] = createSignal(void 0);
   function handleClickSlottedResource(resourceData) {
