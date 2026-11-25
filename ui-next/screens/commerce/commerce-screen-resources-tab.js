@@ -22,7 +22,6 @@ import { SpatialSlot, HSlot } from '../../../../core/ui-next/components/slot.js'
 import { Tooltip } from '../../../../core/ui-next/components/tooltip.js';
 import { useAudio } from '../../../../core/ui-next/services/audio-support.js';
 import { ComponentRegistry } from '../../../../core/ui-next/services/component-registry.js';
-import { FocusManager } from '../../../../core/ui-next/services/focus-manager.js';
 import { IsControllerActive, ActiveInputDevice } from '../../../../core/ui-next/services/input.js';
 import { isMobile } from '../../../../core/ui-next/services/view-experience.js';
 import { LayoutModel } from '../../../../core/ui-next/utilities/layout-utilities.js';
@@ -30,7 +29,7 @@ import { FramedResource } from '../../components/framed-resource.js';
 import { GamepadTrayItemProvider } from '../../components/gamepad-tray-item-provider.js';
 import { YieldDelta } from '../../components/yield-delta.js';
 import { CommerceScreenBaseTabContent } from './commerce-screen-base-tab-content.js';
-import { useCommerceScreenContext, gamepadLog, getResourceName, ResourceContainerSelectionState, getCityName } from './commerce-screen-model.js';
+import { useCommerceScreenContext, gamepadLog, getResourceName, ResourceContainerSelectionState, INVALID_RESOURCE_VALUE, getCityName } from './commerce-screen-model.js';
 import { FactoryTypeDisplay } from './factory-type-display.js';
 import { ResourceTooltip } from '../../tooltips/resource-tooltip.js';
 // TRIX
@@ -56,7 +55,7 @@ var
   _tmpl$12 = template(`<div class="city-type-pill rounded-full min-w-7 flex flex-row justify-center items-center px-2 ml-2"></div>`),
   _tmpl$13 = template(`<div class="flex flex-row items-center text-xs text-accent-1"></div>`),
   _tmpl$14 = template(`<div class="flex flex-row items-center"><div></div><div class="text-secondary font-title uppercase text-lg"></div></div>`),
-  _tmpl$15 = template(`<div class="flex flex-row flex-wrap relative w-full justify-between"></div>`),
+  _tmpl$15 = template(`<div class="flex flex-row flex-wrap relative w-full items-center justify-between"></div>`),
 //_tmpl$16 = template(`<div class="flex flex-row items-center"><div class="flex flex-row max-h-full items-end"></div><div class="flex-auto flex flex-row"><div class="flex-auto"><div class="flex flex-row flex-wrap mt-4 flex-auto"></div></div></div></div>`),
   _tmpl$16 = template(`<div class="flex flex-row items-start"><div class="flex flex-row max-h-full items-start"></div><div class="relative flex-auto flex flex-row"><div class="flex-auto"><div class="flex flex-row flex-wrap mt-1 -mr-3 flex-auto"></div></div></div></div>`),
   _tmpl$17 = template(`<div class="flex items-center flex-col relative"></div>`),
@@ -134,13 +133,20 @@ const DraggableResource = (props) => {
       }
       model.clickSlottedResource({
         resourceValue: props.resourceData.resourceValue,
-        cityID: props.resourceData.cityID
+        cityID: props.resourceData.cityID,
+        isOffMap: props.resourceData.isOffMap
       });
     } else {
       model.clickAvailableResource({
         resourceValue: props.resourceData.resourceValue,
-        cityID: props.resourceData.cityID
+        cityID: props.resourceData.cityID,
+        isOffMap: props.resourceData.isOffMap
       });
+    }
+  }
+  function handleDragStart() {
+    if (!isResourceSelected()) {
+      onActivate();
     }
   }
   const isResourceSelected = createMemo(() => {
@@ -176,6 +182,7 @@ const DraggableResource = (props) => {
       return "draggable-" + resourceName();
     },
     debugTrace: DEBUG_DRAG_AND_DROP,
+    onDragStart: handleDragStart,
     get children() {
       return (() => {
         const draggableContext = useDraggableContext();
@@ -358,7 +365,7 @@ const AvailableResourcesContainer = (props) => {
   const model = useCommerceScreenContext();
   return (() => {
     var _el$2 = _tmpl$2(), _el$3 = _el$2.firstChild;
-    _el$2.style.setProperty("width", "22.8888888889rem");
+    _el$2.style.setProperty("width", "22.8888888889rem");  // TRIX
     insert(_el$3, createComponent(ScrollArea, {
       "class": "flex-auto",
       reserveSpace: true,
@@ -456,10 +463,22 @@ const AvailableResourcesSectionInternal = (props) => {
     const isSelected = model.selectedResource().resourceValue !== -1;
     return isSelected;
   });
+  const getCanDropFunction = createMemo(() => {
+    const func = (resourceData) => {
+      if (resourceData.resourceValue === INVALID_RESOURCE_VALUE) {
+        return false;
+      }
+      const sectionIsConnectedToNetwork = props.section.isConnectedToTradeNetwork;
+      const resourceIsOffMap = resourceData.isOffMap ?? false;
+      const resourceIsConnectedToNetwork = model.resourceIsConnectedToTradeNetwork(resourceData.resourceValue);
+      console.log("sectionIsConnectedToNetwork:", sectionIsConnectedToNetwork, "resourceIsOffMap:", resourceIsOffMap, "resourceIsConnectedToNetwork:", resourceIsConnectedToNetwork);
+      return sectionIsConnectedToNetwork === (resourceIsOffMap || resourceIsConnectedToNetwork);
+    };
+    return func;
+  });
   const canDrop = (draggable, _dropzone) => {
     const result = createMemo(() => {
-      const resourceData = draggable.data;
-      return props.section.isConnectedToTradeNetwork === model.resourceIsConnectedToTradeNetwork(resourceData.resourceValue);
+      return getCanDropFunction()(draggable.data);
     });
     return result;
   };
@@ -480,8 +499,10 @@ const AvailableResourcesSectionInternal = (props) => {
     get children() {
       return createComponent(CardFrame, {
         "class": "w-full my-2 py-2 pl-2 pr-2 flex flex-col",
+        // TRIX: adjust padding
+        // "class": "w-full my-2 py-2 pl-2 pr-1 flex flex-col",
         get style() {
-          return createMemo(() => !!isResourceSelected())() ? createMemo(() => props.section.isConnectedToTradeNetwork === model.resourceIsConnectedToTradeNetwork(model.selectedResource().resourceValue))() ? sectionIsActiveDropzone() || props.isParentFocused() ? {
+          return createMemo(() => !!isResourceSelected())() ? createMemo(() => !!getCanDropFunction()(model.selectedResource()))() ? sectionIsActiveDropzone() || props.isParentFocused() ? {
             "border-image-source": images.ticketSelectedCSS
           } : {
             "border-image-source": images.ticketPositiveCSS
@@ -587,6 +608,8 @@ const SlottedResourcesContainer = (props) => {
     var _el$10 = _tmpl$9();
     insert(_el$10, createComponent(ScrollArea, {
       "class": "flex-auto pl-2",
+      // TRIX: adjust padding
+      // "class": "flex-auto pl-4",
       get allowGamepadPan() {
         return model.focusedSettlementId() !== void 0 || model.selectedSettlementId() !== void 0;
       },
@@ -596,15 +619,16 @@ const SlottedResourcesContainer = (props) => {
             return [{
               hotkeyAction: "cycle-next",
               onActivate: model.onNextSettlementSortType
-            },
-              {
-                hotkeyAction: "cycle-prev",
-                onActivate: model.onPrevSettlementSortType
-              },
-              {
-                hotkeyAction: "unit-skip-turn",
-                onActivate: model.toggleSelectedSortDirection
-              }];
+            }, {
+              hotkeyAction: "cycle-prev",
+              onActivate: model.onPrevSettlementSortType
+            }, {
+              hotkeyAction: "toggle-details",
+              onActivate: model.toggleSelectedSortDirection
+            }, {
+              hotkeyAction: "unit-skip-turn",
+              onActivate: model.toggleSelectedSortDirection
+            }];
           }
         }), createComponent(For, {
           get each() {
@@ -690,6 +714,8 @@ const SlottedResourcesContainer = (props) => {
                         get children() {
                           return createComponent(ReturnResourceButton, {
                             "class": "ml-2 mr-0",
+                            // TRIX: adjust margin
+                            // "class": "ml-2 mr-1",
                             get classList() {
                               return {
                                 "opacity-50": !isReturnResourcesEnabled()
@@ -734,25 +760,20 @@ const SettlementInfoCount = (props) => {
     }
     return `url(${result})`;
   });
-  return createComponent(Show, {
-    get when() {
-      return props.count > 0;
-    },
-    get children() {
-      var _el$13 = _tmpl$11(), _el$14 = _el$13.firstChild;
-      insert(_el$13, createComponent(Icon, {
-        get ["class"]() {
-          return `${isMobile() ? "size-7" : "size-5"} mr-1`;
-        },
-        get name() {
-          return imageUrl();
-        },
-        isUrl: true
-      }), _el$14);
-      insert(_el$14, () => props.count);
-      return _el$13;
-    }
-  });
+  return (() => {
+    var _el$13 = _tmpl$11(), _el$14 = _el$13.firstChild;
+    insert(_el$13, createComponent(Icon, {
+      get ["class"]() {
+        return `${isMobile() ? "size-7" : "size-5"} mr-1`;
+      },
+      get name() {
+        return imageUrl();
+      },
+      isUrl: true
+    }), _el$14);
+    insert(_el$14, () => props.count);
+    return _el$13;
+  })();
 };
 const SettlementNameSymbol = Symbol();
 const SettlementName = (props) => {
@@ -817,6 +838,8 @@ const SettlementName = (props) => {
                 var _el$21 = _tmpl$11(), _el$22 = _el$21.firstChild;
                 insert(_el$21, createComponent(Icon, {
                   "class": "size-7 -my-1 -ml-2",
+                  // TRIX: adjust margins
+                  // "class": "size-7",
                   get name() {
                     return props.townFocusIcon;
                   },
@@ -839,6 +862,8 @@ const SettlementName = (props) => {
                 var _el$23 = _tmpl$11(), _el$24 = _el$23.firstChild;
                 insert(_el$23, createComponent(Icon, {
                   "class": "size-6 -my-0\\.5 -ml-1 mr-0\\.5",
+                  // TRIX: adjust layout
+                  // "class": "size-7",
                   name: "url(blp:action_movebyrail)",
                   isUrl: true
                 }), _el$24);
@@ -850,24 +875,38 @@ const SettlementName = (props) => {
             });
           }
         }), null);
-        insert(_el$18, createComponent(Tooltip.Text, {
-          text: "LOC_COMMERCE_SETTLEMENT_INFO_WAREHOUSE_TOOLTIP",
+        insert(_el$18, createComponent(Show, {
+          get when() {
+            return props.warehouseCount > 0;
+          },
           get children() {
-            return createComponent(SettlementInfoCount, {
-              type: "warehouse",
-              get count() {
-                return props.warehouseCount;
+            return createComponent(Tooltip.Text, {
+              text: "LOC_COMMERCE_SETTLEMENT_INFO_WAREHOUSE_TOOLTIP",
+              get children() {
+                return createComponent(SettlementInfoCount, {
+                  type: "warehouse",
+                  get count() {
+                    return props.warehouseCount;
+                  }
+                });
               }
             });
           }
         }), null);
-        insert(_el$18, createComponent(Tooltip.Text, {
-          text: "LOC_COMMERCE_SETTLEMENT_INFO_WATER_TOOLTIP",
+        insert(_el$18, createComponent(Show, {
+          get when() {
+            return props.waterCount > 0;
+          },
           get children() {
-            return createComponent(SettlementInfoCount, {
-              type: "water",
-              get count() {
-                return props.waterCount;
+            return createComponent(Tooltip.Text, {
+              text: "LOC_COMMERCE_SETTLEMENT_INFO_WATER_TOOLTIP",
+              get children() {
+                return createComponent(SettlementInfoCount, {
+                  type: "water",
+                  get count() {
+                    return props.waterCount;
+                  }
+                });
               }
             });
           }
@@ -876,6 +915,8 @@ const SettlementName = (props) => {
       }
     }), null);
     createRenderEffect(() => className(_el$16, `mr-2 -my-0\\.5 ${isMobile() ? "size-11" : "size-9"} bg-center bg-cover bg-no-repeat relative`));
+    // TRIX: adjust layout
+    // createRenderEffect(() => className(_el$16, `mr-2 ${isMobile() ? "size-11" : "size-9"} bg-center bg-cover bg-no-repeat relative`));
     return _el$15;
   })();
 };
@@ -893,11 +934,13 @@ const CityResourceContainerInternal = (props) => {
   const model = useCommerceScreenContext();
   const imageCache = useImageCache();
   const [mouseIsOverCity, setMouseIsOverCity] = createSignal(false);
+  const [cityFocused, setCityFocused] = createSignal(false);
   const images = {
     ticketHighlightedCSS: "url(blp:base_ticket-select-bg)",
     ticketPositiveCSS: "url(blp:base_ticket-positive_bg)",
     ticketNegativeCSS: "url(blp:base_ticket-negative_bg)",
     resourceEmptySlotCSS: "url(blp:resource_empty_slotv2)",
+    resourceTargetSlotCSS: "url(blp:resource_empty_slot)",
     successIconCSS: "url(blp:dip_esp_success_icon)",
     failIconCSS: "url(blp:dip_esp_fail_icon)"
   };
@@ -913,7 +956,7 @@ const CityResourceContainerInternal = (props) => {
     canAssignResourceToSettlement: props.canAssignSelectedResourceToSettlement
   }));
   const getEmptySlotOpacity = () => {
-    if (model.selectedResource().resourceValue === -1) {
+    if (model.selectedResource().resourceValue === -1 || shouldShowDropTarget()) {
       return "opacity-50";
     }
     if (model.selectedResource().cityID?.id === props.cityID.id || selectionState() === ResourceContainerSelectionState.CanNotSelect) {
@@ -944,7 +987,14 @@ const CityResourceContainerInternal = (props) => {
     const settlementIsSelectedOrFocused = settlementIsFocused() || settlementIsSelected();
     const settlementIsNotUnselectable = selectionState() !== ResourceContainerSelectionState.CanNotSelect;
     const selectedResourcesIsInSettlement = ComponentID.isMatch(model.selectedResource().cityID ?? null, props.cityID);
-    return IsControllerActive() && hasSelectedResource && settlementIsSelectedOrFocused && settlementIsNotUnselectable && !selectedResourcesIsInSettlement;
+    return settlementIsNotUnselectable && hasSelectedResource && !selectedResourcesIsInSettlement && (IsControllerActive() && settlementIsSelectedOrFocused || !IsControllerActive() && mouseIsOverCity());
+  });
+  const shouldShowDropTarget = createMemo(() => {
+    const hasSelectedResource = model.selectedResource().resourceValue !== -1;
+    const settlementIsSelectedOrFocused = settlementIsFocused() || settlementIsSelected();
+    const settlementIsNotUnselectable = selectionState() !== ResourceContainerSelectionState.CanNotSelect;
+    const selectedResourcesIsInSettlement = ComponentID.isMatch(model.selectedResource().cityID ?? null, props.cityID);
+    return settlementIsNotUnselectable && hasSelectedResource && !selectedResourcesIsInSettlement && (IsControllerActive() && !settlementIsSelectedOrFocused || !IsControllerActive() && !mouseIsOverCity());
   });
   const autoFocusGhost = createMemo(() => {
     if (model.isInSortAndFilterMode()) {
@@ -956,15 +1006,19 @@ const CityResourceContainerInternal = (props) => {
     var _el$25 = _tmpl$17();
     insert(_el$25, createComponent(CardFrame, {
       tabIndex: -1,
-      onFocus: () => setMouseIsOverCity(true),
-      onBlur: () => setMouseIsOverCity(false),
+      onFocus: () => setCityFocused(true),
+      onBlur: () => setCityFocused(false),
+      onMouseEnter: () => setMouseIsOverCity(true),
+      onMouseLeave: () => setMouseIsOverCity(false),
       get ["class"]() {
         return `w-full mt-2 mb-2 px-2 pb-0 ${selectionState() === ResourceContainerSelectionState.CanSelect || selectionState() === ResourceContainerSelectionState.CanNotSelect ? "pt-1" : "pt-1"} flex flex-col relative`;
+        // TRIX: adjust layout
+        // return `w-full mt-3 mb-2 px-4 pb-4 ${selectionState() === ResourceContainerSelectionState.CanSelect || selectionState() === ResourceContainerSelectionState.CanNotSelect ? "pt-5" : "pt-4"} flex flex-col relative`;
       },
       get style() {
         return createMemo(() => !!(IsControllerActive() && props.parentIsFocusedOrSelected()))() ? {
           "border-image-source": images.ticketHighlightedCSS
-        } : createMemo(() => selectionState() === ResourceContainerSelectionState.CanSelect)() ? mouseIsOverCity() ? {
+        } : createMemo(() => selectionState() === ResourceContainerSelectionState.CanSelect)() ? mouseIsOverCity() || cityFocused() ? {
           "border-image-source": images.ticketHighlightedCSS
         } : {
           "border-image-source": images.ticketPositiveCSS
@@ -983,9 +1037,6 @@ const CityResourceContainerInternal = (props) => {
             };
           },
           canDrop,
-          onDragOver: () => setMouseIsOverCity(true),
-          onDragLeave: () => setMouseIsOverCity(false),
-          onDragDrop: () => setMouseIsOverCity(false),
           debugTrace: DEBUG_DRAG_AND_DROP,
           get children() {
             return [(() => {
@@ -1009,17 +1060,10 @@ const CityResourceContainerInternal = (props) => {
                   });
                 }
               }), null);
-              insert(_el$26, createComponent(Show, {
-                get when() {
-                  return props.factoryResourceData.hasFactory;
-                },
-                get children() {
-                  return createComponent(FactoryTypeDisplay, mergeProps(() => props.factoryResourceData));
-                }
-              }), null);
+              insert(_el$26, createComponent(FactoryTypeDisplay, mergeProps(() => props.factoryResourceData)), null);
               return _el$26;
             })(), createComponent(Divider.Horizontal, {
-              margin: 1
+              margin: 1  // TRIX
             }), (() => {
               var _el$27 = _tmpl$16(), _el$28 = _el$27.firstChild, _el$29 = _el$28.nextSibling, _el$30 = _el$29.firstChild, _el$31 = _el$30.firstChild;
               _el$31.style.rowGap = '0.2222222222rem';  // TRIX
@@ -1030,9 +1074,9 @@ const CityResourceContainerInternal = (props) => {
                 children: (yieldDelta, index) => createComponent(YieldDelta, {
                   get classList() {
                     return {
-                      "flex-col-reverse": true,
-                      "text-sm": true,
-                      "mb-1": true,
+                      "flex-col-reverse": true,  // TRIX
+                      "text-sm": true,  // TRIX
+                      "mb-1": true,  // TRIX
                       "ml-3": index() > 0 && index() < props.yieldDeltas.length
                     };
                   },
@@ -1075,6 +1119,8 @@ const CityResourceContainerInternal = (props) => {
                         Dropzone,
                         {
                           "class": "size-19 mb-0",
+                          // TRIX: adjust margin
+                          // "class": "size-19 mb-1",
                           get debugId() {
                             return "Resource Dropzone-" + resourceName();
                           },
@@ -1118,7 +1164,7 @@ const CityResourceContainerInternal = (props) => {
                     return (() => {
                       var _el$34 = _tmpl$();
                       createRenderEffect((_p$) => {
-                        var _v$ = `size-16 mb-2 mr-3 bg-contain bg-no-repeat bg-center relative flex items-center justify-center ${getEmptySlotOpacity()}`, _v$2 = images.resourceEmptySlotCSS;
+                        var _v$ = `size-16 mb-2 mr-3 bg-contain bg-no-repeat bg-center relative flex items-center justify-center ${getEmptySlotOpacity()}`, _v$2 = index() == 0 && shouldShowDropTarget() ? images.resourceTargetSlotCSS : images.resourceEmptySlotCSS;
                         _v$ !== _p$.e && className(_el$34, _p$.e = _v$);
                         _v$2 !== _p$.t && ((_p$.t = _v$2) != null ? _el$34.style.setProperty("background-image", _v$2) : _el$34.style.removeProperty("background-image"));
                         return _p$;
@@ -1204,12 +1250,16 @@ const CityResourceContainerInternal = (props) => {
                             get fallback() {
                               return createComponent(ReturnResourceButton, {
                                 "class": "absolute -top-10 right-0",
+                                // TRIX: adjust position
+                                // "class": "mr-1",
                                 disabled: true
                               });
                             },
                             get children() {
                               return createComponent(ReturnResourceButton, {
                                 "class": "absolute -top-10 right-0",
+                                // TRIX: adjust position
+                                // "class": "mr-1",
                                 onActivate: () => {
                                   model.clearAllResources(props.cityID);
                                 }
@@ -1426,11 +1476,13 @@ const CommerceResourcesContainerComponent = (props) => {
     if (data.cityID) {
       model.clickSlottedResource({
         cityID: data.cityID,
-        resourceValue: data.resourceValue
+        resourceValue: data.resourceValue,
+        isOffMap: data.isOffMap
       });
     } else {
       model.clickAvailableResource({
-        resourceValue: data.resourceValue
+        resourceValue: data.resourceValue,
+        isOffMap: data.isOffMap
       });
     }
   };
@@ -1459,21 +1511,23 @@ const CommerceResourcesContainerComponent = (props) => {
       if (cityID) {
         model.clickSlottedResource({
           cityID,
-          resourceValue: targetResourceValue
+          resourceValue: targetResourceValue,
+          isOffMap: dropzone.data.isOffMap
         });
       } else {
         model.clickAvailableResource({
-          resourceValue: targetResourceValue
+          resourceValue: targetResourceValue,
+          isOffMap: dropzone.data.isOffMap
         });
       }
     } else if (cityID) {
       if (resource.cityID === void 0 || !ComponentID.isMatch(cityID, resource.cityID)) {
-        model.slotSelectedResource(cityID, Input.isShiftDown());
+        model.slotSelectedResource(cityID, Input.isShiftDown());  // TRIX
       } else {
         model.deselectSelectedResource();
       }
     } else {
-      model.unslotSelectedResource(Input.isShiftDown());
+      model.unslotSelectedResource(Input.isShiftDown());  // TRIX
     }
   };
   const disableDND = createMemo(() => {
@@ -1521,8 +1575,8 @@ const CommerceResourcesContainerComponent = (props) => {
     setDisableFilters(!model.isInSortAndFilterMode());
     setAutoFocusFilters(model.isInSortAndFilterMode());
   });
-  createEffect(() => {
-    if (model.swapFail()?.swapFail === true) {
+  createEffect(on(model.swapFail, (newValue) => {
+    if (newValue?.swapFail) {
       const resource = model.swapFail()?.selectedResourceData;
       const cityID = model.swapFail()?.dropzoneID;
       if (resource && resource.cityID && cityID) {
@@ -1537,7 +1591,7 @@ const CommerceResourcesContainerComponent = (props) => {
       }
       return;
     }
-  });
+  }));
   function showSwapFailDialog(resourceType, resourceCityID, cityID, resourceProps, onAccept) {
     let body;
     if (!resourceType) {
@@ -1570,14 +1624,13 @@ const CommerceResourcesContainerComponent = (props) => {
         callback: onAccept
       }]
     });
-    FocusManager.get().setFocus(document.body);
   }
   return createComponent(CommerceScreenBaseTabContent, {
     description: "LOC_COMMERCE_RESOURCE_ALLOCATION_DESCRIPTION",
     get headerBar() {
       return (() => {
         var _el$47 = _tmpl$24(), _el$48 = _el$47.firstChild, _el$49 = _el$48.firstChild, _el$50 = _el$49.nextSibling, _el$51 = _el$48.nextSibling;
-        _el$48.style.setProperty("width", "22.8888888889rem");
+        _el$48.style.setProperty("width", "22.8888888889rem");  // TRIX
         insert(_el$49, createComponent(L10n.Compose, {
           text: "LOC_COMMERCE_AVAILABLE_RESOURCES_TITLE"
         }));
@@ -1643,7 +1696,7 @@ const CommerceResourcesContainerComponent = (props) => {
                     return createComponent(For, {
                       each: yieldHighlightDropdownItems,
                       children: (item) => createComponent(DropdownItem, {
-                        "class": "text-sm py-1\\.5 px-2",
+                        "class": "text-sm py-1\\.5 px-2",  // TRIX
                         value: item,
                         get children() {
                           return createComponent(Show, {

@@ -1,5 +1,5 @@
 import { template, insert } from '../../../../core/vendor/solid-js/web/dist/web.js';
-import { createMemo, createComponent, Show, For, mergeProps } from '../../../../core/vendor/solid-js/dist/solid.js';
+import { createMemo, createComponent, Show, For, mergeProps, createRenderEffect } from '../../../../core/vendor/solid-js/dist/solid.js';
 import { ComponentID } from '../../../../core/ui/utilities/utilities-component-id.js';
 import { Layout } from '../../../../core/ui/utilities/utilities-layout.js';
 import { Activatable } from '../../../../core/ui-next/components/activatable.js';
@@ -32,7 +32,8 @@ var
 //_tmpl$7 = template(`<div class="size-9 mt-2 -mb-1 tint-bg-white bg-center bg-contain bg-no-repeat"></div>`),
   _tmpl$8 = template(`<div class="absolute top-0 right-3\\.5 w-12 h-14 bg-center bg-no-repeat bg-contain flex flex-col items-center"><p></p></div>`),
 //_tmpl$8 = template(`<div class="absolute top-0 right-5 w-12 h-20 bg-center bg-no-repeat bg-contain flex flex-col items-center"><p></p></div>`),
-  _tmpl$9 = template(`<div class="mt-2 -mb-0\\.5 mx-1 p-4 flex flex-col"></div>`);
+  _tmpl$9 = template(`<div class="mt-2 -mb-0\\.5 mx-1 flex flex-col"></div>`);
+//_tmpl$9 = template(`<div class="mt-2 flex flex-col"></div>`);
 const TreasureConvoyCardResource = (props) => {
   const model = useCommerceScreenContext();
   const shouldAutoFocus = createMemo(() => props.isInSelectedRoute && props.index === 0);
@@ -81,13 +82,20 @@ const TreasureConvoyCardComponent = (props) => {
   const isSmallScreen = useIsSmallScreen();
   const isSelected = createMemo(() => ComponentID.isMatch(props.fleet.cityID, model.selectedTreasureConvoyId() ?? null));
   const content = createComponent(CardFrame, {
-    // TRIX: replace margins with gap
     "class": "min-h-0 px-1\\.5 pt-3 pb-3 flex flex-col mr-0 mb-0 relative focusable-card",
+    // TRIX: replace margins with gap
+    // get ["class"]() {
+    //   return `${isMobile() ? "" : "w-128"} min-h-64 px-6 pt-6 pb-3 flex flex-col mr-6 mb-6 relative focusable-card`;
+    // },
     get style() {
-      const width = isMobile() ? isSmallScreen() ? 612 : 680 : 416;
+      const width = isMobile() ? isSmallScreen() ? 572 : 630 : 416;
       return {
         width: `${Layout.pixelsToScreenPixels(width)}px`
       };
+      // TRIX: set narrower columns on desktop (four cards across)
+      // return createMemo(() => !!isMobile())() ? {
+      //   width: `${Layout.pixelsToScreenPixels(isSmallScreen() ? 572 : 630)}px`
+      // } : {};
     },
     get children() {
       return [createComponent(Activatable, {
@@ -204,6 +212,15 @@ const TreasureConvoyCardComponent = (props) => {
                 status
               })
             }));
+            createRenderEffect((_p$) => {
+              var _v$ = !isMobile(), _v$2 = !!isMobile();
+              _v$ !== _p$.e && _el$10.classList.toggle("p-4", _p$.e = _v$);
+              _v$2 !== _p$.t && _el$10.classList.toggle("p-2", _p$.t = _v$2);
+              return _p$;
+            }, {
+              e: void 0,
+              t: void 0
+            });
             return _el$10;
           })();
         },

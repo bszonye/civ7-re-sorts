@@ -96,7 +96,7 @@ screen-resource-allocation .bz-factory-return-button {
   border-image-source: url("blp:base_ticket-select-bg");
 }
 .focusable-card-activatable:focus .ornate-card-bg, .focusable-card-activatable:focus-within .ornate-card-bg {
-  border-image-source: url("blp:hud_mini_box_highlight");
+  border-image-source: url("blp:empire_resource_frame_highlight");
 }
 
 /* vim: set sw=2 et : */
